@@ -1,0 +1,19 @@
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  background-color: #0a0a0a !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #ddd;
+  overflow-x: hidden;
+  background-image: url(../public/images/runeterra.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+* {
+  box-sizing: border-box;
+}

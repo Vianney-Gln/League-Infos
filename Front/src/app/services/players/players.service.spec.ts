@@ -1,10 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PlayersService } from './players.service';
-import { ACCOUNT_BY_PUUID_API_URL, CHALLENGERS_LEAGUE_API_URL, SUMMONER_BY_PUUID_API_URL } from '../../common/constants/api-urls';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { RANKED_FLEX_SR, RANKED_SOLO_5x5 } from '../../common/constants/queues';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { environment } from '../../../environments/environment';
 import { AccountDTO } from '../../common/models/accountDTO';
@@ -45,7 +43,7 @@ describe('PlayersService', () => {
           hotStreak: false,
         },
       ],
-      queue: RANKED_SOLO_5x5,
+      queue: 'RANKED_SOLO_5x5',
       name: 'Challenger League',
     } as LeagueListDTO;
 
@@ -55,8 +53,8 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_SOLO_5x5}`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/league-challengers-solo-queue';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockLeagueListDTO);
   });
@@ -80,7 +78,7 @@ describe('PlayersService', () => {
           hotStreak: false,
         },
       ],
-      queue: RANKED_SOLO_5x5,
+      queue: 'RANKED_SOLO_5x5',
       name: 'Challenger League',
     } as LeagueListDTO;
 
@@ -90,8 +88,8 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_FLEX_SR}`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/league-challengers-flex-queue';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockLeagueListDTO);
   });
@@ -110,8 +108,8 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${ACCOUNT_BY_PUUID_API_URL}/12345`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/account/12345';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(accountDTOMock);
   });
@@ -134,8 +132,8 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${SUMMONER_BY_PUUID_API_URL}/12345`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/summoner/12345';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(summonerDTOMock);
   });

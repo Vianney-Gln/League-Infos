@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { GetChampionsService } from './get-champions.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { CHAMPION_ROTATIONS_API_URL } from '../../common/constants/api-urls';
 import { environment } from '../../../environments/environment';
 import { FreeChampionsDTO } from '../../common/models/freeChampionsDTO';
 import { ChampionData } from '../../common/models/championsInfos';
@@ -41,8 +40,8 @@ describe('GetChampionsService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(CHAMPION_ROTATIONS_API_URL);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/champions/free';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

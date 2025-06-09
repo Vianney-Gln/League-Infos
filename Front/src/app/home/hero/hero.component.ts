@@ -19,36 +19,44 @@ import { CommonModule } from '@angular/common';
 export class HeroComponent implements OnInit, OnDestroy {
   constructor(private playersService: PlayersService, private getVersionsService: GetVersionsService) {}
 
-  leagueChallengerSubscription: Subscription | null = null;
+  leagueChallengerSoloQSubscription: Subscription | null = null;
+  leagueChallengerFlexSubscription: Subscription | null = null;
   getAccountSubscription: Subscription | null = null;
+
   firstChallengerPlayerSoloQSignal: Signal<LeagueItemDTO | undefined> = signal<LeagueItemDTO | undefined>(undefined);
   firstChallengerSummonerSoloQSignal: WritableSignal<SummonerDTO | undefined> = signal<SummonerDTO | undefined>(undefined);
-  leagueBestPlayer: string | undefined = '';
-  gameNameBestChalPlayerSoloQ: string | undefined = '';
-  isDataBestSoloQPlayerLoading: boolean = false;
+  firstChallengerSummonerFlexSignal: WritableSignal<SummonerDTO | undefined> = signal<SummonerDTO | undefined>(undefined);
+  firstChallengerPlayerFlexSignal: Signal<LeagueItemDTO | undefined> = signal<LeagueItemDTO | undefined>(undefined);
   lastVersionLolSignal: Signal<string> = signal('');
+
+  leagueBestPlayerSoloQ: string | undefined = '';
+  leagueBestPlayerFlex: string | undefined = '';
+  gameNameBestChalPlayerSoloQ: string | undefined = '';
+  gameNameBestChalPlayerFlex: string | undefined = '';
+  isCarouselLoading: boolean = false;
 
   ngOnInit(): void {
     this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
     this.getDataBestSoloqPlayer();
+    this.getDataBestFlexPlayer();
   }
 
   private getDataBestSoloqPlayer(): void {
-    this.isDataBestSoloQPlayerLoading = true;
-    this.leagueChallengerSubscription = this.playersService
+    this.isCarouselLoading = true;
+    this.leagueChallengerSoloQSubscription = this.playersService
       .getLeagueChallengerDataSoloQ()
       .pipe(
         tap((leagueListDTO) => {
-          this.playersService.leagueChallengerListDTOSignal.set(leagueListDTO);
+          this.playersService.leagueChallengerSoloQListDTOSignal.set(leagueListDTO);
         }),
         switchMap((leagueListDTO) => {
-          this.leagueBestPlayer = this.playersService.leagueChallengerListDTOSignal()?.tier;
-          this.firstChallengerPlayerSoloQSignal = computed(() => this.playersService.leagueChallengerListDTOSignal()?.entries[0]);
+          this.leagueBestPlayerSoloQ = this.playersService.leagueChallengerSoloQListDTOSignal()?.tier;
+          this.firstChallengerPlayerSoloQSignal = computed(() => this.playersService.leagueChallengerSoloQListDTOSignal()?.entries[0]);
           return this.playersService.getAccountByPuuid(leagueListDTO.entries[0].puuid);
         }),
         switchMap((account: AccountDTO) => {
           this.gameNameBestChalPlayerSoloQ = account.gameName;
-          this.isDataBestSoloQPlayerLoading = false;
+          this.isCarouselLoading = false;
           return this.playersService.getSummonerByPuuid(account.puuid);
         })
       )
@@ -58,14 +66,48 @@ export class HeroComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.log(err);
-          this.isDataBestSoloQPlayerLoading = false;
+          this.isCarouselLoading = false;
+        },
+      });
+  }
+
+  private getDataBestFlexPlayer(): void {
+    this.isCarouselLoading = true;
+    this.leagueChallengerFlexSubscription = this.playersService
+      .getLeagueChallengerDataFlexQ()
+      .pipe(
+        tap((leagueListDTO) => {
+          this.playersService.leagueChallengerFlexListDTOSignal.set(leagueListDTO);
+        }),
+        switchMap((leagueListDTO) => {
+          this.leagueBestPlayerFlex = this.playersService.leagueChallengerFlexListDTOSignal()?.tier;
+          this.firstChallengerPlayerFlexSignal = computed(() => this.playersService.leagueChallengerFlexListDTOSignal()?.entries[0]);
+          return this.playersService.getAccountByPuuid(leagueListDTO.entries[0].puuid);
+        }),
+        switchMap((account: AccountDTO) => {
+          this.gameNameBestChalPlayerFlex = account.gameName;
+          this.isCarouselLoading = false;
+          return this.playersService.getSummonerByPuuid(account.puuid);
+        })
+      )
+      .subscribe({
+        next: (summoner: SummonerDTO) => {
+          this.firstChallengerSummonerFlexSignal.set(summoner);
+        },
+        error: (err) => {
+          console.log(err);
+          this.isCarouselLoading = false;
         },
       });
   }
 
   ngOnDestroy(): void {
-    if (this.leagueChallengerSubscription) {
-      this.leagueChallengerSubscription.unsubscribe();
+    if (this.leagueChallengerSoloQSubscription) {
+      this.leagueChallengerSoloQSubscription.unsubscribe();
+    }
+
+    if (this.leagueChallengerFlexSubscription) {
+      this.leagueChallengerFlexSubscription.unsubscribe();
     }
 
     if (this.getAccountSubscription) {

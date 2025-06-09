@@ -4,7 +4,6 @@ import { HeroComponent } from './hero.component';
 import { PlayersService } from '../../services/players/players.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { of } from 'rxjs';
-import { RANKED_SOLO_5x5 } from '../../common/constants/queues';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
@@ -42,7 +41,7 @@ describe('HeroComponentComponent', () => {
         hotStreak: false,
       },
     ],
-    queue: RANKED_SOLO_5x5,
+    queue: 'RANKED_SOLO_5x5',
     name: 'Challenger League',
   } as LeagueListDTO;
 

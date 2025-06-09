@@ -12,7 +12,8 @@ import { SummonerDTO } from '../../common/models/summonerDTO';
 export class PlayersService {
   constructor(private http: HttpClient) {}
 
-  leagueChallengerListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
+  leagueChallengerSoloQListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
+  leagueChallengerFlexListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
 
   getLeagueChallengerDataSoloQ(): Observable<LeagueListDTO> {
     const url = environment.apiBaseUrl + '/league-challengers-solo-queue';

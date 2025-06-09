@@ -94,8 +94,12 @@ describe('PlayersService', () => {
     req.flush(mockLeagueListDTO);
   });
 
-  it('should have leagueChallengerListDTOSignal initialized as null', () => {
-    expect(service.leagueChallengerListDTOSignal()).toBeNull();
+  it('should have leagueChallengerSoloQListDTOSignal initialized as null', () => {
+    expect(service.leagueChallengerSoloQListDTOSignal()).toBeNull();
+  });
+
+  it('should have leagueChallengerFlexListDTOSignal initialized as null', () => {
+    expect(service.leagueChallengerFlexListDTOSignal()).toBeNull();
   });
 
   it('should call getAccountByPuuid', () => {

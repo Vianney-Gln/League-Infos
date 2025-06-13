@@ -91,8 +91,4 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.freeChampionSubscription.unsubscribe();
     }
   }
-
-  alert() {
-    alert();
-  }
 }

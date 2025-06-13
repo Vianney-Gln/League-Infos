@@ -12,13 +12,13 @@ describe('GetChampionsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      declarations: [],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [GetChampionsService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     service = TestBed.inject(GetChampionsService);
     httpMock = TestBed.inject(HttpTestingController);
   });
+
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -65,5 +65,9 @@ describe('GetChampionsService', () => {
 
   it('should have championDataSignal initialized as null', () => {
     expect(service.championDataSignal()).toBeNull();
+  });
+
+  it('should have isFreeChampErrorSignal initialized as false', () => {
+    expect(service.isFreeChampErrorSignal()).toBeFalse();
   });
 });

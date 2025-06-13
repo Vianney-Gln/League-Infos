@@ -13,6 +13,7 @@ export class GetChampionsService {
   constructor(private http: HttpClient) {}
 
   championDataSignal: WritableSignal<ChampionData | null> = signal<ChampionData | null>(null);
+  isFreeChampErrorSignal: WritableSignal<boolean> = signal<boolean>(false);
 
   getFreeChampions(): Observable<FreeChampionsDTO> {
     const url = `${environment.apiBaseUrl}/champions/free`;

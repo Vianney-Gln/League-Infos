@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PlayersService } from './players.service';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { environment } from '../../../environments/environment';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
+import { importProvidersFrom } from '@angular/core';
 
 describe('PlayersService', () => {
   let service: PlayersService;
@@ -14,11 +15,13 @@ describe('PlayersService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [PlayersService, provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(PlayersService);
     httpMock = TestBed.inject(HttpTestingController);
   });
+
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();

@@ -1,6 +1,6 @@
 <div class="container py-4">
   <app-hero-component></app-hero-component>
-  <h2 class="mt-2">Rotation des champions</h2>
+  <h2 class="mt-4 text-center">Rotation des champions</h2>
   <div class="ngbAccordion" ngbAccordion>
     <div class="ngbAccordionItem" ngbAccordionItem>
       <h2 class="ngbAccordionHeader" ngbAccordionHeader>
@@ -9,6 +9,7 @@
         </button>
       </h2>
       <div ngbAccordionCollapse>
+        @if(!isFreeChampsErrorSignal()){
         <div ngbAccordionBody>
           <ng-template>
             <div class="row d-flex justify-content-start">
@@ -27,6 +28,9 @@
             </div>
           </ng-template>
         </div>
+        }@else {
+        <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ freeChampsErrorMsg }}</p>
+        }
       </div>
     </div>
   </div>
@@ -39,10 +43,11 @@
         </button>
       </h2>
       <div ngbAccordionCollapse>
+        @if(!isFreeChampsErrorSignal()){
         <div ngbAccordionBody>
           <ng-template>
             <div class="row d-flex justify-content-start">
-              @for (champion of freeChampionsForBeginnersDataSignal(); track champion.id) {
+              @for (champion of freeChampionsForBeginnersDataSignal(); track champion.id) {s
               <div class="m-1 card champion-card text-white overflow-hidden position-relative">
                 <img
                   [title]="champion.name"
@@ -57,6 +62,9 @@
             </div>
           </ng-template>
         </div>
+        }@else {
+        <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ freeChampsErrorMsg }}</p>
+        }
       </div>
     </div>
   </div>

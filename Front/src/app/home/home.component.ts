@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { GetChampionsService } from '../services/champions/get-champions.service';
 import { FreeChampionsDTO } from '../common/models/freeChampionsDTO';
 import { Champion } from '../common/models/championsInfos';
@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeroComponent } from './hero/hero.component';
 import { Subscription } from 'rxjs';
 import { GetVersionsService } from '../services/versions/get-versions.service';
+import { FREE_CHAMPS_ERRORS } from '../common/constants/errors';
 
 @Component({
   selector: 'app-home-component',
@@ -16,16 +17,18 @@ import { GetVersionsService } from '../services/versions/get-versions.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(private getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
+  constructor(public getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
 
   freeChampionSubscription: Subscription | null = null;
   freeChampionsDTOSignal: WritableSignal<FreeChampionsDTO | null> = signal<FreeChampionsDTO | null>(null);
   freeChampionsDataSignal: WritableSignal<Champion[] | null> = signal<Champion[] | null>(null);
   freeChampionsForBeginnersDataSignal: WritableSignal<Champion[] | null> = signal<Champion[] | null>(null);
-
+  isFreeChampsErrorSignal!: Signal<boolean>;
   lastVersionLolSignal: Signal<string> = signal('');
+  freeChampsErrorMsg = FREE_CHAMPS_ERRORS;
 
   ngOnInit() {
+    this.isFreeChampsErrorSignal = this.getChampionService.isFreeChampErrorSignal;
     this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
     this.freeChampionSubscription = this.getChampionService.getFreeChampions().subscribe({
       next: (freeChamp) => {
@@ -41,7 +44,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.findChampDataFreeByNames(freeChampName, true);
         });
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        this.getChampionService.isFreeChampErrorSignal.set(true);
+        console.log(err);
+      },
     });
   }
 
@@ -84,5 +90,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.freeChampionSubscription) {
       this.freeChampionSubscription.unsubscribe();
     }
+  }
+
+  alert() {
+    alert();
   }
 }

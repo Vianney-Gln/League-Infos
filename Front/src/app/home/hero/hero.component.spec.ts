@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('HeroComponentComponent', () => {
   let component: HeroComponent;
@@ -16,7 +17,7 @@ describe('HeroComponentComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeroComponent],
-      providers: [PlayersService, provideHttpClient(withInterceptorsFromDi())],
+      providers: [PlayersService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     playerservice = TestBed.inject(PlayersService);

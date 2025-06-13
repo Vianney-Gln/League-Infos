@@ -17,7 +17,7 @@ import { FREE_CHAMPS_ERRORS } from '../common/constants/errors';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(public getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
+  constructor(private getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
 
   freeChampionSubscription: Subscription | null = null;
   freeChampionsDTOSignal: WritableSignal<FreeChampionsDTO | null> = signal<FreeChampionsDTO | null>(null);

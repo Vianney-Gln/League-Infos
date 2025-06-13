@@ -155,9 +155,9 @@ describe('Home', () => {
   });
 
   ['button-accordeon-free-champs', 'button-accordeon-free-champs-beginners'].forEach((accordeonButton) => {
-    it('Should display an error message in the template if isFreeChampErrorSignal is true for the both free champs sections', () => {
+    fit('Should display an error message in the template if isFreeChampErrorSignal is true for the both free champs sections', () => {
       // GIVEN
-      component.getChampionService.isFreeChampErrorSignal.set(true);
+      getChampionService.isFreeChampErrorSignal.set(true);
 
       // WHEN
       fixture.detectChanges();

@@ -34,6 +34,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   gameNameBestChalPlayerSoloQ: string | undefined = '';
   gameNameBestChalPlayerFlex: string | undefined = '';
   isCarouselLoading: boolean = false;
+  isCarouselError: boolean = false;
 
   ngOnInit(): void {
     this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
@@ -67,6 +68,7 @@ export class HeroComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.log(err);
           this.isCarouselLoading = false;
+          this.isCarouselError = true;
         },
       });
   }
@@ -97,6 +99,7 @@ export class HeroComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.log(err);
           this.isCarouselLoading = false;
+          this.isCarouselError = true;
         },
       });
   }

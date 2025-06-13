@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GetChampionsService } from '../services/champions/get-champions.service';
-import { DebugElement } from '@angular/core';
-import { getByDataTestAttr } from '../common/utils/utils-tests';
-import { of } from 'rxjs';
+import { clickButtonByDataTestAttr, getByDataTestAttr } from '../common/utils/utils-tests';
+import { of, throwError } from 'rxjs';
 import { FreeChampionsDTO } from '../common/models/freeChampionsDTO';
 import { GetVersionsService } from '../services/versions/get-versions.service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('Home', () => {
   let component: HomeComponent;
@@ -100,7 +100,7 @@ describe('Home', () => {
     await TestBed.configureTestingModule({
       imports: [],
       declarations: [],
-      providers: [provideHttpClient(withInterceptorsFromDi())],
+      providers: [GetChampionsService, GetVersionsService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     getChampionService = TestBed.inject(GetChampionsService);
@@ -140,5 +140,33 @@ describe('Home', () => {
     expect(component.freeChampionsForBeginnersDataSignal()).not.toBeNull;
     expect(component.freeChampionsForBeginnersDataSignal()).toEqual([championDataMock.data.Ahri]);
     expect(component.freeChampionsDataSignal()).toEqual([championDataMock.data.Aatrox]);
+  });
+
+  it('Should call set method from isFreeChampErrorSignal with true as value if back end throw an error', () => {
+    // GIVEN
+    spyOn(getChampionService, 'getFreeChampions').and.returnValue(throwError(() => new Error()));
+    const isFreeChampErrorSignalSpy = spyOn(getChampionService.isFreeChampErrorSignal, 'set').and.stub();
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(isFreeChampErrorSignalSpy).toHaveBeenCalledWith(true);
+  });
+
+  ['button-accordeon-free-champs', 'button-accordeon-free-champs-beginners'].forEach((accordeonButton) => {
+    fit('Should display an error message in the template if isFreeChampErrorSignal is true for the both free champs sections', () => {
+      // GIVEN
+      getChampionService.isFreeChampErrorSignal.set(true);
+
+      // WHEN
+      fixture.detectChanges();
+      clickButtonByDataTestAttr(fixture.debugElement, accordeonButton);
+
+      // THEN
+      const errorMessageHtmlElement = getByDataTestAttr(fixture.debugElement, 'error-message-free-champs');
+      expect(errorMessageHtmlElement).toBeTruthy();
+      expect(errorMessageHtmlElement?.textContent).toContain("Une erreur s'est produite pendant le chargement des champions gratuits");
+    });
   });
 });

@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GetChampionsService } from './services/champions/get-champions.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GetVersionsService } from './services/versions/get-versions.service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('App', () => {
   let fixture: ComponentFixture<App>;
@@ -14,7 +15,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideHttpClient(withInterceptorsFromDi())],
+      providers: [GetChampionsService, GetVersionsService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     getChampionService = TestBed.inject(GetChampionsService);
     getVersionsService = TestBed.inject(GetVersionsService);
@@ -86,5 +87,19 @@ describe('App', () => {
     expect(getChampionServiceSpy).toHaveBeenCalledWith('14.10.2');
     expect(championDataSignalSpy).toHaveBeenCalledWith(ChampionDataMock);
     expect(lastVersionlolDTOSignalSpy).toHaveBeenCalledWith('14.10.2');
+  });
+
+  it('Should call set method from isFreeChampErrorSignal with true as value if back end throw an error', () => {
+    // GIVEN
+    spyOn(getChampionService, 'getAllChampionsInfos').and.returnValue(throwError(() => new Error()));
+    spyOn(getVersionsService, 'getAllVersionsLol').and.returnValue(of(['14.10.2', '13.10.2']));
+    spyOn(getChampionService.championDataSignal, 'set').and.stub();
+    const isFreeChampErrorSignalSpy = spyOn(getChampionService.isFreeChampErrorSignal, 'set').and.stub();
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(isFreeChampErrorSignalSpy).toHaveBeenCalledWith(true);
   });
 });

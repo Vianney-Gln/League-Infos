@@ -121,6 +121,22 @@ describe('PlayersService', () => {
     req.flush(accountDTOMock);
   });
 
+  it('should call getAccountByRiotId', () => {
+    // GIVEN
+    const accountDTOMock = { puuid: '12345', gameName: 'test', tagLine: 'EUW' } as AccountDTO;
+
+    // WHEN
+    service.getAccountByRiotId('test', 'euw').subscribe((res) => {
+      expect(res).toBe(accountDTOMock);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/account/by-riot-id/test/euw';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush(accountDTOMock);
+  });
+
   it('should call getSUmmonerByPuuid', () => {
     // GIVEN
     const summonerDTOMock = {

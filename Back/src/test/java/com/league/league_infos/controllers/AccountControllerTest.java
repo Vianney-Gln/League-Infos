@@ -47,4 +47,24 @@ public class AccountControllerTest {
 
         verify(accountService, times(1)).getAccountByPuuid("123987");
     }
+
+    @Test
+    @DisplayName("should return dto and status Ok")
+    void getAccountByGameName_succes() throws Exception {
+        // GIVEN
+        AccountDTO accountDTO = new AccountDTO.Builder()
+                .gameName("Test")
+                .puuid("2445545445")
+                .tagLine("EUW")
+                .build();
+
+        when(accountService.getAccountByRiotId(anyString(), anyString())).thenReturn(ResponseEntity.ok(accountDTO));
+
+        // WHEN + THEN
+        mockMvc.perform(get("/account/by-riot-id/Test/EUW"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(accountDTO)));
+
+        verify(accountService, times(1)).getAccountByRiotId("Test", "EUW");
+    }
 }

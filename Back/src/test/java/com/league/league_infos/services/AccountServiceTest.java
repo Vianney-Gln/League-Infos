@@ -84,7 +84,6 @@ public class AccountServiceTest {
                 .puuid("2445545445")
                 .tagLine("euw")
                 .build();
-        ResponseEntity<AccountDTO> responseEntity = ResponseEntity.ok(mockResponse);
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404)));
 
         // WHEN + THEN
@@ -102,7 +101,6 @@ public class AccountServiceTest {
                 .puuid("2445545445")
                 .tagLine("euw")
                 .build();
-        ResponseEntity<AccountDTO> responseEntity = ResponseEntity.ok(mockResponse);
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(400)));
 
         // WHEN + THEN
@@ -120,7 +118,6 @@ public class AccountServiceTest {
                 .puuid("2445545445")
                 .tagLine("euw")
                 .build();
-        ResponseEntity<AccountDTO> responseEntity = ResponseEntity.ok(mockResponse);
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new ResourceAccessException(ERROR_BUSINESS_3.getLibelle()));
 
         // WHEN + THEN

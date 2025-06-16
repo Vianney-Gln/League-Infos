@@ -5,7 +5,7 @@ export function getByDataTestAttr(element: DebugElement, attrValue: string): HTM
 }
 
 export function clickButtonByDataTestAttr(element: DebugElement, attrValue: string): void {
-  const button: HTMLElement | null = element.nativeElement.querySelector(`button[data-test="${attrValue}"]`);
+  const button: HTMLElement | null = element.nativeElement.querySelector(`[data-test="${attrValue}"]`);
   if (button) {
     button.click();
   }

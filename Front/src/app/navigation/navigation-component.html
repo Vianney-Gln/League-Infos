@@ -1,9 +1,16 @@
 <div class="row navBar">
-  <div class="col-4 logo-league-infos">
+  <div data-test="logo-league-infos" (click)="redirectHome()" class="col-3 logo-league-infos">
     <img src="./images/Logo-league-infos.png" alt="League Infos Logo" />
   </div>
-  <div class="col-8 input-search-container d-flex justify-content-center align-items-center">
-    <input placeholder="rechercher invocateur" type="text" />
-    <i class="bi bi-search p-2 search-icone"></i>
+  <div class="col-4 input-search-container d-flex justify-content-end align-items-center">
+    <div class="container-input-search">
+      <input data-test="search-summoner-input" (keyup.enter)="onSearch()" #searchSummoner placeholder="Exemple#TAG" type="text" />
+      <i data-test="search-summoner-icone" (click)="onSearch()" class="bi bi-search search-icone"></i>
+    </div>
   </div>
+  @if(INVALID_SEARCH_SUMMONER_ERROR){
+  <div class="col-3">
+    <span class="error-message" data-test="message-error-search-summoner">{{INVALID_SEARCH_SUMMONER_ERROR}}</span>
+  </div>
+  }
 </div>

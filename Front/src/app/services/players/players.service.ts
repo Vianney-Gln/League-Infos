@@ -34,4 +34,9 @@ export class PlayersService {
     const url = `${environment.apiBaseUrl}/summoner/${puuid}`;
     return this.http.get<SummonerDTO>(url);
   }
+
+  getAccountByRiotId(gameName: string, tagLine: string): Observable<AccountDTO> {
+    const url = `${environment.apiBaseUrl}/account/by-riot-id/${gameName}/${tagLine}`;
+    return this.http.get<AccountDTO>(url);
+  }
 }

@@ -1,5 +1,6 @@
 .logo-league-infos img {
   width: 100px;
+  cursor: pointer;
 }
 
 .navBar {
@@ -8,7 +9,6 @@
   color: #c8aa6e;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   font-family: "Beaufort for LOL", "Segoe UI", Arial, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   a {
@@ -28,29 +28,25 @@ input[type="text"] {
   color: #c8aa6e;
   border: 2px solid #785a28;
   border-radius: 6px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
   padding: 8px 16px;
   font-size: 1rem;
   font-family: "Segoe UI", Arial, sans-serif;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   transition: border-color 0.2s;
-  border-right: none;
 }
 
-input[type="text"]:focus {
-  outline: none;
-  border-color: #c8aa6e;
-  box-shadow: 0 0 8px #c8aa6e55;
-}
-
-.search-icone {
-  border: 2px solid #785a28;
-  border-left: none;
-  input[type="text"]:focus + & {
+.container-input-search {
+  position: relative;
+  input[type="text"]:focus {
     outline: none;
     border-color: #c8aa6e;
     box-shadow: 0 0 8px #c8aa6e55;
-    border-left: none;
   }
+}
+
+.search-icone {
+  cursor: pointer;
+  position: absolute;
+  right: 5%;
+  top: 25%;
 }

@@ -1,5 +1,9 @@
-/* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
+
+:root {
+  --color-gold-lol-1: #c8aa6e;
+  --color-black-trans-1: #0a0a0a3f;
+}
 
 body,
 html {
@@ -25,4 +29,10 @@ html {
 
 .spinner-custom {
   color: #f0e6d2 !important;
+}
+
+.container {
+  background-color: #0a0a0a;
+  padding: 2rem;
+  border-radius: 12px;
 }

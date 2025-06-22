@@ -8,6 +8,8 @@ import { environment } from '../../../environments/environment';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { importProvidersFrom } from '@angular/core';
+import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
+import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 
 describe('PlayersService', () => {
   let service: PlayersService;
@@ -159,5 +161,62 @@ describe('PlayersService', () => {
     const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(summonerDTOMock);
+  });
+
+  it('should call getLeagueEntryByPuuid', () => {
+    // GIVEN
+    const leagueEntryDTOMockSet = {
+      leagueId: 'league123',
+      puuid: '1222xx',
+      summonerId: 'summoner123',
+      summonerName: 'SummonerName',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'CHALLENGER',
+      rank: 'I',
+      leaguePoints: 1000,
+      wins: 100,
+      losses: 50,
+      hotStreak: false,
+      veteran: false,
+      freshBlood: true,
+      inactive: false,
+    } as LeagueEntryDTO;
+
+    // WHEN
+    service.getLeagueEntryByPuuid('1222xx').subscribe((res) => {
+      expect(res[0]).toEqual(leagueEntryDTOMockSet);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/league-entries-by-puuid/1222xx';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush([leagueEntryDTOMockSet]);
+  });
+
+  it('should call getChampionMasteriesDTO', () => {
+    // GIVEN
+    const championMasteriesDTOMock = {
+      puuid: '1222xx',
+      championId: 266,
+      championLevel: 7,
+      championPoints: 123456,
+      lastPlayTime: 1680000000000,
+      championPointsSinceLastLevel: 0,
+      championPointsUntilNextLevel: 0,
+      markRequiredForNextLevel: 12,
+      chestGranted: true,
+    } as ChampionMasteryDto;
+
+    // WHEN
+    service.getChampionMasteriesDTO('1222xx').subscribe((res) => {
+      expect(res[0]).toEqual(championMasteriesDTOMock);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/champion-masteries/1222xx/top';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush([championMasteriesDTOMock]);
   });
 });

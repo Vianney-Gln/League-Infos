@@ -1,19 +1,12 @@
-.container {
-  background-color: #0a0a0a;
-  padding: 2rem;
-  border-radius: 12px;
-}
-
 h2,
 .ngbAccordionButton {
-  color: #b0892b; /* Doré chaleureux LoL */
-  font-family: "Trajan Pro", serif; /* Typo proche de LoL, à importer si possible */
+  color: #b0892b;
+  font-family: "Trajan Pro", serif;
   text-shadow: 1px 1px 0 #5c4510;
   margin-bottom: 1.5rem;
   letter-spacing: 1.2px;
 }
 
-/* Cartes champions */
 .champion-card {
   border-radius: 12px;
   position: relative;
@@ -64,7 +57,6 @@ h2,
   transition: transform 0.3s ease;
 }
 
-/* Overlay dégradé LoL style */
 .overlay {
   position: absolute;
   bottom: 0;
@@ -75,7 +67,6 @@ h2,
   pointer-events: none;
 }
 
-/* Texte nom champion */
 .card-title {
   font-size: 0.85rem;
   color: #b0892b;
@@ -84,7 +75,6 @@ h2,
   margin: 0;
 }
 
-/* Hover style */
 .champion-card:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 18px rgba(255, 215, 0, 0.7);

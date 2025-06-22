@@ -3,15 +3,15 @@ package com.league.league_infos.models.dto;
 public class LeagueItemDTO {
     private String summonerId;
     private String puuid;
-    private int leaguePoints;
     private String rank;
+    private int leaguePoints;
     private int wins;
     private int losses;
     private boolean veteran;
     private boolean inactive;
     private boolean freshBlood;
     private boolean hotStreak;
-    private MiniSeriesDTO miniSeriesDTO;
+    private MiniSeriesDTO miniSeries;
 
     public String getSummonerId() {
         return summonerId;
@@ -93,19 +93,19 @@ public class LeagueItemDTO {
         this.hotStreak = hotStreak;
     }
 
-    public MiniSeriesDTO getMiniSeriesDTO() {
-        return miniSeriesDTO;
+    public MiniSeriesDTO getMiniSeries() {
+        return miniSeries;
     }
 
-    public void setMiniSeriesDTO(MiniSeriesDTO miniSeriesDTO) {
-        this.miniSeriesDTO = miniSeriesDTO;
+    public void setMiniSeries(MiniSeriesDTO miniSeries) {
+        this.miniSeries = miniSeries;
     }
 
     public static class Builder {
         private String summonerId;
         private String puuid;
-        private int leaguePoints;
         private String rank;
+        private int leaguePoints;
         private int wins;
         private int losses;
         private boolean veteran;
@@ -181,7 +181,7 @@ public class LeagueItemDTO {
             dto.setInactive(this.inactive);
             dto.setFreshBlood(this.freshBlood);
             dto.setHotStreak(this.hotStreak);
-            dto.setMiniSeriesDTO(this.miniSeriesDTO);
+            dto.setMiniSeries(this.miniSeriesDTO);
             return dto;
         }
     }

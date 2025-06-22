@@ -1,0 +1,41 @@
+.main-champion-banner {
+  display: flex;
+  height: 180px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right center;
+}
+
+.icon-player-container .icon-player-image {
+  width: 80px;
+  height: 80px;
+}
+
+.text-gameName-level {
+  background-color: var(--color-black-trans-1);
+}
+
+.first-entry {
+  border-right: 2px solid var(--color-gold-lol-1);
+}
+
+.second-entry {
+  border-left: 2px solid var(--color-gold-lol-1);
+}
+
+.league-entry {
+  color: var(--color-gold-lol-1);
+  position: relative;
+}
+
+.img-rank-container .img-rank {
+  height: 450px;
+  position: absolute;
+  top: -100px;
+  right: -200px;
+}
+
+.data p {
+  margin: 0;
+  padding: 0;
+}

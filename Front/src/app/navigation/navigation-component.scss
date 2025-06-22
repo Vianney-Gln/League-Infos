@@ -4,15 +4,15 @@
 }
 
 .navBar {
-  background-color: #1a2328;
-  border-bottom: 3px solid #c8aa6e;
-  color: #c8aa6e;
+  background: linear-gradient(135deg, #0a1428 0%, #1e283e 100%);
+  border-bottom: 3px solid var(--color-gold-lol-1);
+  color: var(--color-gold-lol-1);
   display: flex;
   align-items: center;
   font-family: "Beaufort for LOL", "Segoe UI", Arial, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   a {
-    color: #c8aa6e;
+    color: var(--color-gold-lol-1);
     text-decoration: none;
     margin: 0 16px;
     font-weight: bold;
@@ -25,7 +25,7 @@
 
 input[type="text"] {
   background: #1a2328;
-  color: #c8aa6e;
+  color: var(--color-gold-lol-1);
   border: 2px solid #785a28;
   border-radius: 6px;
   padding: 8px 16px;
@@ -39,7 +39,7 @@ input[type="text"] {
   position: relative;
   input[type="text"]:focus {
     outline: none;
-    border-color: #c8aa6e;
+    border-color: var(--color-gold-lol-1);
     box-shadow: 0 0 8px #c8aa6e55;
   }
 }

@@ -3,12 +3,12 @@
   border: 1px solid #c8aa6e;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background-color: #1a2328;
+  background: linear-gradient(85deg, #0a1428 0%, #1e283e 100%);
 }
 
 h2 {
-  color: #b0892b; /* Doré chaleureux LoL */
-  font-family: "Trajan Pro", serif; /* Typo proche de LoL, à importer si possible */
+  color: #b0892b;
+  font-family: "Trajan Pro", serif;
   text-shadow: 1px 1px 0 #3d331b;
   margin-bottom: 1.5rem;
   letter-spacing: 1.2px;

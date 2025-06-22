@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
+import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
+import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +40,15 @@ export class PlayersService {
   getAccountByRiotId(gameName: string, tagLine: string): Observable<AccountDTO> {
     const url = `${environment.apiBaseUrl}/account/by-riot-id/${gameName}/${tagLine}`;
     return this.http.get<AccountDTO>(url);
+  }
+
+  getLeagueEntryByPuuid(puuid: string): Observable<LeagueEntryDTO[]> {
+    const url = `${environment.apiBaseUrl}/league-entries-by-puuid/${puuid}`;
+    return this.http.get<LeagueEntryDTO[]>(url);
+  }
+
+  getChampionMasteriesDTO(puuid: string): Observable<ChampionMasteryDto[]> {
+    const url = `${environment.apiBaseUrl}/champion-masteries/${puuid}/top`;
+    return this.http.get<ChampionMasteryDto[]>(url);
   }
 }

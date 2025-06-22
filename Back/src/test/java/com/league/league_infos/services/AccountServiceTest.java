@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest {
+class AccountServiceTest {
     @InjectMocks
     private AccountService accountService;
 
@@ -79,11 +79,6 @@ public class AccountServiceTest {
     @DisplayName("Should throw a 404 not found exception")
     void getAccountByGameName_echec_1() {
         // GIVEN
-        AccountDTO mockResponse = new AccountDTO.Builder()
-                .gameName("Test")
-                .puuid("2445545445")
-                .tagLine("euw")
-                .build();
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404)));
 
         // WHEN + THEN
@@ -96,11 +91,6 @@ public class AccountServiceTest {
     @DisplayName("Should throw a 400 bad request exception")
     void getAccountByGameName_echec_2() {
         // GIVEN
-        AccountDTO mockResponse = new AccountDTO.Builder()
-                .gameName("Test")
-                .puuid("2445545445")
-                .tagLine("euw")
-                .build();
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(400)));
 
         // WHEN + THEN
@@ -113,11 +103,6 @@ public class AccountServiceTest {
     @DisplayName("Should throw a 503 unavailable service exception")
     void getAccountByGameName_echec_3() {
         // GIVEN
-        AccountDTO mockResponse = new AccountDTO.Builder()
-                .gameName("Test")
-                .puuid("2445545445")
-                .tagLine("euw")
-                .build();
         when(restTemplate.exchange(ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/Test/euw", HttpMethod.GET, null, AccountDTO.class)).thenThrow(new ResourceAccessException(ERROR_BUSINESS_3.getLibelle()));
 
         // WHEN + THEN

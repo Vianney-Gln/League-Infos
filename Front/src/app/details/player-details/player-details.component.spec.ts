@@ -321,4 +321,116 @@ describe('PlayerDetailsComponent', () => {
     );
     expect(blocDataLeagueEntry).toBeFalsy();
   });
+
+  it('should display a message if data is missing for RANKED_SOLO_5x5', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: 'mock-puuid',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    const blocUnrankedSolo = getByDataTestAttr(fixture.debugElement, 'bloc-unranked-solo');
+    expect(blocUnrankedSolo).toBeTruthy();
+    expect(blocUnrankedSolo?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked Solo");
+    expect(component.isUnrankedSoloQ).toBeTrue();
+    expect(component.isUnrankedFlex).toBeFalse();
+  });
+
+  it('should display a message if data is missing for RANKED_FLEX_SR', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: 'mock-puuid',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    const blocUnrankedFlex = getByDataTestAttr(fixture.debugElement, 'bloc_unranked_flex');
+    expect(blocUnrankedFlex).toBeTruthy();
+    expect(blocUnrankedFlex?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked Flex");
+    expect(component.isUnrankedSoloQ).toBeFalse();
+    expect(component.isUnrankedFlex).toBeTrue();
+  });
 });

@@ -7,6 +7,7 @@ import { GetVersionsService } from '../../services/versions/get-versions.service
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
 import { CommonModule } from '@angular/common';
 import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
+import { QueueTypeEnum } from '../../common/constants/queueTypeEnum';
 
 @Component({
   selector: 'app-player-details',
@@ -23,6 +24,8 @@ export class PlayerDetailsComponent {
   leagueEntriesSignal: WritableSignal<LeagueEntryDTO[]> = signal([]);
   championMasteriesSignal: WritableSignal<ChampionMasteryDto[]> = signal([]);
   urlBackgroundBannerSignal: WritableSignal<string> = signal('');
+  isUnrankedFlex = false;
+  isUnrankedSoloQ = false;
   tagLine: string = '';
   isLoading = false;
 
@@ -53,6 +56,8 @@ export class PlayerDetailsComponent {
       .pipe(
         switchMap(({ leagueEntries, puuid }) => {
           this.leagueEntriesSignal.set(leagueEntries);
+          this.isUnrankedFlex = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_FLEX_SR) ? false : true;
+          this.isUnrankedSoloQ = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_SOLO_5x5) ? false : true;
           return this.playerService.getChampionMasteriesDTO(puuid);
         })
       )

@@ -2,11 +2,13 @@ import { Component, computed, OnDestroy, OnInit, Signal, signal, ViewEncapsulati
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { PlayersService } from '../../services/players/players.service';
 import { LeagueItemDTO, LeagueListDTO } from '../../common/models/leagueListDTO';
-import { Subscription, switchMap, tap } from 'rxjs';
+import { map, Subscription, switchMap, tap } from 'rxjs';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { CommonModule } from '@angular/common';
+import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hero-component',
@@ -17,7 +19,7 @@ import { CommonModule } from '@angular/common';
   encapsulation: ViewEncapsulation.None,
 })
 export class HeroComponent implements OnInit, OnDestroy {
-  constructor(private playersService: PlayersService, private getVersionsService: GetVersionsService) {}
+  constructor(private playersService: PlayersService, private getVersionsService: GetVersionsService, private router: Router) {}
 
   leagueChallengerSoloQSubscription: Subscription | null = null;
   leagueChallengerFlexSubscription: Subscription | null = null;
@@ -33,8 +35,13 @@ export class HeroComponent implements OnInit, OnDestroy {
   leagueBestPlayerFlex: string | undefined = '';
   gameNameBestChalPlayerSoloQ: string | undefined = '';
   gameNameBestChalPlayerFlex: string | undefined = '';
+  tagLineChalFlexPlayer: string | undefined = '';
+  tagLineChalSoloQPlayer: string | undefined = '';
   isCarouselLoading: boolean = false;
   isCarouselError: boolean = false;
+
+  urlBackgroundBannerSoloQSignal: WritableSignal<string> = signal('');
+  urlBackgroundBannerFlexQSignal: WritableSignal<string> = signal('');
 
   ngOnInit(): void {
     this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
@@ -57,13 +64,24 @@ export class HeroComponent implements OnInit, OnDestroy {
         }),
         switchMap((account: AccountDTO) => {
           this.gameNameBestChalPlayerSoloQ = account.gameName;
-          this.isCarouselLoading = false;
+          this.tagLineChalSoloQPlayer = account.tagLine;
           return this.playersService.getSummonerByPuuid(account.puuid);
+        }),
+        switchMap((summoner: SummonerDTO) => {
+          return this.playersService
+            .getChampionMasteriesDTO(summoner.puuid)
+            .pipe(map((championMasteries: ChampionMasteryDto[]) => ({ championMasteries, summoner })));
         })
       )
       .subscribe({
-        next: (summoner: SummonerDTO) => {
+        next: ({ championMasteries, summoner }) => {
+          this.isCarouselLoading = false;
           this.firstChallengerSummonerSoloQSignal.set(summoner);
+          if (championMasteries.length) {
+            this.urlBackgroundBannerSoloQSignal.set(`url(https://lolg-cdn.porofessor.gg/img/d/champion-banners/${championMasteries[0].championId}.jpg)`);
+          } else {
+            this.urlBackgroundBannerSoloQSignal.set(`url(images/default-banner.png)`);
+          }
         },
         error: (err) => {
           console.log(err);
@@ -88,13 +106,24 @@ export class HeroComponent implements OnInit, OnDestroy {
         }),
         switchMap((account: AccountDTO) => {
           this.gameNameBestChalPlayerFlex = account.gameName;
-          this.isCarouselLoading = false;
+          this.tagLineChalFlexPlayer = account.tagLine;
           return this.playersService.getSummonerByPuuid(account.puuid);
+        }),
+        switchMap((summoner: SummonerDTO) => {
+          return this.playersService
+            .getChampionMasteriesDTO(summoner.puuid)
+            .pipe(map((championMasteries: ChampionMasteryDto[]) => ({ championMasteries, summoner })));
         })
       )
       .subscribe({
-        next: (summoner: SummonerDTO) => {
+        next: ({ championMasteries, summoner }) => {
+          this.isCarouselLoading = false;
           this.firstChallengerSummonerFlexSignal.set(summoner);
+          if (championMasteries.length) {
+            this.urlBackgroundBannerFlexQSignal.set(`url(https://lolg-cdn.porofessor.gg/img/d/champion-banners/${championMasteries[0].championId}.jpg)`);
+          } else {
+            this.urlBackgroundBannerFlexQSignal.set(`url(images/default-banner.png)`);
+          }
         },
         error: (err) => {
           console.log(err);
@@ -104,6 +133,11 @@ export class HeroComponent implements OnInit, OnDestroy {
       });
   }
 
+  goToPlayerDataLeagueEntries(gameName: string, tagLine: string) {
+    const url = `Detail/${gameName}#${tagLine}`;
+    this.router.navigate([url]);
+  }
+
   ngOnDestroy(): void {
     if (this.leagueChallengerSoloQSubscription) {
       this.leagueChallengerSoloQSubscription.unsubscribe();
@@ -111,10 +145,6 @@ export class HeroComponent implements OnInit, OnDestroy {
 
     if (this.leagueChallengerFlexSubscription) {
       this.leagueChallengerFlexSubscription.unsubscribe();
-    }
-
-    if (this.getAccountSubscription) {
-      this.getAccountSubscription.unsubscribe();
     }
   }
 }

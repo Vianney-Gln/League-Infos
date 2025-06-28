@@ -2,8 +2,13 @@
 <div class="d-flex justify-content-center">
   <ngb-carousel class="w-50" [interval]="4000" [pauseOnHover]="true" [wrap]="true">
     <ng-template ngbSlide>
-      <div class="element-carrousel-challenger">
-        <div class="row">
+      <div
+        data-test="bloc-best-challenger-player-soloQ"
+        (click)="goToPlayerDataLeagueEntries(gameNameBestChalPlayerSoloQ!, tagLineChalSoloQPlayer!)"
+        [ngStyle]="{ 'background-image': urlBackgroundBannerSoloQSignal() }"
+        class="element-carrousel-challenger"
+      >
+        <div class="row h-100">
           <div class="col d-flex justify-content-center mt-3">
             <div class="profilIcone">
               <img
@@ -19,20 +24,25 @@
             </div>
             <h2 class="text-center ms-2">{{ gameNameBestChalPlayerSoloQ }}</h2>
           </div>
-          <div class="row">
-            <div class="col text-center">
-              <span>Numéro 1 Solo Queue EUW - {{ firstChallengerPlayerSoloQSignal()?.leaguePoints + " LP" }}</span
-              ><br />
-              <span>{{ firstChallengerPlayerSoloQSignal()?.wins + " V /" + firstChallengerPlayerSoloQSignal()?.losses + " D" }} </span>
-              <br />
+          <div class="row d-flex align-items-end">
+            <div class="col d-flex justify-content-between">
+              <span class="text-hero ms-2 ps-2">Numéro 1 Solo Queue EUW - {{ firstChallengerPlayerSoloQSignal()?.leaguePoints + " LP" }}</span>
+              <span class="text-hero ps-2 pe-2">
+                {{ firstChallengerPlayerSoloQSignal()?.wins + " V /" + firstChallengerPlayerSoloQSignal()?.losses + " D" }}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </ng-template>
     <ng-template ngbSlide>
-      <div class="element-carrousel-challenger">
-        <div class="row">
+      <div
+        data-test="bloc-best-challenger-player-flexQ"
+        (click)="goToPlayerDataLeagueEntries(gameNameBestChalPlayerFlex!, tagLineChalFlexPlayer!)"
+        [ngStyle]="{ 'background-image': urlBackgroundBannerFlexQSignal() }"
+        class="element-carrousel-challenger"
+      >
+        <div class="row h-100">
           <div class="col d-flex justify-content-center mt-3">
             <div class="profilIcone">
               <img
@@ -48,12 +58,12 @@
             </div>
             <h2 class="text-center ms-2">{{ gameNameBestChalPlayerFlex }}</h2>
           </div>
-          <div class="row">
-            <div class="col text-center">
-              <span>Numéro 1 Flex Queue EUW - {{ firstChallengerPlayerFlexSignal()?.leaguePoints + " LP" }}</span
-              ><br />
-              <span>{{ firstChallengerPlayerFlexSignal()?.wins + " V /" + firstChallengerPlayerFlexSignal()?.losses + " D" }} </span>
-              <br />
+          <div class="row d-flex align-items-end">
+            <div class="col d-flex justify-content-between">
+              <span class="text-hero ms-2 ps-2 pe-2">Numéro 1 Flex Queue EUW - {{ firstChallengerPlayerFlexSignal()?.leaguePoints + " LP" }}</span>
+              <span class="text-hero ps-2 pe-2"
+                >{{ firstChallengerPlayerFlexSignal()?.wins + " V /" + firstChallengerPlayerFlexSignal()?.losses + " D" }}
+              </span>
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="row mt-2">
-    @if(leagueEntriesSignal().length){ @for (leagueEntry of leagueEntriesSignal(); track $index; let i = $index) {
+    @for (leagueEntry of leagueEntriesSignal(); track $index; let i = $index) {
     <div data-test="bloc-data-league-entry" class="col-6 league-entry" [ngClass]="{ 'first-entry': i === 0, 'second-entry': i === 1 }">
       <h3 class="text-center">{{ leagueEntry.queueType }}</h3>
       <div class="data mt-4 pt-4 pb-4">
@@ -31,7 +31,21 @@
         <img class="img-rank" alt="tier emblem" [src]="computeTierEmblem(leagueEntry.tier)" />
       </div>
     </div>
-    }}@else {
+    @if(isUnrankedFlex){
+    <div class="col-6 league-entry">
+      <h3 class="text-center">RANKED_FLEX_SR</h3>
+      <div class="data mt-4 pt-4 pb-4">
+        <p data-test="bloc_unranked_flex" class="text-center">Ce joueur n'est pas encore classé en Ranked Flex</p>
+      </div>
+    </div>
+    } @if(isUnrankedSoloQ){
+    <div class="col-6 league-entry">
+      <h3 class="text-center">RANKED_SOLO_5x5</h3>
+      <div class="data mt-4 pt-4 pb-4">
+        <p data-test="bloc-unranked-solo" class="text-center">Ce joueur n'est pas encore classé en Ranked Solo</p>
+      </div>
+    </div>
+    } }@if(!leagueEntriesSignal().length) {
     <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
       <h3>Il n'y a pas d'informations sur ce joueur.</h3>
       <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>

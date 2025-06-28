@@ -1,10 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { INVALID_SEARCH_SUMMONER_ERROR } from '../common/constants/errors';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-navigation-component',
   standalone: true,
+  imports: [NgbTooltipModule],
   templateUrl: './navigation-component.html',
   styleUrl: './navigation-component.scss',
 })

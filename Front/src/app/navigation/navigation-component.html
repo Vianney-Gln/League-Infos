@@ -4,7 +4,15 @@
   </div>
   <div class="col-4 input-search-container d-flex justify-content-end align-items-center">
     <div class="container-input-search">
-      <input data-test="search-summoner-input" (keyup.enter)="onSearch()" #searchSummoner placeholder="Exemple#TAG" type="text" />
+      <input
+        ngbTooltip="Rechercher un joueur"
+        placement="bottom"
+        data-test="search-summoner-input"
+        (keyup.enter)="onSearch()"
+        #searchSummoner
+        placeholder="Exemple#TAG"
+        type="text"
+      />
       <i data-test="search-summoner-icone" (click)="onSearch()" class="bi bi-search search-icone"></i>
     </div>
   </div>

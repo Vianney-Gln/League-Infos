@@ -16,7 +16,6 @@
               @for (champion of freeChampionsDataSignal(); track champion.id) {
               <div class="m-1 card champion-card text-white overflow-hidden position-relative">
                 <img
-                  [title]="champion.name"
                   [alt]="champion.name"
                   [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full"
                 />
@@ -47,10 +46,9 @@
         <div ngbAccordionBody>
           <ng-template>
             <div class="row d-flex justify-content-start">
-              @for (champion of freeChampionsForBeginnersDataSignal(); track champion.id) {s
+              @for (champion of freeChampionsForBeginnersDataSignal(); track champion.id) {
               <div class="m-1 card champion-card text-white overflow-hidden position-relative">
                 <img
-                  [title]="champion.name"
                   [alt]="champion.name"
                   [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full"
                 />

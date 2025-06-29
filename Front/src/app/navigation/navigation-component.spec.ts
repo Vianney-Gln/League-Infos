@@ -45,7 +45,7 @@ describe('NavigationComponent', () => {
     fixture.detectChanges();
 
     // THEN
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/Detail', 'summonerName#EUW']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/Detail-summoner', 'summonerName#EUW']);
     const errorMessageHtmlElement = getByDataTestAttr(fixture.debugElement, 'message-error-search-summoner');
     expect(component.INVALID_SEARCH_SUMMONER_ERROR).toEqual('');
     expect(errorMessageHtmlElement).toBeFalsy;

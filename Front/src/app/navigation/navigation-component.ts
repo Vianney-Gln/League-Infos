@@ -29,7 +29,7 @@ export class NavigationComponent {
   onSearch() {
     const value = this.searchSummonerInputRef.nativeElement.value;
     if (value && this.isValidRiotId(value)) {
-      this.router.navigate(['/Detail', value]);
+      this.router.navigate(['/Detail-summoner', value]);
       this.INVALID_SEARCH_SUMMONER_ERROR = '';
     } else {
       this.INVALID_SEARCH_SUMMONER_ERROR = INVALID_SEARCH_SUMMONER_ERROR;

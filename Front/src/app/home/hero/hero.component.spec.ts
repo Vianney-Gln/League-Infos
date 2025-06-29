@@ -309,7 +309,7 @@ describe('HeroComponentComponent', () => {
       slideClickable?.click();
 
       // THEN
-      expect(routerSpy).toHaveBeenCalledWith(['Detail/test name#EUW']);
+      expect(routerSpy).toHaveBeenCalledWith(['Detail-summoner/test name#EUW']);
       fixture.destroy();
     });
   });

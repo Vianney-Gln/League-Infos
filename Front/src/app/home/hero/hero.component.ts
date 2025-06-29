@@ -134,7 +134,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   goToPlayerDataLeagueEntries(gameName: string, tagLine: string) {
-    const url = `Detail/${gameName}#${tagLine}`;
+    const url = `Detail-summoner/${gameName}#${tagLine}`;
     this.router.navigate([url]);
   }
 

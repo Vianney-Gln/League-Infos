@@ -3,32 +3,52 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
-import { ACCOUNT_BY_PUUID_API_URL, CHALLENGERS_LEAGUE_API_URL, SUMMONER_BY_PUUID_API_URL } from '../../common/constants/api-urls';
-import { RANKED_FLEX_SR, RANKED_SOLO_5x5 } from '../../common/constants/queues';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
+import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
+import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayersService {
   constructor(private http: HttpClient) {}
-  header = { 'X-Riot-Token': environment.apiKey };
-  leagueChallengerListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
+
+  leagueChallengerSoloQListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
+  leagueChallengerFlexListDTOSignal: WritableSignal<LeagueListDTO | null> = signal<LeagueListDTO | null>(null);
 
   getLeagueChallengerDataSoloQ(): Observable<LeagueListDTO> {
-    return this.http.get<LeagueListDTO>(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_SOLO_5x5}`, { headers: this.header });
+    const url = environment.apiBaseUrl + '/league-challengers-solo-queue';
+    return this.http.get<LeagueListDTO>(url);
   }
 
   getLeagueChallengerDataFlexQ(): Observable<LeagueListDTO> {
-    return this.http.get<LeagueListDTO>(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_FLEX_SR}`, { headers: this.header });
+    const url = environment.apiBaseUrl + '/league-challengers-flex-queue';
+    return this.http.get<LeagueListDTO>(url);
   }
 
   getAccountByPuuid(puuid: string): Observable<AccountDTO> {
-    return this.http.get<AccountDTO>(`${ACCOUNT_BY_PUUID_API_URL}/${puuid}`, { headers: this.header });
+    const url = `${environment.apiBaseUrl}/account/${puuid}`;
+    return this.http.get<AccountDTO>(url);
   }
 
   getSummonerByPuuid(puuid: string): Observable<SummonerDTO> {
-    return this.http.get<SummonerDTO>(`${SUMMONER_BY_PUUID_API_URL}/${puuid}`, { headers: this.header });
+    const url = `${environment.apiBaseUrl}/summoner/${puuid}`;
+    return this.http.get<SummonerDTO>(url);
+  }
+
+  getAccountByRiotId(gameName: string, tagLine: string): Observable<AccountDTO> {
+    const url = `${environment.apiBaseUrl}/account/by-riot-id/${gameName}/${tagLine}`;
+    return this.http.get<AccountDTO>(url);
+  }
+
+  getLeagueEntryByPuuid(puuid: string): Observable<LeagueEntryDTO[]> {
+    const url = `${environment.apiBaseUrl}/league-entries-by-puuid/${puuid}`;
+    return this.http.get<LeagueEntryDTO[]>(url);
+  }
+
+  getChampionMasteriesDTO(puuid: string): Observable<ChampionMasteryDto[]> {
+    const url = `${environment.apiBaseUrl}/champion-masteries/${puuid}/top`;
+    return this.http.get<ChampionMasteryDto[]>(url);
   }
 }

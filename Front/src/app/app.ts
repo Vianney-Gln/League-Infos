@@ -31,7 +31,10 @@ export class App implements OnInit, OnDestroy {
         next: (data) => {
           this.getChampionService.championDataSignal.set(data);
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          this.getChampionService.isFreeChampErrorSignal.set(true);
+          console.log(error);
+        },
       });
   }
 

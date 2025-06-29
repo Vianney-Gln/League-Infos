@@ -2,9 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetVersionsService } from './get-versions.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { environment } from '../../../environments/environment';
-import { CHALLENGERS_LEAGUE_API_URL, GET_VERSIONS_LOL_DRAGON_URL } from '../../common/constants/api-urls';
-import { RANKED_FLEX_SR } from '../../common/constants/queues';
+import { GET_VERSIONS_LOL_DRAGON_URL } from '../../common/constants/api-urls';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('GetVersionsService', () => {
@@ -13,11 +11,13 @@ describe('GetVersionsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [GetVersionsService, provideHttpClient(), provideHttpClientTesting()],
     });
     httpMock = TestBed.inject(HttpTestingController);
     service = TestBed.inject(GetVersionsService);
   });
+
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();

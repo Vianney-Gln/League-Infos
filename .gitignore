@@ -8,6 +8,7 @@ Back/.settings/
 Back/*.iml
 Back/mvnw
 Back/mvnw.cmd
+Back/src/main/resources/application-secrets.yml
 *.log
 
 # === FRONTEND ===

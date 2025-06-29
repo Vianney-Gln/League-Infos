@@ -1,14 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PlayersService } from './players.service';
-import { ACCOUNT_BY_PUUID_API_URL, CHALLENGERS_LEAGUE_API_URL, SUMMONER_BY_PUUID_API_URL } from '../../common/constants/api-urls';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { RANKED_FLEX_SR, RANKED_SOLO_5x5 } from '../../common/constants/queues';
 import { LeagueListDTO } from '../../common/models/leagueListDTO';
 import { environment } from '../../../environments/environment';
 import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
+import { importProvidersFrom } from '@angular/core';
+import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
+import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 
 describe('PlayersService', () => {
   let service: PlayersService;
@@ -16,11 +17,13 @@ describe('PlayersService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [PlayersService, provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(PlayersService);
     httpMock = TestBed.inject(HttpTestingController);
   });
+
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -45,7 +48,7 @@ describe('PlayersService', () => {
           hotStreak: false,
         },
       ],
-      queue: RANKED_SOLO_5x5,
+      queue: 'RANKED_SOLO_5x5',
       name: 'Challenger League',
     } as LeagueListDTO;
 
@@ -55,8 +58,8 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_SOLO_5x5}`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/league-challengers-solo-queue';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockLeagueListDTO);
   });
@@ -80,7 +83,7 @@ describe('PlayersService', () => {
           hotStreak: false,
         },
       ],
-      queue: RANKED_SOLO_5x5,
+      queue: 'RANKED_SOLO_5x5',
       name: 'Challenger League',
     } as LeagueListDTO;
 
@@ -90,14 +93,18 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${CHALLENGERS_LEAGUE_API_URL}/${RANKED_FLEX_SR}`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/league-challengers-flex-queue';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockLeagueListDTO);
   });
 
-  it('should have leagueChallengerListDTOSignal initialized as null', () => {
-    expect(service.leagueChallengerListDTOSignal()).toBeNull();
+  it('should have leagueChallengerSoloQListDTOSignal initialized as null', () => {
+    expect(service.leagueChallengerSoloQListDTOSignal()).toBeNull();
+  });
+
+  it('should have leagueChallengerFlexListDTOSignal initialized as null', () => {
+    expect(service.leagueChallengerFlexListDTOSignal()).toBeNull();
   });
 
   it('should call getAccountByPuuid', () => {
@@ -110,8 +117,24 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${ACCOUNT_BY_PUUID_API_URL}/12345`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/account/12345';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush(accountDTOMock);
+  });
+
+  it('should call getAccountByRiotId', () => {
+    // GIVEN
+    const accountDTOMock = { puuid: '12345', gameName: 'test', tagLine: 'EUW' } as AccountDTO;
+
+    // WHEN
+    service.getAccountByRiotId('test', 'euw').subscribe((res) => {
+      expect(res).toBe(accountDTOMock);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/account/by-riot-id/test/euw';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(accountDTOMock);
   });
@@ -134,9 +157,66 @@ describe('PlayersService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(`${SUMMONER_BY_PUUID_API_URL}/12345`);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/summoner/12345';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(summonerDTOMock);
+  });
+
+  it('should call getLeagueEntryByPuuid', () => {
+    // GIVEN
+    const leagueEntryDTOMockSet = {
+      leagueId: 'league123',
+      puuid: '1222xx',
+      summonerId: 'summoner123',
+      summonerName: 'SummonerName',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'CHALLENGER',
+      rank: 'I',
+      leaguePoints: 1000,
+      wins: 100,
+      losses: 50,
+      hotStreak: false,
+      veteran: false,
+      freshBlood: true,
+      inactive: false,
+    } as LeagueEntryDTO;
+
+    // WHEN
+    service.getLeagueEntryByPuuid('1222xx').subscribe((res) => {
+      expect(res[0]).toEqual(leagueEntryDTOMockSet);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/league-entries-by-puuid/1222xx';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush([leagueEntryDTOMockSet]);
+  });
+
+  it('should call getChampionMasteriesDTO', () => {
+    // GIVEN
+    const championMasteriesDTOMock = {
+      puuid: '1222xx',
+      championId: 266,
+      championLevel: 7,
+      championPoints: 123456,
+      lastPlayTime: 1680000000000,
+      championPointsSinceLastLevel: 0,
+      championPointsUntilNextLevel: 0,
+      markRequiredForNextLevel: 12,
+      chestGranted: true,
+    } as ChampionMasteryDto;
+
+    // WHEN
+    service.getChampionMasteriesDTO('1222xx').subscribe((res) => {
+      expect(res[0]).toEqual(championMasteriesDTOMock);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/champion-masteries/1222xx/top';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush([championMasteriesDTOMock]);
   });
 });

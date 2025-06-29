@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { GetChampionsService } from './get-champions.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { CHAMPION_ROTATIONS_API_URL } from '../../common/constants/api-urls';
 import { environment } from '../../../environments/environment';
 import { FreeChampionsDTO } from '../../common/models/freeChampionsDTO';
 import { ChampionData } from '../../common/models/championsInfos';
@@ -13,13 +12,13 @@ describe('GetChampionsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      declarations: [],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [GetChampionsService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     service = TestBed.inject(GetChampionsService);
     httpMock = TestBed.inject(HttpTestingController);
   });
+
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -41,8 +40,8 @@ describe('GetChampionsService', () => {
     });
 
     // THEN
-    const req = httpMock.expectOne(CHAMPION_ROTATIONS_API_URL);
-    expect(req.request.headers.get('X-Riot-Token')).toBe(environment.apiKey);
+    const url = environment.apiBaseUrl + '/champions/free';
+    const req = httpMock.expectOne(url);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -66,5 +65,9 @@ describe('GetChampionsService', () => {
 
   it('should have championDataSignal initialized as null', () => {
     expect(service.championDataSignal()).toBeNull();
+  });
+
+  it('should have isFreeChampErrorSignal initialized as false', () => {
+    expect(service.isFreeChampErrorSignal()).toBeFalse();
   });
 });

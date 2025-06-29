@@ -1,15 +1,16 @@
-.element-carrousel-challenger-soloq {
-  width: 100%;
+.element-carrousel-challenger {
   height: 200px;
   border: 1px solid #c8aa6e;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background-color: #1a2328;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
 }
 
 h2 {
-  color: #b0892b; /* Doré chaleureux LoL */
-  font-family: "Trajan Pro", serif; /* Typo proche de LoL, à importer si possible */
+  font-family: "Trajan Pro", serif;
   text-shadow: 1px 1px 0 #3d331b;
   margin-bottom: 1.5rem;
   letter-spacing: 1.2px;
@@ -27,4 +28,9 @@ h2 {
 
 .profilIcone img {
   width: 100%;
+}
+
+.text-hero {
+  background-color: var(--color-black-trans-2);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }

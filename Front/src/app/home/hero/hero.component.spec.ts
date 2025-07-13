@@ -12,22 +12,207 @@ import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
 import { Router } from '@angular/router';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
+import { GetChampionsService } from '../../services/champions/get-champions.service';
+import { ChampionData } from '../../common/models/championsInfos';
 
 describe('HeroComponentComponent', () => {
   let component: HeroComponent;
   let fixture: ComponentFixture<HeroComponent>;
   let playerservice: PlayersService;
   let getVersionService: GetVersionsService;
+  let getChampionsService: GetChampionsService;
   let router: Router;
+
+  const version1 = '14.10.2';
+  const version2 = '13.10.2';
+  const version3 = '13.9.2';
+  const version4 = '13.9.1';
+  const version5 = '13.9.0';
+  const version6 = '13.8.6';
+  const version7 = '13.8.5';
+  const version8 = '13.8.4';
+  const version9 = '13.8.3';
+  const version10 = '13.8.2';
+  const version11 = '13.8.1';
+  const version12 = '13.8.0';
+  const version13 = '13.7.11';
+  const version14 = '13.10.10';
+  const version15 = '13.7.9';
+  const version16 = '13.7.8';
+  const version17 = '13.7.7';
+  const version18 = '13.7.6';
+  const version19 = '13.7.5';
+  const version20 = '13.7.4';
+
+  const champDataV1 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version1,
+  };
+
+  const champDataV2 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version2,
+  };
+
+  const champDataV3 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version3,
+  };
+
+  const champDataV4 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version4,
+  };
+
+  const champDataV5 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version5,
+  };
+
+  const champDataV6 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version6,
+  };
+
+  const champDataV7 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version7,
+  };
+
+  const champDataV8 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version8,
+  };
+
+  const champDataV9 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version9,
+  };
+
+  const champDataV10 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version10,
+  };
+
+  const champDataV11 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version11,
+  };
+
+  const champDataV12 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version12,
+  };
+
+  const champDataV13 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version13,
+  };
+
+  const champDataV14 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version14,
+  };
+
+  const champDataV15 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version15,
+  };
+
+  const champDataV16 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version16,
+  };
+
+  const champDataV17 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version17,
+  };
+
+  const champDataV18 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version18,
+  };
+
+  const champDataV19 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version19,
+  };
+
+  const champDataV20 = {
+    data: {
+      Aatrox: { name: 'Aatrox' },
+      Ahri: { name: 'Ahri' },
+    },
+    version: version20,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeroComponent],
-      providers: [GetVersionsService, PlayersService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [GetChampionsService, GetVersionsService, PlayersService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     playerservice = TestBed.inject(PlayersService);
     getVersionService = TestBed.inject(GetVersionsService);
+    getChampionsService = TestBed.inject(GetChampionsService);
     fixture = TestBed.createComponent(HeroComponent);
     router = TestBed.inject(Router);
     component = fixture.componentInstance;
@@ -312,5 +497,134 @@ describe('HeroComponentComponent', () => {
       expect(routerSpy).toHaveBeenCalledWith(['Detail-summoner/test name#EUW']);
       fixture.destroy();
     });
+  });
+
+  it('should call getAllChampionsInfos as much as there is versions in the list and find the most recent champion', () => {
+    // GIVEN
+    const champDataV20WithNewChamp = {
+      data: {
+        Aatrox: { name: 'Aatrox' },
+        Ahri: { name: 'Ahri' },
+        Aurora: { name: 'Aurora' },
+      },
+      version: version20,
+    };
+
+    getVersionService.lastTwentyVersionslolSignal.set([
+      version20,
+      version19,
+      version18,
+      version17,
+      version16,
+      version15,
+      version14,
+      version13,
+      version12,
+      version11,
+      version10,
+      version9,
+      version8,
+      version7,
+      version6,
+      version5,
+      version4,
+      version3,
+      version2,
+      version1,
+    ]);
+
+    // Spy sur le service
+    spyOn(getChampionsService, 'getAllChampionsInfos').and.callFake((version: string) => {
+      if (version === version1) return of({ ...champDataV1, type: 'champion', format: 'standAloneComplex' });
+      if (version === version2) return of({ ...champDataV2, type: 'champion', format: 'standAloneComplex' });
+      if (version === version3) return of({ ...champDataV3, type: 'champion', format: 'standAloneComplex' });
+      if (version === version4) return of({ ...champDataV4, type: 'champion', format: 'standAloneComplex' });
+      if (version === version5) return of({ ...champDataV5, type: 'champion', format: 'standAloneComplex' });
+      if (version === version6) return of({ ...champDataV6, type: 'champion', format: 'standAloneComplex' });
+      if (version === version7) return of({ ...champDataV7, type: 'champion', format: 'standAloneComplex' });
+      if (version === version8) return of({ ...champDataV8, type: 'champion', format: 'standAloneComplex' });
+      if (version === version9) return of({ ...champDataV9, type: 'champion', format: 'standAloneComplex' });
+      if (version === version10) return of({ ...champDataV10, type: 'champion', format: 'standAloneComplex' });
+      if (version === version11) return of({ ...champDataV11, type: 'champion', format: 'standAloneComplex' });
+      if (version === version12) return of({ ...champDataV12, type: 'champion', format: 'standAloneComplex' });
+      if (version === version13) return of({ ...champDataV13, type: 'champion', format: 'standAloneComplex' });
+      if (version === version14) return of({ ...champDataV14, type: 'champion', format: 'standAloneComplex' });
+      if (version === version15) return of({ ...champDataV15, type: 'champion', format: 'standAloneComplex' });
+      if (version === version16) return of({ ...champDataV16, type: 'champion', format: 'standAloneComplex' });
+      if (version === version17) return of({ ...champDataV17, type: 'champion', format: 'standAloneComplex' });
+      if (version === version18) return of({ ...champDataV18, type: 'champion', format: 'standAloneComplex' });
+      if (version === version19) return of({ ...champDataV19, type: 'champion', format: 'standAloneComplex' });
+      if (version === version20) return of({ ...champDataV20WithNewChamp, type: 'champion', format: 'standAloneComplex' });
+      return of({ type: 'champion', format: 'standAloneComplex', data: {}, version });
+    });
+
+    // Spy sur la mise à jour du signal
+    const signalSpy = spyOn(component.mostRecentChampionDtoSignal, 'set');
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(signalSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ name: 'Aurora' }));
+  });
+
+  it('should call getAllChampionsInfos as much as there is versions in the list and dont set any signal if no champ finded', () => {
+    // GIVEN
+    getVersionService.lastTwentyVersionslolSignal.set([
+      version20,
+      version19,
+      version18,
+      version17,
+      version16,
+      version15,
+      version14,
+      version13,
+      version12,
+      version11,
+      version10,
+      version9,
+      version8,
+      version7,
+      version6,
+      version5,
+      version4,
+      version3,
+      version2,
+      version1,
+    ]);
+
+    // Spy sur le service
+    spyOn(getChampionsService, 'getAllChampionsInfos').and.callFake((version: string) => {
+      if (version === version1) return of({ ...champDataV1, type: 'champion', format: 'standAloneComplex' });
+      if (version === version2) return of({ ...champDataV2, type: 'champion', format: 'standAloneComplex' });
+      if (version === version3) return of({ ...champDataV3, type: 'champion', format: 'standAloneComplex' });
+      if (version === version4) return of({ ...champDataV4, type: 'champion', format: 'standAloneComplex' });
+      if (version === version5) return of({ ...champDataV5, type: 'champion', format: 'standAloneComplex' });
+      if (version === version6) return of({ ...champDataV6, type: 'champion', format: 'standAloneComplex' });
+      if (version === version7) return of({ ...champDataV7, type: 'champion', format: 'standAloneComplex' });
+      if (version === version8) return of({ ...champDataV8, type: 'champion', format: 'standAloneComplex' });
+      if (version === version9) return of({ ...champDataV9, type: 'champion', format: 'standAloneComplex' });
+      if (version === version10) return of({ ...champDataV10, type: 'champion', format: 'standAloneComplex' });
+      if (version === version11) return of({ ...champDataV11, type: 'champion', format: 'standAloneComplex' });
+      if (version === version12) return of({ ...champDataV12, type: 'champion', format: 'standAloneComplex' });
+      if (version === version13) return of({ ...champDataV13, type: 'champion', format: 'standAloneComplex' });
+      if (version === version14) return of({ ...champDataV14, type: 'champion', format: 'standAloneComplex' });
+      if (version === version15) return of({ ...champDataV15, type: 'champion', format: 'standAloneComplex' });
+      if (version === version16) return of({ ...champDataV16, type: 'champion', format: 'standAloneComplex' });
+      if (version === version17) return of({ ...champDataV17, type: 'champion', format: 'standAloneComplex' });
+      if (version === version18) return of({ ...champDataV18, type: 'champion', format: 'standAloneComplex' });
+      if (version === version19) return of({ ...champDataV19, type: 'champion', format: 'standAloneComplex' });
+      if (version === version20) return of({ ...champDataV20, type: 'champion', format: 'standAloneComplex' });
+      return of({ type: 'champion', format: 'standAloneComplex', data: {}, version });
+    });
+
+    // Spy sur la mise à jour du signal
+    const signalSpy = spyOn(component.mostRecentChampionDtoSignal, 'set');
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(signalSpy).not.toHaveBeenCalled();
   });
 });

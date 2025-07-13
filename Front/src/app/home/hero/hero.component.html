@@ -9,7 +9,7 @@
         class="element-carrousel-challenger"
       >
         <div class="row h-100">
-          <div class="col d-flex justify-content-center mt-3">
+          <div class="col ms-4 d-flex mt-3">
             <div class="profilIcone">
               <img
                 [src]="
@@ -43,7 +43,7 @@
         class="element-carrousel-challenger"
       >
         <div class="row h-100">
-          <div class="col d-flex justify-content-center mt-3">
+          <div class="col d-flex ms-4 mt-3">
             <div class="profilIcone">
               <img
                 [src]="
@@ -69,6 +69,28 @@
         </div>
       </div>
     </ng-template>
+    @if(mostRecentChampionDtoSignal()){
+    <ng-template ngbSlide>
+      <div data-test="bloc-most-recent-champion" class="element-carrousel-challenger" [ngStyle]="{ 'background-image': urlBackgroundMostRecentChampion() }">
+        <div class="row h-100">
+          <div class="col d-flex ms-4 mt-3">
+            <div class="profilIcone">
+              <img
+                [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + mostRecentChampionDtoSignal()?.image?.full"
+                alt="îcone champion"
+              />
+            </div>
+            <h2 class="text-center ms-2">{{ mostRecentChampionDtoSignal()?.name }}</h2>
+          </div>
+          <div class="row d-flex align-items-end">
+            <div class="col d-flex justify-content-between">
+              <span class="text-hero ms-2 ps-2 pe-2">Champion le plus récent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    }
   </ngb-carousel>
 </div>
 }@else if (isCarouselLoading) {

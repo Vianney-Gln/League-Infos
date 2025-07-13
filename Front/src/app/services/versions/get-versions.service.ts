@@ -10,6 +10,7 @@ export class GetVersionsService {
   constructor(private http: HttpClient) {}
 
   lastVersionlolDTOSignal: WritableSignal<string> = signal<string>('');
+  lastTwentyVersionslolSignal: WritableSignal<string[]> = signal<string[]>([]);
 
   getAllVersionsLol(): Observable<string[]> {
     return this.http.get<string[]>(GET_VERSIONS_LOL_DRAGON_URL);

@@ -27,13 +27,13 @@ public class FeaturedGameService {
 
     public ResponseEntity<FeaturedGamesDTO> getFeaturedGames() {
         try {
-            ResponseEntity<FeaturedGamesDTO> featuredGameResponseEntity = restTemplate.exchange(
+            return restTemplate.exchange(
                     ApiRiotUrls.FEATURED_GAMES_API_URL,
                     HttpMethod.GET,
                     null,
                     FeaturedGamesDTO.class
             );
-            return featuredGameResponseEntity;
+
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             throw new BusinessException(ERROR_BUSINESS_2.getLibelle(), HttpStatus.BAD_REQUEST);
         } catch (ResourceAccessException ex) {

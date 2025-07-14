@@ -1,7 +1,7 @@
-package com.league.league_infos.services;
+package com.league.league_infos.services.api;
 
 import com.league.league_infos.models.constants.ApiRiotUrls;
-import com.league.league_infos.models.dto.SummonerDTO;
+import com.league.league_infos.models.dto.FreeChampionsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -9,20 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class SummonersService {
+public class ChampionsService {
+
     private final RestTemplate restTemplate;
 
     @Autowired
-    public SummonersService(RestTemplate restTemplate) {
+    public ChampionsService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<SummonerDTO> getSummonerByPuuid(String puuid) {
+    public ResponseEntity<FreeChampionsDTO> getFreeChampionsInfos() {
         return restTemplate.exchange(
-                ApiRiotUrls.SUMMONER_BY_PUUID_API_URL + "/" + puuid,
+                ApiRiotUrls.CHAMPION_ROTATIONS_API_URL,
                 HttpMethod.GET,
                 null,
-                SummonerDTO.class
+                FreeChampionsDTO.class
         );
     }
 }

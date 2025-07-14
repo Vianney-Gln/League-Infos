@@ -2,7 +2,7 @@ package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.league.league_infos.models.dto.SummonerDTO;
-import com.league.league_infos.services.SummonersService;
+import com.league.league_infos.services.api.SummonersService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

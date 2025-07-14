@@ -47,7 +47,7 @@ export class PlayerDetailsComponent {
         switchMap((summoner: SummonerDTO) => {
           this.summonerDto = summoner;
           this.summonerDto = summoner;
-          if (!summoner.id) {
+          if (!summoner.puuid) {
             this.router.navigate(['/NotFound']);
           }
           return this.playerService.getLeagueEntryByPuuid(summoner.puuid).pipe(map((leagueEntries) => ({ leagueEntries, puuid: summoner.puuid })));

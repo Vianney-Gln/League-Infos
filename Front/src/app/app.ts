@@ -22,8 +22,9 @@ export class App implements OnInit, OnDestroy {
     this.getVersionsService
       .getAllVersionsLol()
       .pipe(
-        tap((versions) => this.getVersionsService.lastVersionlolDTOSignal.set(versions[0])),
         switchMap((versions) => {
+          this.getVersionsService.lastVersionlolDTOSignal.set(versions[0]);
+          this.getVersionsService.lastTwentyVersionslolSignal.set(versions.slice(0, 20));
           return this.getChampionService.getAllChampionsInfos(versions[0]);
         })
       )

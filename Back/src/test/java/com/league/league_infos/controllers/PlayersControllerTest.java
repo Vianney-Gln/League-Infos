@@ -5,7 +5,7 @@ import com.league.league_infos.models.dto.ChampionMasteryDTO;
 import com.league.league_infos.models.dto.LeagueEntryDTO;
 import com.league.league_infos.models.dto.LeagueItemDTO;
 import com.league.league_infos.models.dto.LeagueListDTO;
-import com.league.league_infos.services.PlayersService;
+import com.league.league_infos.services.api.PlayersService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

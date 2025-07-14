@@ -1,7 +1,7 @@
 package com.league.league_infos.controllers;
 
 import com.league.league_infos.models.dto.SummonerDTO;
-import com.league.league_infos.services.SummonersService;
+import com.league.league_infos.services.api.SummonersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

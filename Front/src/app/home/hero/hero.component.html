@@ -1,6 +1,6 @@
 @if (!isCarouselLoading && !isCarouselError){
 <div class="d-flex justify-content-center">
-  <ngb-carousel class="w-50" [interval]="4000" [pauseOnHover]="true" [wrap]="true">
+  <ngb-carousel class="w-50" [interval]="INTERVAL_CAROUSSEL" [pauseOnHover]="true" [wrap]="true">
     <ng-template ngbSlide>
       <div
         data-test="bloc-best-challenger-player-soloQ"
@@ -85,6 +85,27 @@
           <div class="row d-flex align-items-end">
             <div class="col d-flex justify-content-between">
               <span class="text-hero ms-2 ps-2 pe-2">Champion le plus récent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    } @if(mostBannedChampSignal()){
+    <ng-template ngbSlide>
+      <div data-test="bloc-most-recent-champion" class="element-carrousel-challenger" [ngStyle]="{ 'background-image': urlBackgroundMostBannedChampion() }">
+        <div class="row h-100">
+          <div class="col d-flex ms-4 mt-3">
+            <div class="profilIcone">
+              <img
+                [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + mostBannedChampSignal()?.image?.full"
+                alt="îcone champion"
+              />
+            </div>
+            <h2 class="text-center ms-2">{{ mostBannedChampSignal()?.name }}</h2>
+          </div>
+          <div class="row d-flex align-items-end">
+            <div class="col d-flex justify-content-between">
+              <span class="text-hero ms-2 ps-2 pe-2">L'un des Champions les plus bannis du moment</span>
             </div>
           </div>
         </div>

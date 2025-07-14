@@ -2,7 +2,7 @@ package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.league.league_infos.models.dto.AccountDTO;
-import com.league.league_infos.services.AccountService;
+import com.league.league_infos.services.api.AccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.league.league_infos.services;
+package com.league.league_infos.services.api;
 
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.models.constants.ApiRiotUrls;

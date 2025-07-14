@@ -23,4 +23,9 @@ export class GetChampionsService {
   getAllChampionsInfos(version: string): Observable<ChampionData> {
     return this.http.get<ChampionData>(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`);
   }
+
+  getMostBannedChampionId(): Observable<number> {
+    const url = `${environment.apiBaseUrl}/stats/most-banned-champion`;
+    return this.http.get<number>(url);
+  }
 }

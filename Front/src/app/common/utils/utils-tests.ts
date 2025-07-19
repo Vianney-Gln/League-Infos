@@ -10,3 +10,7 @@ export function clickButtonByDataTestAttr(element: DebugElement, attrValue: stri
     button.click();
   }
 }
+
+export function getAllByDataTestAttr(element: DebugElement, attrValue: string): HTMLElement[] | null {
+  return element.nativeElement.querySelectorAll(`[data-test="${attrValue}"]`);
+}

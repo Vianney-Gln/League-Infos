@@ -1,4 +1,4 @@
-package com.league.league_infos.services;
+package com.league.league_infos.services.api;
 
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.models.constants.ApiRiotUrls;
@@ -7,7 +7,6 @@ import com.league.league_infos.models.dto.LeagueEntryDTO;
 import com.league.league_infos.models.dto.LeagueListDTO;
 import com.league.league_infos.models.enums.QueueEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,21 +33,27 @@ public class PlayersService {
     }
 
     public ResponseEntity<LeagueListDTO> getLeagueChallengerDataSoloQ() {
-        return restTemplate.exchange(
+        ResponseEntity<LeagueListDTO> riotResponse = restTemplate.exchange(
                 ApiRiotUrls.CHALLENGERS_LEAGUE_API_URL + "/" + QueueEnum.RANKED_SOLO_5x5.getLibelle(),
                 HttpMethod.GET,
                 null,
                 LeagueListDTO.class
         );
+        return ResponseEntity
+                .status(riotResponse.getStatusCode())
+                .body(riotResponse.getBody());
     }
 
     public ResponseEntity<LeagueListDTO> getLeagueChallengerDataFlexQ() {
-        return restTemplate.exchange(
+        ResponseEntity<LeagueListDTO> riotResponse = restTemplate.exchange(
                 ApiRiotUrls.CHALLENGERS_LEAGUE_API_URL + "/" + QueueEnum.RANKED_FLEX_SR.getLibelle(),
                 HttpMethod.GET,
                 null,
                 LeagueListDTO.class
         );
+        return ResponseEntity
+                .status(riotResponse.getStatusCode())
+                .body(riotResponse.getBody());
     }
 
     public ResponseEntity<List<LeagueEntryDTO>> getLeagueEntriesByPuuid(String puuid) {
@@ -60,10 +65,9 @@ public class PlayersService {
                     LeagueEntryDTO[].class
             );
             List<LeagueEntryDTO> listLeagueEntryDto = result.getBody() != null ? Arrays.asList(result.getBody()) : Collections.emptyList();
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Access-Control-Allow-Origin", "*");
-
-            return new ResponseEntity<>(listLeagueEntryDto, headers, HttpStatus.OK);
+            return ResponseEntity
+                    .status(result.getStatusCode())
+                    .body(listLeagueEntryDto);
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -85,10 +89,9 @@ public class PlayersService {
                     ChampionMasteryDTO[].class
             );
             List<ChampionMasteryDTO> listChampionMastery = result.getBody() != null ? Arrays.asList(result.getBody()) : Collections.emptyList();
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Access-Control-Allow-Origin", "*");
-
-            return new ResponseEntity<>(listChampionMastery, headers, HttpStatus.OK);
+            return ResponseEntity
+                    .status(result.getStatusCode())
+                    .body(listChampionMastery);
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {

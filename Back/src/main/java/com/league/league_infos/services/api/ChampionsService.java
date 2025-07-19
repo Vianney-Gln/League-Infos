@@ -1,4 +1,4 @@
-package com.league.league_infos.services;
+package com.league.league_infos.services.api;
 
 import com.league.league_infos.models.constants.ApiRiotUrls;
 import com.league.league_infos.models.dto.FreeChampionsDTO;
@@ -19,11 +19,14 @@ public class ChampionsService {
     }
 
     public ResponseEntity<FreeChampionsDTO> getFreeChampionsInfos() {
-        return restTemplate.exchange(
+        ResponseEntity<FreeChampionsDTO> riotResponse = restTemplate.exchange(
                 ApiRiotUrls.CHAMPION_ROTATIONS_API_URL,
                 HttpMethod.GET,
                 null,
                 FreeChampionsDTO.class
         );
+        return ResponseEntity
+                .status(riotResponse.getStatusCode())
+                .body(riotResponse.getBody());
     }
 }

@@ -1,7 +1,7 @@
 package com.league.league_infos.controllers;
 
 import com.league.league_infos.models.dto.AccountDTO;
-import com.league.league_infos.services.AccountService;
+import com.league.league_infos.services.api.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

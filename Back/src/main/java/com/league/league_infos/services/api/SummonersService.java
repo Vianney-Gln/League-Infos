@@ -1,4 +1,4 @@
-package com.league.league_infos.services;
+package com.league.league_infos.services.api;
 
 import com.league.league_infos.models.constants.ApiRiotUrls;
 import com.league.league_infos.models.dto.SummonerDTO;
@@ -18,11 +18,14 @@ public class SummonersService {
     }
 
     public ResponseEntity<SummonerDTO> getSummonerByPuuid(String puuid) {
-        return restTemplate.exchange(
+        ResponseEntity<SummonerDTO> riotResponse = restTemplate.exchange(
                 ApiRiotUrls.SUMMONER_BY_PUUID_API_URL + "/" + puuid,
                 HttpMethod.GET,
                 null,
                 SummonerDTO.class
         );
+        return ResponseEntity
+                .status(riotResponse.getStatusCode())
+                .body(riotResponse.getBody());
     }
 }

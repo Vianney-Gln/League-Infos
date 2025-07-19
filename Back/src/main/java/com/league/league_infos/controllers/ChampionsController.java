@@ -1,7 +1,7 @@
 package com.league.league_infos.controllers;
 
 import com.league.league_infos.models.dto.FreeChampionsDTO;
-import com.league.league_infos.services.ChampionsService;
+import com.league.league_infos.services.api.ChampionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -70,4 +70,19 @@ describe('GetChampionsService', () => {
   it('should have isFreeChampErrorSignal initialized as false', () => {
     expect(service.isFreeChampErrorSignal()).toBeFalse();
   });
+
+  it('should call getMostBannedChampionId with correct URL', () => {
+    // GIVEN
+    const mockResponse: number = 200;
+
+    // WHEN
+    service.getMostBannedChampionId().subscribe((res) => {
+      expect(res).toEqual(200);
+    });
+
+    // THEN
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/stats/most-banned-champion`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
 });

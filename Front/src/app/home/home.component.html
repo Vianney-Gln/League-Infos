@@ -1,69 +1,27 @@
 <div class="container py-4">
   <app-hero-component></app-hero-component>
-  <h2 class="mt-4 text-center">Rotation des champions</h2>
-  <div class="ngbAccordion" ngbAccordion>
-    <div class="ngbAccordionItem" ngbAccordionItem>
-      <h2 class="ngbAccordionHeader" ngbAccordionHeader>
-        <button data-test="button-accordeon-free-champs" class="ngbAccordionButton" ngbAccordionButton>
-          <i class="bi bi-chevron-down custom-chevron"></i><span class="ms-2">Champions gratuits</span>
-        </button>
-      </h2>
-      <div ngbAccordionCollapse>
-        @if(!isFreeChampsErrorSignal()){
-        <div ngbAccordionBody>
-          <ng-template>
-            <div class="row d-flex justify-content-start">
-              @for (champion of freeChampionsDataSignal(); track champion.id) {
-              <div class="m-1 card champion-card text-white overflow-hidden position-relative">
-                <img
-                  [alt]="champion.name"
-                  [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full"
-                />
-                <div class="overlay d-flex align-items-end p-2">
-                  <h6 class="card-title m-0">{{ champion.name }}</h6>
-                </div>
-              </div>
-              }
-            </div>
-          </ng-template>
-        </div>
-        }@else {
-        <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ freeChampsErrorMsg }}</p>
+  <h2 class="mt-4 text-center">Champions</h2>
+  <div class="row">
+    <div class="col-3">
+      <select data-test="select-champ-by-type" class="lol-select" (change)="sortTypeChamp($event)">
+        @for (championType of CHAMPION_TYPES; track championType) {
+        <option data-test="type-champion-option" [id]="championType.id" [value]="championType.type">{{ championType.libelle }}</option>
         }
-      </div>
+      </select>
     </div>
   </div>
-  <div class="ngbAccordion mt-4" ngbAccordion>
-    <div class="ngbAccordionItem" ngbAccordionItem>
-      <h2 class="ngbAccordionHeader" ngbAccordionHeader>
-        <button data-test="button-accordeon-free-champs-beginners" class="ngbAccordionButton" ngbAccordionButton>
-          <i class="bi bi-chevron-down custom-chevron"></i>
-          <span class="ms-2">Champions gratuits pour comptes inférieur au niveau {{ freeChampionsDTOSignal()?.maxNewPlayerLevel }}</span>
-        </button>
-      </h2>
-      <div ngbAccordionCollapse>
-        @if(!isFreeChampsErrorSignal()){
-        <div ngbAccordionBody>
-          <ng-template>
-            <div class="row d-flex justify-content-start">
-              @for (champion of freeChampionsForBeginnersDataSignal(); track champion.id) {
-              <div class="m-1 card champion-card text-white overflow-hidden position-relative">
-                <img
-                  [alt]="champion.name"
-                  [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full"
-                />
-                <div class="overlay d-flex align-items-end p-2">
-                  <h6 class="card-title m-0">{{ champion.name }}</h6>
-                </div>
-              </div>
-              }
-            </div>
-          </ng-template>
-        </div>
-        }@else {
-        <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ freeChampsErrorMsg }}</p>
-        }
+  @if(listChampions?.length){
+  <div class="row mt-4">
+    @for (champion of listChampions; track champion.id) {
+    <div class="m-1 card champion-card text-white overflow-hidden position-relative">
+      <img [alt]="champion.name" [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full" />
+      <div class="overlay d-flex align-items-end p-2">
+        <h6 class="card-title m-0">{{ champion.name }}</h6>
       </div>
     </div>
+    }
   </div>
+  }@else {
+  <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ champsErrorMsg }}</p>
+  }
 </div>

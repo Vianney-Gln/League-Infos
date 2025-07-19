@@ -27,12 +27,16 @@ public class FeaturedGameService {
 
     public ResponseEntity<FeaturedGamesDTO> getFeaturedGames() {
         try {
-            return restTemplate.exchange(
+            ResponseEntity<FeaturedGamesDTO> riotResponse = restTemplate.exchange(
                     ApiRiotUrls.FEATURED_GAMES_API_URL,
                     HttpMethod.GET,
                     null,
                     FeaturedGamesDTO.class
             );
+
+            return ResponseEntity
+                    .status(riotResponse.getStatusCode())
+                    .body(riotResponse.getBody());
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             throw new BusinessException(ERROR_BUSINESS_2.getLibelle(), HttpStatus.BAD_REQUEST);

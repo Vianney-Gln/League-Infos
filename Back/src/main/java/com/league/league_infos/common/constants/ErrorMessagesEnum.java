@@ -6,7 +6,6 @@ public enum ErrorMessagesEnum {
     ERROR_BUSINESS_3("ERROR_BUSINESS_3", "API Riot inaccessible pour le moment"),
     ERROR_BUSINESS_4("ERROR_BUSINESS_4", "Le champion le plus bannis n'a pas pu être récupéré.");
 
-
     private final String libelle;
     private final String code;
 

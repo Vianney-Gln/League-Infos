@@ -23,23 +23,29 @@ public class AccountService {
     }
 
     public ResponseEntity<AccountDTO> getAccountByPuuid(String puuid) {
-        return restTemplate.exchange(
+        ResponseEntity<AccountDTO> riotResponse = restTemplate.exchange(
                 ApiRiotUrls.ACCOUNT_BY_PUUID_API_URL + "/" + puuid,
                 HttpMethod.GET,
                 null,
                 AccountDTO.class
         );
+        return ResponseEntity
+                .status(riotResponse.getStatusCode())
+                .body(riotResponse.getBody());
     }
 
     public ResponseEntity<AccountDTO> getAccountByRiotId(String gameName, String tagLine) {
 
         try {
-            return restTemplate.exchange(
+            ResponseEntity<AccountDTO> riotResponse = restTemplate.exchange(
                     ApiRiotUrls.ACCOUNT_BY_RIOT_ID_API_URL + "/" + gameName + "/" + tagLine,
                     HttpMethod.GET,
                     null,
                     AccountDTO.class
             );
+            return ResponseEntity
+                    .status(riotResponse.getStatusCode())
+                    .body(riotResponse.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode().value() == 404) {
                 throw new BusinessException(ERROR_BUSINESS_1.getLibelle(), HttpStatus.NOT_FOUND);

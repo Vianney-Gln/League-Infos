@@ -16,10 +16,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import static com.league.league_infos.common.constants.ErrorMessagesEnum.*;
+import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_BUSINESS_1;
+import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_BUSINESS_2;
+import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_BUSINESS_3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {

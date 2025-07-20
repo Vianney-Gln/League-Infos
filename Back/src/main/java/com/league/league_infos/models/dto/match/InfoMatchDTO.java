@@ -14,8 +14,8 @@ public class InfoMatchDTO {
     private Long gameId;
     private Integer mapId;
     private Integer queueId;
-    List<ParticipantMatchDTO> participants;
-    List<TeamDTO> teams;
+    private List<ParticipantMatchDTO> participants;
+    private List<TeamDTO> teams;
 
     public String getEndOfGameResult() {
         return endOfGameResult;
@@ -133,8 +133,8 @@ public class InfoMatchDTO {
         private Long gameId;
         private Integer mapId;
         private Integer queueId;
-        List<ParticipantMatchDTO> participants;
-        List<TeamDTO> teams;
+        private List<ParticipantMatchDTO> participants;
+        private List<TeamDTO> teams;
 
         public InfoMatchDTO.Builder endOfGameResult(String endOfGameResult) {
             this.endOfGameResult = endOfGameResult;

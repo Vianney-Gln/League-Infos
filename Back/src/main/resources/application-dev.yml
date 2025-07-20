@@ -1,3 +1,5 @@
 app:
   cors:
     allowed-origin: "http://localhost:4200"
+  game-history:
+    max-count: 3

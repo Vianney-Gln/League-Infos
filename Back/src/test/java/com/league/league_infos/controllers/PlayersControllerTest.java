@@ -18,7 +18,10 @@ import java.util.List;
 
 import static com.league.league_infos.models.enums.QueueEnum.RANKED_FLEX_SR;
 import static com.league.league_infos.models.enums.QueueEnum.RANKED_SOLO_5x5;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

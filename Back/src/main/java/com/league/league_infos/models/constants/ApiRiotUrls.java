@@ -9,4 +9,6 @@ public class ApiRiotUrls {
     public static String PLAYER_LEAGUE_API_URL = "https://euw1.api.riotgames.com/lol/league/v4/entries/by-puuid";
     public static String CHAMPION_MASTERY_API_URL = "https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid";
     public static String FEATURED_GAMES_API_URL = "https://euw1.api.riotgames.com/lol/spectator/v5/featured-games";
+    public static String HISTORY_GAMES_IDS_API_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid";
+    public static String HISTORY_GAMES_URL = "https://europe.api.riotgames.com/lol/match/v5/matches";
 }

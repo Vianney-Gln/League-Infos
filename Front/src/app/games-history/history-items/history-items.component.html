@@ -1,0 +1,46 @@
+<!-- prettier-ignore -->
+<span class="date-creation">{{dateCreationGameStr}}</span>
+<span class="date-creation ms-2">{{ gameDuration }}</span>
+<div class="match-history-row">
+  <div class="champion-info">
+    <div>
+      <img [src]="iconChampionUrl" alt="{{ currMatchParticipant.championName }}" class="champion-icon" />
+      <div class="summoner-spell-container">
+        <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
+        <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
+      </div>
+    </div>
+    <div>
+      <span class="champion-name">{{ currMatchParticipant.championName }}</span
+      ><br />
+      <span class="champion-role">{{ role }}</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div>
+      <span class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span
+      ><br />
+      <span class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
+    </div>
+    <span class="gold">
+      <img src="images/Icons/icon_gold.png" alt="Gold" class="gold-icon" />
+      {{ currMatchParticipant.goldEarned }}
+    </span>
+    <span class="cs">
+      <img src="images/Icons/icon_minions.png" alt="CS" class="cs-icon" />
+      {{ nbCsKilled }}
+    </span>
+  </div>
+  <div class="items">
+    @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
+    <ng-container>
+      <img [src]="itemUrl.url" alt="{{ itemUrl.itemId }}" class="item-icon" />
+    </ng-container>
+    }}
+  </div>
+  <div class="result">
+    <span [ngClass]="{ win: currMatchParticipant.win, loss: !currMatchParticipant.win }">
+      {{ currMatchParticipant.win ? "Victory" : "Defeat" }}
+    </span>
+  </div>
+</div>

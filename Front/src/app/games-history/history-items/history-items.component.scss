@@ -1,0 +1,106 @@
+.match-history-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e2e2;
+  background: var(--color-black-background-1);
+  color: #f5f5f5;
+  font-size: 15px;
+}
+
+.champion-info {
+  display: flex;
+  align-items: center;
+  min-width: 160px;
+}
+
+.summoner-spell-container {
+  display: flex;
+  justify-content: center;
+  width: 48px;
+}
+
+.champion-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  margin-right: 10px;
+  border: 2px solid var(--color-history-border-champ-icon);
+  background: var(--color-history-background-color-champ-icon);
+}
+
+.summoner-spell-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  border: 1px solid var(--color-history-border-champ-icon);
+  background: var(--color-history-background-color-champ-icon);
+}
+
+.champion-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.champion-role,
+.date-creation,
+.kda-ratio {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 190px;
+}
+
+.kda {
+  font-weight: 500;
+  color: var(--color-gold-lol-2);
+}
+
+.gold,
+.cs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gold-icon,
+.cs-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: 24px;
+  min-width: 160px;
+}
+
+.item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--color-history-background-color-champ-icon);
+  border: 1px solid var(--color-history-border-champ-icon);
+}
+
+.result {
+  margin-left: auto;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.win {
+  color: var(--color-text-win);
+}
+
+.loss {
+  color: var(--color-text-loss);
+}

@@ -7,6 +7,10 @@
   --color-black-trans-1: #0a0a0a3f;
   --color-black-trans-2: #0a0a0a98;
   --color-black-background-1: #232c33;
+  --color-history-border-champ-icon: #444;
+  --color-history-background-color-champ-icon: #222;
+  --color-text-win: #4caf50;
+  --color-text-loss: #f44336;
 }
 
 body,
@@ -45,4 +49,26 @@ html {
   transform: translateY(-8px);
   color: var(--color-gold-lol-1);
   background-color: transparent;
+}
+
+.button-lol-style {
+  position: relative;
+  z-index: 100;
+  cursor: pointer;
+  background: var(--color-black-background-1);
+  color: var(--color-gold-lol-1);
+  border: 2px solid var(--color-gold-border-lol-1);
+  border-radius: 8px;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  font-family: "Trajan Pro", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    outline: none;
+    border-color: var(--color-gold-lol-2);
+    box-shadow: 0 0 0 2px #b0892b55;
+  }
 }

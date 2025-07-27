@@ -11,14 +11,87 @@ import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
 import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
-import { getByDataTestAttr } from '../../common/utils/utils-tests';
+import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
+import { HistoryService } from '../../services/games-history/history.service';
+import { MatchDTO } from '../../common/models/games-history/matchDTO';
 
 describe('PlayerDetailsComponent', () => {
   let component: PlayerDetailsComponent;
   let fixture: ComponentFixture<PlayerDetailsComponent>;
   let playerService: PlayersService;
+  let historyService: HistoryService;
   let paramMap$: any;
   let router: Router;
+
+  function matchDTOMock() {
+    return {
+      metadata: {
+        matchId: '12345',
+        participants: ['123'],
+        dataVersion: '1',
+      },
+      info: {
+        gameDuration: 1800,
+        gameCreation: 1620000000000,
+        queueId: 420,
+        participants: [mockMatchParticipant()],
+        teams: [
+          {
+            teamId: 100,
+            win: true,
+            bans: [11, 22, 33, 44, 55],
+          },
+          {
+            teamId: 200,
+            win: false,
+            bans: [66, 77, 88, 99, 101],
+          },
+        ],
+      },
+    } as unknown as MatchDTO;
+  }
+
+  function mockMatchParticipant() {
+    return {
+      participantId: 1,
+      profileIcon: 1234,
+      assists: 8,
+      kills: 10,
+      deaths: 2,
+      champLevel: 18,
+      championId: 157,
+      goldEarned: 15000,
+      item0: 1055,
+      item1: 3006,
+      item2: 6672,
+      item3: 3046,
+      item4: 3031,
+      item5: 3072,
+      item6: 3363,
+      championTransform: 0,
+      pentaKills: 0,
+      quadraKills: 1,
+      tripleKills: 2,
+      doubleKills: 3,
+      summoner1Id: 4,
+      summoner2Id: 7,
+      teamId: 100,
+      totalMinionsKilled: 200,
+      neutralMinionsKilled: 30,
+      championName: 'MockChampion',
+      summonerName: 'MockSummoner',
+      lane: 'MIDDLE',
+      role: 'SOLO',
+      puuid: '123',
+      teamPosition: '',
+      win: true,
+      matchId: '12345',
+      challenges: {
+        kda: 9.0,
+        gameLength: 2555,
+      },
+    };
+  }
 
   beforeEach(async () => {
     paramMap$ = new BehaviorSubject(convertToParamMap({ summoner: 'test#euw' }));
@@ -41,6 +114,7 @@ describe('PlayerDetailsComponent', () => {
 
     fixture = TestBed.createComponent(PlayerDetailsComponent);
     playerService = TestBed.inject(PlayersService);
+    historyService = TestBed.inject(HistoryService);
     router = TestBed.inject(Router);
     component = fixture.componentInstance;
   });
@@ -432,5 +506,170 @@ describe('PlayerDetailsComponent', () => {
     expect(blocUnrankedFlex?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked Flex");
     expect(component.isUnrankedSoloQ).toBeFalse();
     expect(component.isUnrankedFlex).toBeTrue();
+  });
+
+  it('should reset itemsHistory', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([]));
+    spyOn(router, 'navigate').and.stub();
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    const currentMatchsParticipantsFlexQSignalSpy = spyOn(component.currentMatchsParticipantsFlexQSignal, 'set');
+    const currentMatchsParticipantsSoloQSignalSpy = spyOn(component.currentMatchsParticipantsSoloQSignal, 'set');
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(currentMatchsParticipantsFlexQSignalSpy).toHaveBeenCalledWith([]);
+    expect(currentMatchsParticipantsSoloQSignalSpy).toHaveBeenCalledWith([]);
+
+    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(0);
+    expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(0);
+  });
+
+  it('should call historyService.getHistoryByPuuidAndQueueType on click on Historique_RANKED_SOLO_5x5 button', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    const listMatchDataSignalSetSpy = spyOn(historyService.listMatchDataSignal, 'set');
+    const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([matchDTOMock()]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'button historique RANKED_SOLO_5x5');
+
+    // THEN
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 420);
+    expect(listMatchDataSignalSetSpy).toHaveBeenCalledWith([matchDTOMock()]);
+    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(0);
+    expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(1);
+    expect(component.currentMatchsParticipantsSoloQSignal()[0]).toEqual(mockMatchParticipant());
+  });
+
+  it('should call historyService.getHistoryByPuuidAndQueueType on click on Historique_Ranked_FLEX_SR button', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    const listMatchDataSignalSetSpy = spyOn(historyService.listMatchDataSignal, 'set');
+
+    const history = [matchDTOMock()];
+    history[0].info.queueId = 440;
+
+    const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'button historique RANKED_FLEX_SR');
+
+    // THEN
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 440);
+    expect(listMatchDataSignalSetSpy).toHaveBeenCalledWith(history);
+    expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(0);
+    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(1);
+    expect(component.currentMatchsParticipantsFlexQSignal()[0]).toEqual(mockMatchParticipant());
   });
 });

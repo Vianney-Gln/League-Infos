@@ -31,6 +31,7 @@ public class ParticipantMatchDTO {
     private String lane;
     private String role;
     private String puuid;
+    private String teamPosition;
     private Boolean win;
     private ChallengesDTO challenges;
 
@@ -286,6 +287,14 @@ public class ParticipantMatchDTO {
         return challenges;
     }
 
+    public String getTeamPosition() {
+        return teamPosition;
+    }
+
+    public void setTeamPosition(String teamPosition) {
+        this.teamPosition = teamPosition;
+    }
+
     public void setChallenges(ChallengesDTO challenges) {
         this.challenges = challenges;
     }
@@ -321,6 +330,7 @@ public class ParticipantMatchDTO {
         private String lane;
         private String role;
         private String puuid;
+        private String teamPosition;
         private Boolean win;
         private ChallengesDTO challenges;
 
@@ -474,6 +484,11 @@ public class ParticipantMatchDTO {
             return this;
         }
 
+        public ParticipantMatchDTO.Builder teamPosition(String teamPosition) {
+            this.teamPosition = teamPosition;
+            return this;
+        }
+
         public ParticipantMatchDTO.Builder win(Boolean win) {
             this.win = win;
             return this;
@@ -516,6 +531,7 @@ public class ParticipantMatchDTO {
             dto.setLane(this.lane);
             dto.setRole(this.role);
             dto.setPuuid(this.puuid);
+            dto.setTeamPosition(this.teamPosition);
             dto.setWin(this.win);
             dto.setChallenges(this.challenges);
             return dto;

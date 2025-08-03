@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020820252335
+      author: VG
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: T_CHALLENGES
+      changes:
+        - createTable:
+            tableName: T_CHALLENGES
+            columns:
+              - column:
+                  name: challenges_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: game_length
+                  type: FLOAT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kda
+                  type: FLOAT
+                  constraints:
+                    nullable: true

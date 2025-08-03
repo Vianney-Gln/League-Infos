@@ -1,0 +1,180 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020820252233
+      author: VG
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: T_PARTICIPANT_MATCH
+      changes:
+        - createTable:
+            tableName: T_PARTICIPANT_MATCH
+            columns:
+              - column:
+                  name: participant_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: profile_icon
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: assists
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kills
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deaths
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: champ_level
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: champion_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gold_earned
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_0
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_1
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_2
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_3
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_4
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_5
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: item_6
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: champion_transform
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: penta_kills
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quadra_kills
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: triple_kills
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: double_kills
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summoner1_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summoner2_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: team_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_minions_killed
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: neutral_minions_killed
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: champion_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summoner_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: lane
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: team_position
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: puuid
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: win
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: challenges_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_participant_match_challenges
+                    references: T_CHALLENGES(challenges_id)

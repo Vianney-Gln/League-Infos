@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 030820251105
+      author: VG
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: T_META_DATA
+      changes:
+        - createTable:
+            tableName: T_META_DATA
+            columns:
+              - column:
+                  name: meta_data_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: data_version
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: match_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

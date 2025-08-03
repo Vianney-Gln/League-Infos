@@ -3,3 +3,16 @@ app:
     allowed-origin: "http://localhost:4200"
   game-history:
     max-count: 3
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/league
+    username: leagueuser
+    password: leaguepass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

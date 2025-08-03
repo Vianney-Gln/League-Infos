@@ -1,12 +1,12 @@
 package com.league.league_infos.controllers;
 
-import com.league.league_infos.models.dto.match.ChallengesDTO;
-import com.league.league_infos.models.dto.match.InfoMatchDTO;
-import com.league.league_infos.models.dto.match.MatchDTO;
-import com.league.league_infos.models.dto.match.MetadataDTO;
-import com.league.league_infos.models.dto.match.ParticipantMatchDTO;
-import com.league.league_infos.models.dto.match.TeamDTO;
-import com.league.league_infos.services.api.HistoryGamesService;
+import com.league.league_infos.dto.match.ChallengesDTO;
+import com.league.league_infos.dto.match.InfoMatchDTO;
+import com.league.league_infos.dto.match.MatchDTO;
+import com.league.league_infos.dto.match.MetadataDTO;
+import com.league.league_infos.dto.match.ParticipantMatchDTO;
+import com.league.league_infos.dto.match.TeamDTO;
+import com.league.league_infos.services.riot.RiotHistoryGamesService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HistoryGamesControllerTest {
 
     @MockitoBean
-    private HistoryGamesService historyGamesService;
+    private RiotHistoryGamesService riotHistoryGamesService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -142,8 +142,8 @@ class HistoryGamesControllerTest {
                         .build())
                 .build();
 
-        when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1"));
-        when(historyGamesService.getMatchHistory(anyString())).thenReturn(matchDTO);
+        when(riotHistoryGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1"));
+        when(riotHistoryGamesService.getMatchHistory(anyString())).thenReturn(matchDTO);
 
         // WHEN
         mockMvc.perform(get("/games-history/puuid")
@@ -242,15 +242,15 @@ class HistoryGamesControllerTest {
                         """));
 
         // THEN
-        verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
-        verify(historyGamesService, times(1)).getMatchHistory("1");
+        verify(riotHistoryGamesService, times(1)).getHistoryIds("puuid", 420);
+        verify(riotHistoryGamesService, times(1)).getMatchHistory("1");
     }
 
     @Test
     @DisplayName("Should not return anything if list ids is null")
     void getGamesHistory_success_2() throws Exception {
         // GIVEN
-        when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(null);
+        when(riotHistoryGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(null);
 
         // WHEN
         mockMvc.perform(get("/games-history/puuid")
@@ -259,7 +259,7 @@ class HistoryGamesControllerTest {
                 .andExpect(content().json("[]"));
 
         // THEN
-        verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
-        verify(historyGamesService, never()).getMatchHistory(any());
+        verify(riotHistoryGamesService, times(1)).getHistoryIds("puuid", 420);
+        verify(riotHistoryGamesService, never()).getMatchHistory(any());
     }
 }

@@ -1,17 +1,16 @@
 package com.league.league_infos.services.business;
 
 import com.league.league_infos.common.exceptions.BusinessException;
-import com.league.league_infos.models.dto.BannedChampionDTO;
-import com.league.league_infos.models.dto.FeaturedGameInfoDTO;
-import com.league.league_infos.models.dto.FeaturedGamesDTO;
-import com.league.league_infos.services.api.FeaturedGameService;
+import com.league.league_infos.dto.BannedChampionDTO;
+import com.league.league_infos.dto.FeaturedGameInfoDTO;
+import com.league.league_infos.dto.FeaturedGamesDTO;
+import com.league.league_infos.services.riot.RiotFeaturedGameService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ class StatsServiceTest {
     private StatsService statsService;
 
     @Mock
-    private FeaturedGameService featuredGameService;
+    private RiotFeaturedGameService riotFeaturedGameService;
 
     @Test
     @DisplayName("Should return the most banned id champion")
@@ -54,14 +53,14 @@ class StatsServiceTest {
                 .gameList(List.of(featuredGameInfo, featuredGameInfo, featuredGameInfo, featuredGameInfo, featuredGameInfo))
                 .build();
 
-        when(featuredGameService.getFeaturedGames()).thenReturn(ResponseEntity.ok(featuredGamesDTO));
+        when(riotFeaturedGameService.getFeaturedGames()).thenReturn(featuredGamesDTO);
 
         // WHEN
         Long result = statsService.calculateMostBannedChampion();
 
         // THEN
         assertThat(result).isEqualTo(200L);
-        verify(featuredGameService, times(1)).getFeaturedGames();
+        verify(riotFeaturedGameService, times(1)).getFeaturedGames();
     }
 
     @Test
@@ -86,7 +85,7 @@ class StatsServiceTest {
         FeaturedGamesDTO featuredGamesDTO = new FeaturedGamesDTO.Builder()
                 .gameList(List.of(featuredGameInfo, featuredGameInfo, featuredGameInfo, featuredGameInfo, featuredGameInfo))
                 .build();
-        when(featuredGameService.getFeaturedGames()).thenReturn(ResponseEntity.ok(featuredGamesDTO));
+        when(riotFeaturedGameService.getFeaturedGames()).thenReturn(featuredGamesDTO);
 
         // WHEN + THEN
         assertThatThrownBy(() -> statsService.calculateMostBannedChampion())
@@ -98,7 +97,7 @@ class StatsServiceTest {
     @DisplayName("Should throw Business Exception if getFeaturedGames is null")
     void calculateMostBannedChampion_fail_2() {
         // GIVEN
-        when(featuredGameService.getFeaturedGames()).thenReturn(ResponseEntity.ok(null));
+        when(riotFeaturedGameService.getFeaturedGames()).thenReturn(null);
 
         // WHEN + THEN
         assertThatThrownBy(() -> statsService.calculateMostBannedChampion())

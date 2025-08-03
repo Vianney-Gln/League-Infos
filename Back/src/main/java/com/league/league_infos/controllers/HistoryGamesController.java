@@ -1,7 +1,7 @@
 package com.league.league_infos.controllers;
 
-import com.league.league_infos.models.dto.match.MatchDTO;
-import com.league.league_infos.services.api.HistoryGamesService;
+import com.league.league_infos.dto.match.MatchDTO;
+import com.league.league_infos.services.riot.RiotHistoryGamesService;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +16,19 @@ import java.util.List;
 @RestController
 public class HistoryGamesController {
 
-    private final HistoryGamesService historyGamesService;
+    private final RiotHistoryGamesService riotHistoryGamesService;
 
     @Autowired
-    public HistoryGamesController(HistoryGamesService historyGamesService) {
-        this.historyGamesService = historyGamesService;
+    public HistoryGamesController(RiotHistoryGamesService riotHistoryGamesService) {
+        this.riotHistoryGamesService = riotHistoryGamesService;
     }
 
     @GetMapping("games-history/{puuid}")
     public ResponseEntity<List<MatchDTO>> getGamesHistory(@PathVariable String puuid, @Nullable @RequestParam Integer queue) {
-        List<String> listGamesIds = historyGamesService.getHistoryIds(puuid, queue);
+        List<String> listGamesIds = riotHistoryGamesService.getHistoryIds(puuid, queue);
 
         if (listGamesIds != null) {
-            List<MatchDTO> listMatchHistory = listGamesIds.stream().map(historyGamesService::getMatchHistory).toList();
+            List<MatchDTO> listMatchHistory = listGamesIds.stream().map(riotHistoryGamesService::getMatchHistory).toList();
             return ResponseEntity.status(200).body(listMatchHistory);
         }
         return ResponseEntity.status(204).body(Collections.emptyList());

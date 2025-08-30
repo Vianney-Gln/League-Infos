@@ -2,7 +2,7 @@ app:
   cors:
     allowed-origin: "http://localhost:4200"
   game-history:
-    max-count: 3
+    max-count: 10
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/league

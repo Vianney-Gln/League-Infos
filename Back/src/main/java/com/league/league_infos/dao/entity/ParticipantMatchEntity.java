@@ -1,5 +1,6 @@
 package com.league.league_infos.dao.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,9 @@ public class ParticipantMatchEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "participant_id")
     private Long idParticipant;
 
@@ -111,13 +115,33 @@ public class ParticipantMatchEntity {
     @Column(name = "win", nullable = false)
     private boolean win;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "challenges_id", nullable = false)
     private ChallengesEntity challengesEntity;
 
     @ManyToOne
     @JoinColumn(name = "info_match_id", nullable = false)
     private InfoMatchEntity infoMatchEntity;
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "meta_data_id", nullable = false)
+    private MetaDataEntity metaDataEntity;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public MetaDataEntity getMetaDataEntity() {
+        return metaDataEntity;
+    }
+
+    public void setMetaDataEntity(MetaDataEntity metaDataEntity) {
+        this.metaDataEntity = metaDataEntity;
+    }
 
     public Long getIdParticipant() {
         return idParticipant;

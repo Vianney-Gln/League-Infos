@@ -4,6 +4,7 @@ import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.services.api.HistoryGamesService;
+import com.league.league_infos.services.spi.HistoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,13 +30,15 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 public class RiotHistoryGamesService implements HistoryGamesService {
 
     private final RestTemplate restTemplate;
+    private final HistoryPersistence historyPersistence;
 
     @Value("${app.game-history.max-count}")
     private int MAX_COUNT_MATCH_HISTORY;
 
     @Autowired
-    public RiotHistoryGamesService(RestTemplate restTemplate) {
+    public RiotHistoryGamesService(RestTemplate restTemplate, HistoryPersistence historyPersistence) {
         this.restTemplate = restTemplate;
+        this.historyPersistence = historyPersistence;
     }
 
     @Override
@@ -61,16 +65,21 @@ public class RiotHistoryGamesService implements HistoryGamesService {
     }
 
     @Override
-    public MatchDTO getMatchHistory(String matchId) {
+    public void getMatchHistory(List<String> listMatchId) {
 
+        List<MatchDTO> listMatchDTO = new ArrayList<>();
         try {
-            ResponseEntity<MatchDTO> result = restTemplate.exchange(
-                    HISTORY_GAMES_URL + "/" + matchId,
-                    HttpMethod.GET,
-                    null,
-                    MatchDTO.class
-            );
-            return result.getBody();
+            listMatchDTO = listMatchId.stream().map(matchId -> {
+                ResponseEntity<MatchDTO> result = restTemplate.exchange(
+                        HISTORY_GAMES_URL + "/" + matchId,
+                        HttpMethod.GET,
+                        null,
+                        MatchDTO.class
+                );
+                return result.getBody();
+            }).toList();
+
+            historyPersistence.persistMatchHistory(listMatchDTO);
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {

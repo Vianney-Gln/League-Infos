@@ -8,10 +8,13 @@ import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.dto.match.MetadataDTO;
 import com.league.league_infos.dto.match.ParticipantMatchDTO;
 import com.league.league_infos.dto.match.TeamDTO;
+import com.league.league_infos.services.spi.HistoryPersistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +35,8 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,8 +45,14 @@ class RiotHistoryGamesServiceTest {
     @Mock
     private RestTemplate restTemplate;
 
+    @Mock
+    private HistoryPersistence historyPersistence;
+
     @InjectMocks
     private RiotHistoryGamesService riotHistoryGamesService;
+
+    @Captor
+    ArgumentCaptor<List<MatchDTO>> listMatchCaptor;
 
     @BeforeEach
     void init() {
@@ -159,7 +170,7 @@ class RiotHistoryGamesServiceTest {
                 .thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404)));
 
         // WHEN + THEN
-        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory("id"))
+        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory(List.of("id")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ERROR_BUSINESS_1.getLibelle());
     }
@@ -175,7 +186,7 @@ class RiotHistoryGamesServiceTest {
                 .thenThrow(new HttpServerErrorException(HttpStatusCode.valueOf(404)));
 
         // WHEN + THEN
-        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory("id"))
+        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory(List.of("id")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ERROR_BUSINESS_1.getLibelle());
     }
@@ -191,7 +202,7 @@ class RiotHistoryGamesServiceTest {
                 .thenThrow(new ResourceAccessException(""));
 
         // WHEN + THEN
-        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory("id"))
+        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory(List.of("id")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ERROR_BUSINESS_3.getLibelle());
     }
@@ -207,13 +218,13 @@ class RiotHistoryGamesServiceTest {
                 .thenThrow(new HttpServerErrorException(HttpStatusCode.valueOf(400)));
 
         // WHEN + THEN
-        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory("id"))
+        assertThatThrownBy(() -> riotHistoryGamesService.getMatchHistory(List.of("id")))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ERROR_BUSINESS_2.getLibelle());
     }
 
     @Test
-    @DisplayName("Should call riot game api and return a MatchDTO")
+    @DisplayName("Should call historyPersistence.persistMatchHistory with data from riot game api")
     void getMatchHistory_success_1() {
         // GIVEN
         MatchDTO matchDTO = new MatchDTO.Builder()
@@ -328,89 +339,73 @@ class RiotHistoryGamesServiceTest {
                 .thenReturn(response);
 
         // WHEN
-        MatchDTO result = riotHistoryGamesService.getMatchHistory("id");
+        riotHistoryGamesService.getMatchHistory(List.of("id"));
 
         // THEN
-        assertThat(result).isNotNull();
-        assertThat(result.getMetadata()).isNotNull()
-                .extracting("matchId", "dataVersion")
+        verify(historyPersistence, times(1)).persistMatchHistory(listMatchCaptor.capture());
+        assertThat(listMatchCaptor.getValue()).isNotEmpty().hasSize(1);
+        assertThat(listMatchCaptor.getValue().getFirst().getMetadata()).isNotNull().extracting("matchId", "dataVersion")
                 .containsExactly("200", "dataVersion");
-        assertThat(result.getMetadata().getParticipants()).containsExactly("p1", "p2");
 
-        assertThat(result.getInfo()).isNotNull()
-                .extracting("gameId",
+        assertThat(listMatchCaptor.getValue().getFirst().getInfo()).isNotNull().extracting("endOfGameResult",
                         "gameCreation",
                         "gameDuration",
-                        "endOfGameResult",
-                        "gameEndTimestamp",
                         "gameMode",
-                        "gameName",
                         "gameType",
+                        "gameEndTimestamp",
                         "gameVersion",
-                        "mapId",
-                        "queueId")
-                .containsExactly(200L,
+                        "queueId",
+                        "mapId")
+                .containsExactly("end of game result",
                         326L,
                         300L,
-                        "end of game result",
-                        326L,
                         "classic",
-                        "game name",
                         "Ranked",
+                        326L,
                         "game version",
-                        10,
-                        420);
+                        420,
+                        10);
 
-        assertThat(result.getInfo().getParticipants()).isNotEmpty().hasSize(2)
-                .extracting("assists",
-                        "deaths",
-                        "kills",
-                        "championId",
-                        "championName",
-                        "championTransform",
-                        "champLevel",
-                        "doubleKills",
-                        "goldEarned",
-                        "item0",
-                        "item1",
-                        "item2",
-                        "item3",
-                        "item4",
-                        "item5",
-                        "item6",
-                        "lane",
-                        "neutralMinionsKilled",
-                        "pentaKills",
-                        "puuid",
-                        "profileIcon",
-                        "participantId",
-                        "quadraKills",
-                        "role",
-                        "summoner1Id",
-                        "summoner2Id",
-                        "summonerName",
-                        "teamId",
-                        "totalMinionsKilled",
-                        "tripleKills",
-                        "win"
-                ).containsExactly(
-                        tuple(13, 5, 20, 125, "Shyvana", 0, 18, 2, 18566, 135, 136, 95, 77, 122, 123, 126, "JUNGLE", 104, 1, "puuid", 13, 1, 0, "", 27, 28, "", 50, 125, 0, true),
-                        tuple(5, 10, 3, 98, "Garen", 0, 17, 0, 14056, 135, 136, 94, 75, 100, null, null, "TOP", 0, 0, "puuid1", 36, 2, 0, "", 27, 45, "", 60, 185, 0, false)
-                );
-
-        assertThat(result.getInfo().getParticipants().getFirst().getChallenges()).isNotNull()
-                .extracting("gameLength", "kda")
-                .containsExactly(326.0f, 3.0f);
-
-        assertThat(result.getInfo().getParticipants().getLast().getChallenges()).isNotNull()
-                .extracting("gameLength", "kda")
-                .containsExactly(326.0f, 3.0f);
-
-        assertThat(result.getInfo().getTeams()).isNotEmpty().hasSize(2)
-                .extracting("win", "teamId")
+        assertThat(listMatchCaptor.getValue().getFirst().getInfo().getTeams()).isNotEmpty().hasSize(2).extracting("win", "teamId")
                 .containsExactly(
                         tuple(true, 50),
                         tuple(false, 60)
                 );
+
+        assertThat(listMatchCaptor.getValue().getFirst().getInfo().getParticipants()).isNotEmpty().hasSize(2).extracting("assists",
+                "deaths",
+                "kills",
+                "championId",
+                "championName",
+                "championTransform",
+                "champLevel",
+                "doubleKills",
+                "goldEarned",
+                "item0",
+                "item1",
+                "item2",
+                "item3",
+                "item4",
+                "item5",
+                "item6",
+                "lane",
+                "neutralMinionsKilled",
+                "pentaKills",
+                "puuid",
+                "profileIcon",
+                "participantId",
+                "quadraKills",
+                "role",
+                "summoner1Id",
+                "summoner2Id",
+                "summonerName",
+                "teamId",
+                "totalMinionsKilled",
+                "tripleKills",
+                "win"
+        ).containsExactly(
+                tuple(13, 5, 20, 125, "Shyvana", 0, 18, 2, 18566, 135, 136, 95, 77, 122, 123, 126, "JUNGLE", 104, 1, "puuid", 13, 1, 0, "", 27, 28, "", 50, 125, 0, true),
+                tuple(5, 10, 3, 98, "Garen", 0, 17, 0, 14056, 135, 136, 94, 75, 100, null, null, "TOP", 0, 0, "puuid1", 36, 2, 0, "", 27, 45, "", 60, 185, 0, false)
+        );
     }
 }

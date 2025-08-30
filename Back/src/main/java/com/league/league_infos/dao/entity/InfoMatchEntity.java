@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -57,6 +58,8 @@ public class InfoMatchEntity {
 
     @OneToMany(mappedBy = "infoMatchEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParticipantMatchEntity> participantMatchEntityList;
+
+    private LocalDateTime creationDate;
 
     public Long getIdInfoMatch() {
         return idInfoMatch;
@@ -169,4 +172,13 @@ public class InfoMatchEntity {
     public void setParticipantMatchEntityList(List<ParticipantMatchEntity> participantMatchEntityList) {
         this.participantMatchEntityList = participantMatchEntityList;
     }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }
+

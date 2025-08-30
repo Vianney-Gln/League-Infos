@@ -1,5 +1,6 @@
 package com.league.league_infos.dto.match;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class InfoMatchDTO {
@@ -16,6 +17,7 @@ public class InfoMatchDTO {
     private Integer queueId;
     private List<ParticipantMatchDTO> participants;
     private List<TeamDTO> teams;
+    private LocalDateTime creationDate;
 
     public String getEndOfGameResult() {
         return endOfGameResult;
@@ -121,6 +123,14 @@ public class InfoMatchDTO {
         this.teams = teams;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public static class Builder {
         private String endOfGameResult;
         private String gameMode;
@@ -135,6 +145,7 @@ public class InfoMatchDTO {
         private Integer queueId;
         private List<ParticipantMatchDTO> participants;
         private List<TeamDTO> teams;
+        private LocalDateTime creationDate;
 
         public InfoMatchDTO.Builder endOfGameResult(String endOfGameResult) {
             this.endOfGameResult = endOfGameResult;
@@ -201,6 +212,11 @@ public class InfoMatchDTO {
             return this;
         }
 
+        public InfoMatchDTO.Builder creationDate(LocalDateTime creationDate) {
+            this.creationDate = creationDate;
+            return this;
+        }
+
         public InfoMatchDTO build() {
             InfoMatchDTO dto = new InfoMatchDTO();
             dto.setEndOfGameResult(this.endOfGameResult);
@@ -216,6 +232,7 @@ public class InfoMatchDTO {
             dto.setQueueId(this.queueId);
             dto.setParticipants(this.participants);
             dto.setTeams(this.teams);
+            dto.setCreationDate(this.creationDate);
             return dto;
         }
     }

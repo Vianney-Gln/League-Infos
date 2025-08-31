@@ -20,8 +20,7 @@ jobs:
 
       - name: Build & Test Backend
         run: |
-          cd Back
-          ./mvnw clean verify --fail-at-end
+          mvn clean verify --fail-at-end
 
   frontend-tests:
     runs-on: ubuntu-latest

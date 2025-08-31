@@ -38,3 +38,5 @@ jobs:
           cd Front
           npm ci
           npm test -- --watch=false --browsers=ChromeHeadless
+        env:
+          TZ: "Europe/Paris"

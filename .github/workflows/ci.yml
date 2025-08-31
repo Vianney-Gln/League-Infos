@@ -19,7 +19,9 @@ jobs:
           java-version: '21.0.7'
 
       - name: Build & Test Backend
-        run: ./mvnw clean verify --fail-at-end
+        run: |
+          cd Back
+          mvn clean verify --fail-at-end
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -33,6 +35,8 @@ jobs:
 
       - name: Install & Test Frontend
         run: |
-          cd frontend
+          cd Front
           npm ci
           npm test -- --watch=false --browsers=ChromeHeadless
+        env:
+          TZ: "Europe/Paris"

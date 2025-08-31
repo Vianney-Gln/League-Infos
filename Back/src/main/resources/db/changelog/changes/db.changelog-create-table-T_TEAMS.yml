@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 030820250011
+      author: VG
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: T_TEAMS
+      changes:
+        - createTable:
+            tableName: T_TEAMS
+            columns:
+              - column:
+                  name: team_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: team_id_numero
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: win
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false

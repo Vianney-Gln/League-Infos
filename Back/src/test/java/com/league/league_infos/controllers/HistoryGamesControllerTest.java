@@ -1,12 +1,12 @@
 package com.league.league_infos.controllers;
 
-import com.league.league_infos.models.dto.match.ChallengesDTO;
-import com.league.league_infos.models.dto.match.InfoMatchDTO;
-import com.league.league_infos.models.dto.match.MatchDTO;
-import com.league.league_infos.models.dto.match.MetadataDTO;
-import com.league.league_infos.models.dto.match.ParticipantMatchDTO;
-import com.league.league_infos.models.dto.match.TeamDTO;
-import com.league.league_infos.services.api.HistoryGamesService;
+import com.league.league_infos.dto.match.ChallengesDTO;
+import com.league.league_infos.dto.match.InfoMatchDTO;
+import com.league.league_infos.dto.match.MatchDTO;
+import com.league.league_infos.dto.match.MetadataDTO;
+import com.league.league_infos.dto.match.ParticipantMatchDTO;
+import com.league.league_infos.dto.match.TeamDTO;
+import com.league.league_infos.services.business.MatchDataProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HistoryGamesControllerTest {
 
     @MockitoBean
-    private HistoryGamesService historyGamesService;
+    private MatchDataProvider matchDataProvider;
 
     @Autowired
     private MockMvc mockMvc;
@@ -141,9 +140,7 @@ class HistoryGamesControllerTest {
                                         .build()))
                         .build())
                 .build();
-
-        when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1"));
-        when(historyGamesService.getMatchHistory(anyString())).thenReturn(matchDTO);
+        when(matchDataProvider.getMatchsHistory(anyString(), any(Integer.class))).thenReturn(List.of(matchDTO));
 
         // WHEN
         mockMvc.perform(get("/games-history/puuid")
@@ -242,24 +239,6 @@ class HistoryGamesControllerTest {
                         """));
 
         // THEN
-        verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
-        verify(historyGamesService, times(1)).getMatchHistory("1");
-    }
-
-    @Test
-    @DisplayName("Should not return anything if list ids is null")
-    void getGamesHistory_success_2() throws Exception {
-        // GIVEN
-        when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(null);
-
-        // WHEN
-        mockMvc.perform(get("/games-history/puuid")
-                        .param("queue", "420")
-                ).andExpect(status().is2xxSuccessful())
-                .andExpect(content().json("[]"));
-
-        // THEN
-        verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
-        verify(historyGamesService, never()).getMatchHistory(any());
+        verify(matchDataProvider, times(1)).getMatchsHistory("puuid", 420);
     }
 }

@@ -1,23 +1,22 @@
 package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.league.league_infos.models.dto.ChampionMasteryDTO;
-import com.league.league_infos.models.dto.LeagueEntryDTO;
-import com.league.league_infos.models.dto.LeagueItemDTO;
-import com.league.league_infos.models.dto.LeagueListDTO;
-import com.league.league_infos.services.api.PlayersService;
+import com.league.league_infos.dto.ChampionMasteryDTO;
+import com.league.league_infos.dto.LeagueEntryDTO;
+import com.league.league_infos.dto.LeagueItemDTO;
+import com.league.league_infos.dto.LeagueListDTO;
+import com.league.league_infos.services.riot.RiotPlayersService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.league.league_infos.models.enums.QueueEnum.RANKED_FLEX_SR;
-import static com.league.league_infos.models.enums.QueueEnum.RANKED_SOLO_5x5;
+import static com.league.league_infos.common.enums.QueueEnum.RANKED_FLEX_SR;
+import static com.league.league_infos.common.enums.QueueEnum.RANKED_SOLO_5x5;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,7 +31,7 @@ class PlayersControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private PlayersService playersService;
+    private RiotPlayersService riotPlayersService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,14 +60,14 @@ class PlayersControllerTest {
                         .build()
                 )).build();
 
-        when(playersService.getLeagueChallengerDataSoloQ()).thenReturn(ResponseEntity.ok(leagueListDTO));
+        when(riotPlayersService.getLeagueChallengerDataSoloQ()).thenReturn(leagueListDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/league-challengers-solo-queue"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(leagueListDTO)));
 
-        verify(playersService, times(1)).getLeagueChallengerDataSoloQ();
+        verify(riotPlayersService, times(1)).getLeagueChallengerDataSoloQ();
     }
 
     @Test
@@ -95,14 +94,14 @@ class PlayersControllerTest {
                         .build()
                 )).build();
 
-        when(playersService.getLeagueChallengerDataFlexQ()).thenReturn(ResponseEntity.ok(leagueListDTO));
+        when(riotPlayersService.getLeagueChallengerDataFlexQ()).thenReturn(leagueListDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/league-challengers-flex-queue"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(leagueListDTO)));
 
-        verify(playersService, times(1)).getLeagueChallengerDataFlexQ();
+        verify(riotPlayersService, times(1)).getLeagueChallengerDataFlexQ();
     }
 
     @Test
@@ -142,14 +141,14 @@ class PlayersControllerTest {
                 .build();
 
         List<LeagueEntryDTO> leagueEntries = List.of(leagueEntrySoloQ, leagueEntryFlexQ);
-        when(playersService.getLeagueEntriesByPuuid(anyString())).thenReturn(ResponseEntity.ok(leagueEntries));
+        when(riotPlayersService.getLeagueEntriesByPuuid(anyString())).thenReturn(leagueEntries);
 
         // WHEN + THEN
         mockMvc.perform(get("/league-entries-by-puuid/puuidxxxxx"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(leagueEntries)));
 
-        verify(playersService, times(1)).getLeagueEntriesByPuuid("puuidxxxxx");
+        verify(riotPlayersService, times(1)).getLeagueEntriesByPuuid("puuidxxxxx");
     }
 
     @Test
@@ -170,13 +169,13 @@ class PlayersControllerTest {
                 .build();
 
         List<ChampionMasteryDTO> championsMasteryDTO = List.of(championMasteryDTO);
-        when(playersService.getChampionMasteriesByPuuid(anyString())).thenReturn(ResponseEntity.ok(championsMasteryDTO));
+        when(riotPlayersService.getChampionMasteriesByPuuid(anyString())).thenReturn(championsMasteryDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/champion-masteries/puuid/top"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(championsMasteryDTO)));
 
-        verify(playersService, times(1)).getChampionMasteriesByPuuid("puuid");
+        verify(riotPlayersService, times(1)).getChampionMasteriesByPuuid("puuid");
     }
 }

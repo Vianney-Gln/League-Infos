@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/db.changelog-create-table-T_META_DATA.yml
+  - include:
+      file: db/changelog/changes/db.changelog-create-table-T_INFOS_MATCH.yml
+  - include:
+      file: db/changelog/changes/db.changelog-create-table-T_TEAMS.yml
+  - include:
+      file: db/changelog/changes/db.changelog-create-table-T_CHALLENGES.yml
+  - include:
+      file: db/changelog/changes/db.changelog-create-table-T_PARTICIPANT_MATCH.yml
+  - include:
+      file: db/changelog/changes/db.changelog-update-table-T_PARTICIPANT_MATCH-add-column-info_match_id.yml
+  - include:
+      file: db/changelog/changes/db.changelog-update-table-T_TEAMS-add-column-info_match_id.yml
+  - include:
+      file: db/changelog/changes/db.changelog-update-table-T_PARTICIPANT_MATCH-add-column-meta_data_id.yml

@@ -1,13 +1,12 @@
 package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.league.league_infos.models.dto.AccountDTO;
-import com.league.league_infos.services.api.AccountService;
+import com.league.league_infos.dto.AccountDTO;
+import com.league.league_infos.services.riot.RiotAccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,7 +24,7 @@ class AccountControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private AccountService accountService;
+    private RiotAccountService accountService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -40,7 +39,7 @@ class AccountControllerTest {
                 .tagLine("tag line")
                 .build();
 
-        when(accountService.getAccountByPuuid(anyString())).thenReturn(ResponseEntity.ok(accountDTO));
+        when(accountService.getAccountByPuuid(anyString())).thenReturn(accountDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/account/123987"))
@@ -60,7 +59,7 @@ class AccountControllerTest {
                 .tagLine("EUW")
                 .build();
 
-        when(accountService.getAccountByRiotId(anyString(), anyString())).thenReturn(ResponseEntity.ok(accountDTO));
+        when(accountService.getAccountByRiotId(anyString(), anyString())).thenReturn(accountDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/account/by-riot-id/Test/EUW"))

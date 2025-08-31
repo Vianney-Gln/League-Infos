@@ -1,13 +1,12 @@
 package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.league.league_infos.models.dto.SummonerDTO;
-import com.league.league_infos.services.api.SummonersService;
+import com.league.league_infos.dto.SummonerDTO;
+import com.league.league_infos.services.riot.RiotSummonersService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,7 +25,7 @@ class SummonersControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private SummonersService summonersService;
+    private RiotSummonersService riotSummonersService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,13 +43,13 @@ class SummonersControllerTest {
                 .puuid("abcdefgh")
                 .build();
 
-        when(summonersService.getSummonerByPuuid(anyString())).thenReturn(ResponseEntity.ok(summonerDTO));
+        when(riotSummonersService.getSummonerByPuuid(anyString())).thenReturn(summonerDTO);
 
         // WHEN + THEN
         mockMvc.perform(get("/summoner/122355"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(summonerDTO)));
 
-        verify(summonersService, times(1)).getSummonerByPuuid("122355");
+        verify(riotSummonersService, times(1)).getSummonerByPuuid("122355");
     }
 }

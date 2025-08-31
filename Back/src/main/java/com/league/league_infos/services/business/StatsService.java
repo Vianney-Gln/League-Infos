@@ -1,13 +1,12 @@
 package com.league.league_infos.services.business;
 
 import com.league.league_infos.common.exceptions.BusinessException;
-import com.league.league_infos.models.dto.BannedChampionDTO;
-import com.league.league_infos.models.dto.FeaturedGameInfoDTO;
-import com.league.league_infos.models.dto.FeaturedGamesDTO;
-import com.league.league_infos.services.api.FeaturedGameService;
+import com.league.league_infos.dto.BannedChampionDTO;
+import com.league.league_infos.dto.FeaturedGameInfoDTO;
+import com.league.league_infos.dto.FeaturedGamesDTO;
+import com.league.league_infos.services.riot.RiotFeaturedGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,11 +17,11 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 
 @Service
 public class StatsService {
-    private final FeaturedGameService featuredGameService;
+    private final RiotFeaturedGameService riotFeaturedGameService;
 
     @Autowired
-    public StatsService(FeaturedGameService featuredGameService) {
-        this.featuredGameService = featuredGameService;
+    public StatsService(RiotFeaturedGameService riotFeaturedGameService) {
+        this.riotFeaturedGameService = riotFeaturedGameService;
     }
 
     /**
@@ -31,8 +30,7 @@ public class StatsService {
      * @return Long
      */
     public Long calculateMostBannedChampion() {
-        ResponseEntity<FeaturedGamesDTO> featuredGamesResponse = featuredGameService.getFeaturedGames();
-        FeaturedGamesDTO featuredGames = featuredGamesResponse != null ? featuredGamesResponse.getBody() : null;
+        FeaturedGamesDTO featuredGames = riotFeaturedGameService.getFeaturedGames();
         List<List<BannedChampionDTO>> bannedChampionDTOList;
         Map<Long, Integer> idsBannedMap = new HashMap<>();
         if (featuredGames != null) {

@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 030820251119
+      author: VG
+      preConditions:
+        - not:
+            - columnExists:
+                tableName: T_PARTICIPANT_MATCH
+                columnName: meta_data_id
+          onFail: MARK_RAN
+      changes:
+        - addColumn:
+            tableName: T_PARTICIPANT_MATCH
+            columns:
+              - column:
+                  name: meta_data_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: T_PARTICIPANT_MATCH
+            baseColumnNames: meta_data_id
+            constraintName: fk_meta_data_participant_match
+            referencedTableName: T_META_DATA
+            referencedColumnNames: meta_data_id

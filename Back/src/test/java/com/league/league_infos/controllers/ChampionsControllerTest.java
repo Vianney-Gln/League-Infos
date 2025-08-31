@@ -1,13 +1,12 @@
 package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.league.league_infos.models.dto.FreeChampionsDTO;
-import com.league.league_infos.services.api.ChampionsService;
+import com.league.league_infos.dto.FreeChampionsDTO;
+import com.league.league_infos.services.riot.RiotChampionsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,7 +25,7 @@ class ChampionsControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private ChampionsService championsService;
+    private RiotChampionsService riotChampionsService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -40,13 +39,13 @@ class ChampionsControllerTest {
         dto.setFreeChampionIdsForNewPlayers(List.of(1, 2, 3));
         dto.setFreeChampionIds(List.of(101, 102));
 
-        when(championsService.getFreeChampionsInfos()).thenReturn(ResponseEntity.ok(dto));
+        when(riotChampionsService.getFreeChampionsInfos()).thenReturn(dto);
 
         // WHEN + THEN
         mockMvc.perform(get("/champions/free"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(dto)));
 
-        verify(championsService, times(1)).getFreeChampionsInfos();
+        verify(riotChampionsService, times(1)).getFreeChampionsInfos();
     }
 }

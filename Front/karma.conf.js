@@ -22,9 +22,21 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ["Chrome"],
+    browsers: ["ChromeHeadlessTZ"],
     singleRun: true,
     restartOnFileChange: true,
     files: [{ pattern: "./src/test.ts", watched: false }],
+    customLaunchers: {
+      ChromeHeadlessTZ: {
+        base: "ChromeHeadless",
+        flags: [
+          "--no-sandbox",
+          "--disable-gpu",
+          "--lang=fr",
+          // Forcer le fuseau horaire à Europe/Paris
+          "--tz=Europe/Paris",
+        ],
+      },
+    },
   });
 };

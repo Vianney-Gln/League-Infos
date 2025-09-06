@@ -19,6 +19,7 @@ export class NavigationComponent {
 
   redirectHome() {
     this.router.navigate(['/Accueil']);
+    this.INVALID_SEARCH_SUMMONER_ERROR = '';
   }
 
   isValidRiotId(input: string): boolean {
@@ -33,6 +34,9 @@ export class NavigationComponent {
       this.INVALID_SEARCH_SUMMONER_ERROR = '';
     } else {
       this.INVALID_SEARCH_SUMMONER_ERROR = INVALID_SEARCH_SUMMONER_ERROR;
+      setTimeout(() => {
+        this.INVALID_SEARCH_SUMMONER_ERROR = '';
+      }, 10000);
     }
   }
 }

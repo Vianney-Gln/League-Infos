@@ -290,9 +290,9 @@ describe('Home', () => {
     expect(isFreeChampErrorSignalSpy).toHaveBeenCalledWith(true);
   });
 
-  it('Should display an error message in the template if isFreeChampErrorSignal is true', () => {
+  it('Should display an error message in the template if an error occurs while fetching list free champions', () => {
     // GIVEN
-    getChampionService.isFreeChampErrorSignal.set(true);
+    spyOn(getChampionService, 'getFreeChampions').and.returnValue(throwError(() => new Error()));
 
     // WHEN
     fixture.detectChanges();

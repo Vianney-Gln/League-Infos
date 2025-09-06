@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   freeChampionsForBeginnersDataSignal: WritableSignal<Champion[] | null> = signal<Champion[] | null>(null);
   isFreeChampsErrorSignal!: Signal<boolean>;
   lastVersionLolSignal: Signal<string> = signal('');
-  champsErrorMsg = CHAMPS_ERRORS;
+  champsErrorMsg = '';
   libelleTypeChamps: string = '';
 
   CHAMPION_TYPES = [
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     { id: 8, type: 'FreeBeginners', libelle: 'Gratuits jusque lv10' },
   ];
 
-  champMode = signal<'all' | 'free' | 'freeBeginners' | string>('all');
+  champMode = signal<'all' | 'free' | 'freeBeginners' | string>('free');
   listChampions = computed<Champion[]>(() => {
     const championData = this.getChampionService.championDataSignal();
     if (!championData) return [];
@@ -78,6 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.getChampionService.isFreeChampErrorSignal.set(true);
+        this.champsErrorMsg = CHAMPS_ERRORS;
         console.log(err);
       },
     });

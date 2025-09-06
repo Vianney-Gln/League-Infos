@@ -23,7 +23,7 @@
     </div>
     }
   </div>
-  }@else {
+  } @if(!listChampions().length && champsErrorMsg){
   <p data-test="error-message-free-champs" class="error-message ms-3 p-2">{{ champsErrorMsg }}</p>
   }
 </div>

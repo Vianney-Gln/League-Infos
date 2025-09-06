@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GetChampionsService } from '../services/champions/get-champions.service';
@@ -318,7 +318,7 @@ describe('Home', () => {
     const options = getAllByDataTestAttr(fixture.debugElement, 'type-champion-option');
     expect(options).toHaveSize(9);
     options?.forEach((option, index) => {
-      expect(option.textContent).toEqual(optionTexts[index]);
+      expect(option.textContent!.trim()).toEqual(optionTexts[index]);
     });
   });
 
@@ -340,14 +340,14 @@ describe('Home', () => {
       fixture.detectChanges();
 
       // WHEN
-      const matchingOption = [...selectInputChamps.options].find((o) => o.textContent === select.libelle);
+      const matchingOption = [...selectInputChamps.options].find((o) => o.textContent!.trim() === select.libelle);
       selectInputChamps.value = matchingOption!.value;
       selectInputChamps.dispatchEvent(new Event('change'));
 
       // THEN
-      expect(component.listChampions).toHaveSize(select.nbChamp);
+      expect(component.listChampions()).toHaveSize(select.nbChamp);
       if (select.libelle === 'Tous') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Aatrox',
@@ -556,7 +556,7 @@ describe('Home', () => {
       }
 
       if (select.libelle === 'Assassin') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Zed',
@@ -594,7 +594,7 @@ describe('Home', () => {
         ]);
       }
       if (select.libelle === 'Combattant') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Aatrox',
@@ -633,7 +633,7 @@ describe('Home', () => {
       }
 
       if (select.libelle === 'Mage') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Ahri',
@@ -672,7 +672,7 @@ describe('Home', () => {
       }
 
       if (select.libelle === 'Tireur') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Ashe',
@@ -710,7 +710,7 @@ describe('Home', () => {
         ]);
       }
       if (select.libelle === 'Support') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Janna',
@@ -748,7 +748,7 @@ describe('Home', () => {
         ]);
       }
       if (select.libelle === 'Tank') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Malphite',
@@ -800,14 +800,14 @@ describe('Home', () => {
       fixture.detectChanges();
 
       // WHEN
-      const matchingOption = [...selectInputChamps.options].find((o) => o.textContent === type);
+      const matchingOption = [...selectInputChamps.options].find((o) => o.textContent!.trim() === type);
       selectInputChamps.value = matchingOption!.value;
       selectInputChamps.dispatchEvent(new Event('change'));
 
       // THEN
-      expect(component.listChampions).toHaveSize(1);
+      expect(component.listChampions()).toHaveSize(1);
       if (type === 'Gratuits') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Aatrox',
@@ -845,7 +845,7 @@ describe('Home', () => {
         ]);
       }
       if (type === 'Gratuits jusque lv10') {
-        expect(component.listChampions).toEqual([
+        expect(component.listChampions()).toEqual([
           {
             version: '14.10.1',
             id: 'Ahri',
@@ -883,5 +883,55 @@ describe('Home', () => {
         ]);
       }
     });
+  });
+
+  it('free chapions should be selected by default', () => {
+    // GIVEN
+    getChampionService.championDataSignal.set(championDataMock);
+    spyOn(getChampionService, 'getFreeChampions').and.returnValue(of(mockFreeChampions));
+
+    fixture.detectChanges();
+    // THEN
+    const selectInputChamps = getByDataTestAttr(fixture.debugElement, 'select-champ-by-type') as HTMLSelectElement;
+    const options = selectInputChamps.options;
+    const optionSelected = options[options.selectedIndex];
+    expect(optionSelected.textContent!.trim()).toEqual('Gratuits');
+    expect(component.listChampions()).toHaveSize(1);
+    expect(component.listChampions()).toEqual([
+      {
+        version: '14.10.1',
+        id: 'Aatrox',
+        key: '1',
+        name: 'Aatrox',
+        title: 'the Darkin Blade',
+        blurb: 'Once honored defenders...',
+        info: { attack: 8, defense: 4, magic: 3, difficulty: 4 },
+        image: { full: 'Aatrox.png', sprite: 'champion0.png', group: 'champion', x: 0, y: 0, w: 48, h: 48 },
+        tags: ['Fighter'],
+        partype: 'Blood Well',
+        stats: {
+          hp: 650,
+          hpperlevel: 114,
+          mp: 0,
+          mpperlevel: 0,
+          movespeed: 345,
+          armor: 38,
+          armorperlevel: 4.45,
+          spellblock: 32,
+          spellblockperlevel: 2.05,
+          attackrange: 175,
+          hpregen: 3,
+          hpregenperlevel: 1,
+          mpregen: 0,
+          mpregenperlevel: 0,
+          crit: 0,
+          critperlevel: 0,
+          attackdamage: 60,
+          attackdamageperlevel: 5,
+          attackspeedperlevel: 2.5,
+          attackspeed: 0.651,
+        },
+      },
+    ]);
   });
 });

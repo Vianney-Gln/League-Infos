@@ -1,5 +1,6 @@
 package com.league.league_infos.controllers;
 
+import com.league.league_infos.common.utils.StringUtils;
 import com.league.league_infos.dto.AccountDTO;
 import com.league.league_infos.services.riot.RiotAccountService;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,6 @@ public class AccountController {
 
     @GetMapping("account/by-riot-id/{gameName}/{tagLine}")
     public ResponseEntity<AccountDTO> getAccountByRiotId(@PathVariable String gameName, @PathVariable String tagLine) {
-        return ResponseEntity.ok(accountService.getAccountByRiotId(gameName, tagLine));
+        return ResponseEntity.ok(accountService.getAccountByRiotId(StringUtils.cleanGameOrTagName(gameName), StringUtils.cleanGameOrTagName(tagLine)));
     }
 }

@@ -22,7 +22,7 @@ export class NavigationComponent {
   }
 
   isValidRiotId(input: string): boolean {
-    const riotIdRegex = /^[a-zA-Z0-9]{3,16}#[a-zA-Z0-9]{3,5}$/;
+    const riotIdRegex = /^.{3,16}#.{3,5}$/u;
     return riotIdRegex.test(input);
   }
 

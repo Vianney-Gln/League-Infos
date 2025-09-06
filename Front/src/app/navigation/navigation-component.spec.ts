@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { clickButtonByDataTestAttr, getByDataTestAttr } from '../common/utils/utils-tests';
 import { INVALID_SEARCH_SUMMONER_ERROR } from '../common/constants/errors';
 
-fdescribe('NavigationComponent', () => {
+describe('NavigationComponent', () => {
   let component: NavigationComponent;
   let fixture: ComponentFixture<NavigationComponent>;
   let routerSpy: jasmine.SpyObj<Router>;

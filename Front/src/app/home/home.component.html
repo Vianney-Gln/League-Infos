@@ -1,18 +1,20 @@
 <div class="container py-4">
   <app-hero-component></app-hero-component>
-  <h2 class="mt-4 text-center">Champions</h2>
+  <h2 data-test="libelle-type-champ" class="mt-4 text-center">{{ libelleTypeChamps }}</h2>
   <div class="row">
     <div class="col-3">
       <select data-test="select-champ-by-type" class="lol-select" (change)="sortTypeChamp($event)">
         @for (championType of CHAMPION_TYPES; track championType) {
-        <option data-test="type-champion-option" [id]="championType.id" [value]="championType.type">{{ championType.libelle }}</option>
+        <option data-test="type-champion-option" [selected]="championType.type === 'Free'" [id]="championType.id" [value]="championType.type">
+          {{ championType.libelle }}
+        </option>
         }
       </select>
     </div>
   </div>
-  @if(listChampions?.length){
+  @if(listChampions().length){
   <div class="row mt-4">
-    @for (champion of listChampions; track champion.id) {
+    @for (champion of listChampions(); track champion.id) {
     <div class="m-1 card champion-card text-white overflow-hidden position-relative">
       <img [alt]="champion.name" [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/champion/' + champion.image.full" />
       <div class="overlay d-flex align-items-end p-2">

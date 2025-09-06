@@ -1,7 +1,7 @@
 import { Component, computed, effect, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { GetChampionsService } from '../services/champions/get-champions.service';
 import { FreeChampionsDTO } from '../common/models/freeChampionsDTO';
-import { Champion } from '../common/models/championsInfos';
+import { Champion, ChampionData } from '../common/models/championsInfos';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeroComponent } from './hero/hero.component';
@@ -17,9 +17,7 @@ import { CHAMPS_ERRORS } from '../common/constants/errors';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(private getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {
-    this.getChampionsDataEffect();
-  }
+  constructor(private getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
 
   freeChampionSubscription: Subscription | null = null;
   freeChampionsDTOSignal: WritableSignal<FreeChampionsDTO | null> = signal<FreeChampionsDTO | null>(null);
@@ -28,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isFreeChampsErrorSignal!: Signal<boolean>;
   lastVersionLolSignal: Signal<string> = signal('');
   champsErrorMsg = CHAMPS_ERRORS;
-  listChampions: Champion[] | null = [];
+  libelleTypeChamps: string = '';
 
   CHAMPION_TYPES = [
     { id: 0, type: '', libelle: 'Tous' },
@@ -41,6 +39,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     { id: 7, type: 'Free', libelle: 'Gratuits' },
     { id: 8, type: 'FreeBeginners', libelle: 'Gratuits jusque lv10' },
   ];
+
+  champMode = signal<'all' | 'free' | 'freeBeginners' | string>('all');
+  listChampions = computed<Champion[]>(() => {
+    const championData = this.getChampionService.championDataSignal();
+    if (!championData) return [];
+
+    switch (this.champMode()) {
+      case 'free':
+        return this.freeChampionsDataSignal() ? this.freeChampionsDataSignal()! : [];
+      case 'freeBeginners':
+        return this.freeChampionsForBeginnersDataSignal() ? this.freeChampionsForBeginnersDataSignal()! : [];
+      case 'all':
+        return Object.values(championData.data);
+      default:
+        return Object.values(championData.data).filter((c) => c.tags.includes(this.champMode()));
+    }
+  });
 
   ngOnInit() {
     this.isFreeChampsErrorSignal = this.getChampionService.isFreeChampErrorSignal;
@@ -58,6 +73,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         freeChampNamesForBeginners.forEach((freeChampName) => {
           this.findChampDataFreeByNames(freeChampName, true);
         });
+
+        this.displayFreeChamps();
       },
       error: (err) => {
         this.getChampionService.isFreeChampErrorSignal.set(true);
@@ -101,32 +118,50 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getChampionsDataEffect() {
-    effect(() => {
-      const championDataSignal = this.getChampionService.championDataSignal();
-      if (championDataSignal) {
-        this.listChampions = Object.values(championDataSignal.data);
-      }
-    });
-  }
-
   sortTypeChamp(event: Event) {
     const select = event.target as HTMLSelectElement;
     const type = select.selectedOptions[0].getAttribute('value');
-    const championDataSignal = this.getChampionService.championDataSignal();
-    if (championDataSignal) {
-      if (type) {
-        if (type === 'Free') {
-          this.listChampions = this.freeChampionsDataSignal() !== null ? this.freeChampionsDataSignal() : [];
-        } else if (type === 'FreeBeginners') {
-          this.listChampions = this.freeChampionsDataSignal() !== null ? this.freeChampionsForBeginnersDataSignal() : [];
-        } else {
-          this.listChampions = Object.values(championDataSignal.data).filter((champ) => champ.tags.includes(type));
-        }
-      } else {
-        this.listChampions = Object.values(championDataSignal.data);
-      }
+    const championData = this.getChampionService.championDataSignal();
+
+    if (!championData) {
+      return;
     }
+
+    if (!type) {
+      this.displayAllChamps(championData);
+      return;
+    }
+
+    switch (type) {
+      case 'Free':
+        this.displayFreeChamps();
+        break;
+      case 'FreeBeginners':
+        this.displayFreeChampsBeginners();
+        break;
+      default:
+        this.displayChampsFilteredByType(championData, type);
+    }
+  }
+
+  private displayAllChamps(championData: ChampionData) {
+    this.champMode.set('all');
+    this.libelleTypeChamps = `Tous les champions`;
+  }
+
+  private displayChampsFilteredByType(championData: ChampionData, type: string) {
+    this.champMode.set(type);
+    this.libelleTypeChamps = `Champions - ${type}`;
+  }
+
+  private displayFreeChamps(): void {
+    this.champMode.set('free');
+    this.libelleTypeChamps = `Champions gratuits`;
+  }
+
+  private displayFreeChampsBeginners(): void {
+    this.champMode.set('freeBeginners');
+    this.libelleTypeChamps = 'Champions gratuits pour débutants';
   }
 
   ngOnDestroy(): void {

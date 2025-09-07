@@ -55,7 +55,7 @@ public class HistoryPersistenceBdd implements HistoryPersistence {
     @Override
     public boolean wasCreatedWithinLastHour(String puuid, Integer queue) {
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1L);
-        List<InfoMatchEntity> infoMatchEntities = infoMatchRepository.findMostRecentMatchByPuuid(puuid, oneHourAgo, queue);
+        List<InfoMatchEntity> infoMatchEntities = infoMatchRepository.findRecentsMatchByPuuidAndQueue(puuid, oneHourAgo, queue);
         return !infoMatchEntities.isEmpty();
     }
 }

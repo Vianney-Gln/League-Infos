@@ -18,5 +18,5 @@ public interface InfoMatchRepository extends JpaRepository<InfoMatchEntity, Long
             "where participant.puuid = :puuid " +
             "AND infoMatch.creationDate >= :oneHourAgo " +
             "AND infoMatch.queueId = :queue")
-    List<InfoMatchEntity> findMostRecentMatchByPuuid(@Param("puuid") String puuid, @Param("oneHourAgo") LocalDateTime oneHourAgo, @Param("queue") Integer queue);
+    List<InfoMatchEntity> findRecentsMatchByPuuidAndQueue(@Param("puuid") String puuid, @Param("oneHourAgo") LocalDateTime oneHourAgo, @Param("queue") Integer queue);
 }

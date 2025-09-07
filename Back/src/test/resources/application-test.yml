@@ -1,0 +1,21 @@
+spring:
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      schema-locations: classpath:/db/schema.sql
+      data-locations: classpath:/db/data.sql
+  h2:
+    console:
+      enabled: true

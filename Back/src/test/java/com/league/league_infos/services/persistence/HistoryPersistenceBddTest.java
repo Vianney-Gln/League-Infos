@@ -187,12 +187,12 @@ class HistoryPersistenceBddTest {
     void wasCreatedWithinLastHour_success_1() {
 
         // GIVEN
-        when(infoMatchRepository.findMostRecentMatchByPuuid(anyString(), any(LocalDateTime.class), any(Integer.class)))
+        when(infoMatchRepository.findRecentsMatchByPuuidAndQueue(anyString(), any(LocalDateTime.class), any(Integer.class)))
                 .thenReturn(List.of(new InfoMatchEntity()));
 
         // WHEN
         boolean result = historyPersistenceBdd.wasCreatedWithinLastHour("puuid", 420);
-        verify(infoMatchRepository, times(1)).findMostRecentMatchByPuuid(eq("puuid"), any(LocalDateTime.class), eq(420));
+        verify(infoMatchRepository, times(1)).findRecentsMatchByPuuidAndQueue(eq("puuid"), any(LocalDateTime.class), eq(420));
         assertThat(result).isTrue();
     }
 
@@ -201,12 +201,12 @@ class HistoryPersistenceBddTest {
     void wasCreatedWithinLastHour_success_2() {
 
         // GIVEN
-        when(infoMatchRepository.findMostRecentMatchByPuuid(anyString(), any(LocalDateTime.class), any(Integer.class)))
+        when(infoMatchRepository.findRecentsMatchByPuuidAndQueue(anyString(), any(LocalDateTime.class), any(Integer.class)))
                 .thenReturn(Collections.emptyList());
 
         // WHEN
         boolean result = historyPersistenceBdd.wasCreatedWithinLastHour("puuid", 420);
-        verify(infoMatchRepository, times(1)).findMostRecentMatchByPuuid(eq("puuid"), any(LocalDateTime.class), eq(420));
+        verify(infoMatchRepository, times(1)).findRecentsMatchByPuuidAndQueue(eq("puuid"), any(LocalDateTime.class), eq(420));
         assertThat(result).isFalse();
     }
 }

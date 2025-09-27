@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -52,13 +51,13 @@ class MatchDataProviderTest {
         // GIVEN
         when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1", "2"));
         when(historyPersistence.wasCreatedWithinLastHour(anyString(), any(Integer.class))).thenReturn(true);
-        when(historyPersistence.getMatchHistoryByGameIds(anyList())).thenReturn(List.of(new MatchDTO()));
+        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(new MatchDTO()));
 
         // WHEN
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
 
         // THEN
-        verify(historyPersistence, times(1)).getMatchHistoryByGameIds(List.of("1", "2"));
+        verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyGamesService, never()).getMatchHistory(any());
 
         assertThat(result).isNotEmpty().hasSize(1);
@@ -71,13 +70,13 @@ class MatchDataProviderTest {
         // GIVEN
         when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1", "2"));
         when(historyPersistence.wasCreatedWithinLastHour(anyString(), any(Integer.class))).thenReturn(false);
-        when(historyPersistence.getMatchHistoryByGameIds(anyList())).thenReturn(List.of(new MatchDTO()));
+        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(new MatchDTO()));
 
         // WHEN
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
 
         // THEN
-        verify(historyPersistence, times(1)).getMatchHistoryByGameIds(List.of("1", "2"));
+        verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyGamesService, times(1)).getMatchHistory(List.of("1", "2"));
 
         assertThat(result).isNotEmpty().hasSize(1);

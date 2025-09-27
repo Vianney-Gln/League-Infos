@@ -19,4 +19,24 @@ public interface InfoMatchRepository extends JpaRepository<InfoMatchEntity, Long
             "AND infoMatch.creationDate >= :oneHourAgo " +
             "AND infoMatch.queueId = :queue")
     List<InfoMatchEntity> findRecentsMatchByPuuidAndQueue(@Param("puuid") String puuid, @Param("oneHourAgo") LocalDateTime oneHourAgo, @Param("queue") Integer queue);
+
+    @Query("SELECT infoMatch FROM ParticipantMatchEntity participant " +
+            "JOIN participant.infoMatchEntity infoMatch " +
+            "where participant.puuid = :puuid " +
+            "AND infoMatch.queueId = :queue " +
+            "ORDER BY infoMatch.gameCreation DESC " +
+            "LIMIT 10"
+    )
+    List<InfoMatchEntity> findAllMatchByPuuidAndQueue(@Param("puuid") String puuid, @Param("queue") Integer queue);
+
+    @Query("SELECT infoMatch FROM ParticipantMatchEntity participant " +
+            "JOIN participant.infoMatchEntity infoMatch " +
+            "where participant.puuid = :puuid " +
+            "AND infoMatch.queueId = :queue " +
+            "AND infoMatch.gameCreation < :gameCreation " +
+            "ORDER BY infoMatch.gameCreation DESC " +
+            "LIMIT 10"
+    )
+    List<InfoMatchEntity> findAllMatchByPuuidAndQueueBeforeGivenDate(@Param("puuid") String puuid, @Param("gameCreation") Long gameCreation,
+                                                                     @Param("queue") Integer queue);
 }

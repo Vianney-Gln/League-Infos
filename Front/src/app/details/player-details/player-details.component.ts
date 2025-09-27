@@ -11,6 +11,7 @@ import { QueueTypeEnum } from '../../common/constants/queueTypeEnum';
 import { HistoryService } from '../../services/games-history/history.service';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { HistoryItemsComponent } from '../../games-history/history-items/history-items.component';
+import { NO_MORE_HISTORIQUE_GAME } from '../../common/constants/errors';
 
 @Component({
   selector: 'app-player-details',
@@ -40,6 +41,10 @@ export class PlayerDetailsComponent implements OnDestroy {
   isUnrankedSoloQ = false;
   tagLine: string = '';
   isLoading = false;
+  isGetMoreButtonSoloQVisibleSignal: WritableSignal<boolean> = signal(true);
+  isGetMoreButtonFlexQVisibleSignal: WritableSignal<boolean> = signal(true);
+  noMoreHistoriqueMessageSoloQSignal: WritableSignal<string> = signal('');
+  noMoreHistoriqueMessageFlexQSignal: WritableSignal<string> = signal('');
 
   displayInfosPlayerSubscription: Subscription = new Subscription();
   gamesHistorySubscription: Subscription = new Subscription();
@@ -51,6 +56,9 @@ export class PlayerDetailsComponent implements OnDestroy {
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.isLoading = true;
     this.getDisplayedPlayerInfos();
+    this.route.paramMap.subscribe(() => {
+      this.initGetMoreButtonAndMessageState();
+    });
   }
 
   private getDataPlayerdetail(riotId: string) {
@@ -192,6 +200,7 @@ export class PlayerDetailsComponent implements OnDestroy {
     if (queueType === this.RANKED_FLEX_SR.libelle && this.currentMatchsParticipantsFlexQSignal().length) {
       return;
     }
+
     this.gamesHistorySubscription = this.historyService.getHistoryByPuuidAndQueueType(this.summonerDto.puuid, this.computeQueueId(queueType)).subscribe({
       next: (res: MatchDTO[]) => {
         this.historyService.listMatchDataSignal.set(res);
@@ -205,6 +214,50 @@ export class PlayerDetailsComponent implements OnDestroy {
       },
       error: (err) => console.log(err),
     });
+  }
+
+  moreHistory(queueType: string) {
+    const olderGame = this.historyService.listMatchDataSignal().reduce((prev, current) => {
+      return prev.info.gameCreation < current.info.gameCreation ? prev : current;
+    });
+
+    const queue = this.computeQueueId(queueType);
+    this.historyService.getMoreHistory(this.summonerDto.puuid, olderGame.info.gameCreation, queue).subscribe({
+      next: (res: MatchDTO[]) => {
+        if (!res.length) {
+          if (queue === this.RANKED_SOLO_5x5.code) {
+            this.isGetMoreButtonSoloQVisibleSignal.set(false);
+            this.noMoreHistoriqueMessageSoloQSignal.set(NO_MORE_HISTORIQUE_GAME);
+          }
+
+          if (queue === this.RANKED_FLEX_SR.code) {
+            this.isGetMoreButtonFlexQVisibleSignal.set(false);
+            this.noMoreHistoriqueMessageFlexQSignal.set(NO_MORE_HISTORIQUE_GAME);
+          }
+
+          return;
+        }
+        this.historyService.listMatchDataSignal.update((m) => [...m, ...res]);
+        const queueType = res[0].info.queueId;
+        if (queueType === this.RANKED_SOLO_5x5.code) {
+          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(this.historyService.listMatchDataSignal()));
+        }
+        if (queueType === this.RANKED_FLEX_SR.code) {
+          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(this.historyService.listMatchDataSignal()));
+        }
+      },
+    });
+  }
+
+  private initGetMoreButtonAndMessageState() {
+    this.isGetMoreButtonFlexQVisibleSignal.set(true);
+    this.noMoreHistoriqueMessageFlexQSignal.set('');
+    this.isGetMoreButtonSoloQVisibleSignal.set(true);
+    this.noMoreHistoriqueMessageSoloQSignal.set('');
+  }
+
+  isMultipleOf10(value: number) {
+    return value !== 0 && value % 10 === 0;
   }
 
   ngOnDestroy(): void {

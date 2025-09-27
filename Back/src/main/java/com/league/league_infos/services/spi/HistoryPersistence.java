@@ -10,4 +10,8 @@ public interface HistoryPersistence {
     List<MatchDTO> getMatchHistoryByGameIds(List<String> gameIds);
 
     boolean wasCreatedWithinLastHour(String puuid, Integer queue);
+
+    List<MatchDTO> findAllMatchByPuuidAndQueue(String puuid, Integer queue);
+
+    List<MatchDTO> findAllMatchByPuuidAndQueueBeforeGivenDate(String puuid, Long gameCreation, Integer queue);
 }

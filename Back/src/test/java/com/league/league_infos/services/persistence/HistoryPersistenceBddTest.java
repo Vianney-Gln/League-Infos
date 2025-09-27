@@ -209,4 +209,126 @@ class HistoryPersistenceBddTest {
         verify(infoMatchRepository, times(1)).findRecentsMatchByPuuidAndQueue(eq("puuid"), any(LocalDateTime.class), eq(420));
         assertThat(result).isFalse();
     }
+
+    @Test
+    @DisplayName("Should return list of MatchDTO")
+    void findAllMatchByPuuidAndQueue_success() {
+        // GIVEN
+        InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
+
+        ChallengesEntity challengesEntity = new ChallengesEntity();
+        challengesEntity.setKda(13F);
+        challengesEntity.setGameLength(1380F);
+
+        TeamEntity teamEntity = new TeamEntity();
+        teamEntity.setWin(true);
+        teamEntity.setIdTeam(20L);
+        teamEntity.setTeamIdNumero(20);
+
+        MetaDataEntity metaDataEntity = new MetaDataEntity();
+        metaDataEntity.setDataVersion("version");
+        metaDataEntity.setMatchId("#TAG_10");
+
+        ParticipantMatchEntity participantMatchEntity = new ParticipantMatchEntity();
+        participantMatchEntity.setWin(true);
+        participantMatchEntity.setChallengesEntity(challengesEntity);
+        participantMatchEntity.setMetaDataEntity(metaDataEntity);
+        participantMatchEntity.setIdParticipant(15L);
+
+        infoMatchEntity.setParticipantMatchEntityList(List.of(participantMatchEntity));
+        infoMatchEntity.setTeamEntity(List.of(teamEntity));
+
+        when(infoMatchRepository.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(infoMatchEntity));
+
+        // WHEN
+        List<MatchDTO> result = historyPersistenceBdd.findAllMatchByPuuidAndQueue("uuid", 420);
+
+        // THEN
+        verify(infoMatchRepository, times(1)).findAllMatchByPuuidAndQueue("uuid", 420);
+        assertThat(result).isNotEmpty().hasSize(1);
+
+        assertThat(result.getFirst().getInfo()).isNotNull();
+        assertThat(result.getFirst().getInfo().getParticipants())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("participantId")
+                .containsExactly(15);
+
+        assertThat(result.getFirst().getInfo().getParticipants().getFirst().getChallenges())
+                .isNotNull()
+                .extracting("kda", "gameLength")
+                .containsExactly(13F, 1380F);
+
+        assertThat(result.getFirst().getMetadata())
+                .isNotNull()
+                .extracting("dataVersion", "matchId")
+                .containsExactly("version", "#TAG_10");
+
+        assertThat(result.getFirst().getInfo().getTeams())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("win", "teamId")
+                .containsExactly(tuple(true, 20));
+    }
+
+    @Test
+    @DisplayName("Should return list of MatchDTO")
+    void findAllMatchByPuuidAndQueueBeforeGivenDate_success() {
+        // GIVEN
+        InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
+
+        ChallengesEntity challengesEntity = new ChallengesEntity();
+        challengesEntity.setKda(13F);
+        challengesEntity.setGameLength(1380F);
+
+        TeamEntity teamEntity = new TeamEntity();
+        teamEntity.setWin(true);
+        teamEntity.setIdTeam(20L);
+        teamEntity.setTeamIdNumero(20);
+
+        MetaDataEntity metaDataEntity = new MetaDataEntity();
+        metaDataEntity.setDataVersion("version");
+        metaDataEntity.setMatchId("#TAG_10");
+
+        ParticipantMatchEntity participantMatchEntity = new ParticipantMatchEntity();
+        participantMatchEntity.setWin(true);
+        participantMatchEntity.setChallengesEntity(challengesEntity);
+        participantMatchEntity.setMetaDataEntity(metaDataEntity);
+        participantMatchEntity.setIdParticipant(15L);
+
+        infoMatchEntity.setParticipantMatchEntityList(List.of(participantMatchEntity));
+        infoMatchEntity.setTeamEntity(List.of(teamEntity));
+
+        when(infoMatchRepository.findAllMatchByPuuidAndQueueBeforeGivenDate(anyString(), anyLong(), any(Integer.class))).thenReturn(List.of(infoMatchEntity));
+
+        // WHEN
+        List<MatchDTO> result = historyPersistenceBdd.findAllMatchByPuuidAndQueueBeforeGivenDate("uuid", 175125125125L, 420);
+
+        // THEN
+        verify(infoMatchRepository, times(1)).findAllMatchByPuuidAndQueueBeforeGivenDate("uuid", 175125125125L, 420);
+        assertThat(result).isNotEmpty().hasSize(1);
+
+        assertThat(result.getFirst().getInfo()).isNotNull();
+        assertThat(result.getFirst().getInfo().getParticipants())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("participantId")
+                .containsExactly(15);
+
+        assertThat(result.getFirst().getInfo().getParticipants().getFirst().getChallenges())
+                .isNotNull()
+                .extracting("kda", "gameLength")
+                .containsExactly(13F, 1380F);
+
+        assertThat(result.getFirst().getMetadata())
+                .isNotNull()
+                .extracting("dataVersion", "matchId")
+                .containsExactly("version", "#TAG_10");
+
+        assertThat(result.getFirst().getInfo().getTeams())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("win", "teamId")
+                .containsExactly(tuple(true, 20));
+    }
 }

@@ -37,14 +37,26 @@
             @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
               <app-history-items data-test="history-item" [currMatchParticipant]="currMatchParticipant"></app-history-items>
           } 
+          @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
+          <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(leagueEntry.queueType)">Plus de parties</button>
+        }
         </div>
+        @if (noMoreHistoriqueMessageSoloQSignal()) {
+          <span data-test="no-more-history-message-soloQ">{{noMoreHistoriqueMessageSoloQSignal()}}</span>
+        }
         } 
         @if(leagueEntry.queueType === RANKED_FLEX_SR.libelle){ 
           <div class="mt-4">
             @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
               <app-history-items [currMatchParticipant]="currMatchParticipant"></app-history-items>
         }
+        @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
+          <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(leagueEntry.queueType)">Plus de parties</button>
+        }
       </div>
+       @if (noMoreHistoriqueMessageFlexQSignal()) {
+          <span data-test="no-more-history-message-flexQ">{{noMoreHistoriqueMessageFlexQSignal()}}</span>
+        }
       }
     </div>
     @if(isUnrankedFlex){

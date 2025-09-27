@@ -17,6 +17,6 @@ class H2BasicTest {
     @Test
     void testH2IsUp() {
         Integer result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM T_INFOS_MATCH", Integer.class);
-        assertThat(result).isEqualTo(1);
+        assertThat(result).isEqualTo(16);
     }
 }

@@ -10,23 +10,23 @@ import java.util.List;
 
 @Service
 public class MatchDataProvider {
-    private final HistoryGamesService historyGamesService;
+    private final HistoryGamesService historyRiotGamesService;
     private final HistoryPersistence historyPersistence;
 
-    public MatchDataProvider(HistoryGamesService historyGamesService, HistoryPersistence historyPersistence) {
-        this.historyGamesService = historyGamesService;
+    public MatchDataProvider(HistoryGamesService historyRiotGamesService, HistoryPersistence historyPersistence) {
+        this.historyRiotGamesService = historyRiotGamesService;
         this.historyPersistence = historyPersistence;
     }
 
     public List<MatchDTO> getMatchsHistory(String puuid, Integer queue) {
-        List<String> listGamesIds = historyGamesService.getHistoryIds(puuid, queue);
+        List<String> listGamesIds = historyRiotGamesService.getHistoryIds(puuid, queue);
         List<MatchDTO> listMatchHistory = new ArrayList<>();
 
         if (listGamesIds != null && !listGamesIds.isEmpty()) {
             if (!wasCreatedWithinLastHour(puuid, queue)) {
-                historyGamesService.getMatchHistory(listGamesIds);
+                historyRiotGamesService.getMatchHistory(listGamesIds);
             }
-            listMatchHistory = historyPersistence.getMatchHistoryByGameIds(listGamesIds);
+            listMatchHistory = historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
         }
         return listMatchHistory;
     }

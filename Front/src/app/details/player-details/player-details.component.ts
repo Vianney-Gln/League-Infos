@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
 import { catchError, map, of, Subscription, switchMap, tap } from 'rxjs';
@@ -11,11 +11,13 @@ import { QueueTypeEnum } from '../../common/constants/queueTypeEnum';
 import { HistoryService } from '../../services/games-history/history.service';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { HistoryItemsComponent } from '../../games-history/history-items/history-items.component';
+import { NO_MORE_HISTORIQUE_GAME } from '../../common/constants/errors';
+import { TranslateFillPipe } from '../../common/pipes/translate-fill.pipe';
 
 @Component({
   selector: 'app-player-details',
   standalone: true,
-  imports: [CommonModule, HistoryItemsComponent],
+  imports: [CommonModule, HistoryItemsComponent, TranslateFillPipe],
   templateUrl: './player-details.component.html',
   styleUrl: './player-details.component.scss',
 })
@@ -28,10 +30,25 @@ export class PlayerDetailsComponent implements OnDestroy {
     private historyService: HistoryService
   ) {}
 
+  RANKED_SOLO_5x5 = { libelle: QueueTypeEnum.RANKED_SOLO_5x5, code: 420 };
+  RANKED_FLEX_SR = { libelle: QueueTypeEnum.RANKED_FLEX_SR, code: 440 };
+
   gameName: string | undefined = '';
   summonerDto: SummonerDTO = new SummonerDTO();
   lastVersionLolSignal: Signal<string> = signal('');
   leagueEntriesSignal: WritableSignal<LeagueEntryDTO[]> = signal([]);
+  leagueEntry: WritableSignal<LeagueEntryDTO | null> = signal(null);
+  queueTypeSignal: WritableSignal<string> = signal(QueueTypeEnum.RANKED_SOLO_5x5);
+  leagueEntrySoloQSignal = computed(() => this.leagueEntriesSignal().find((entry) => entry.queueType === QueueTypeEnum.RANKED_SOLO_5x5));
+  leagueEntryFlexQSignal = computed(() => this.leagueEntriesSignal().find((entry) => entry.queueType === QueueTypeEnum.RANKED_FLEX_SR));
+  nbGameSoloQPlayed = computed(() => this.leagueEntrySoloQSignal()?.wins! + this.leagueEntrySoloQSignal()?.losses!);
+  nbGameFlexQPlayed = computed(() => this.leagueEntryFlexQSignal()?.wins! + this.leagueEntryFlexQSignal()?.losses!);
+  winRateSoloQ = computed(() => this.calculateWinRate(this.leagueEntrySoloQSignal()?.wins!, this.nbGameSoloQPlayed()));
+  winRateFlexQ = computed(() => this.calculateWinRate(this.leagueEntryFlexQSignal()?.wins!, this.nbGameFlexQPlayed()));
+
+  listMatchDataFlexQSignal: WritableSignal<MatchDTO[]> = signal([]);
+  listMatchDataSoloQSignal: WritableSignal<MatchDTO[]> = signal([]);
+
   championMasteriesSignal: WritableSignal<ChampionMasteryDto[]> = signal([]);
   urlBackgroundBannerSignal: WritableSignal<string> = signal('');
   currentMatchsParticipantsSoloQSignal: WritableSignal<ParticipantMatchDTO[]> = signal([]);
@@ -40,17 +57,21 @@ export class PlayerDetailsComponent implements OnDestroy {
   isUnrankedSoloQ = false;
   tagLine: string = '';
   isLoading = false;
+  isGetMoreButtonSoloQVisibleSignal: WritableSignal<boolean> = signal(true);
+  isGetMoreButtonFlexQVisibleSignal: WritableSignal<boolean> = signal(true);
+  noMoreHistoriqueMessageSoloQSignal: WritableSignal<string> = signal('');
+  noMoreHistoriqueMessageFlexQSignal: WritableSignal<string> = signal('');
 
   displayInfosPlayerSubscription: Subscription = new Subscription();
   gamesHistorySubscription: Subscription = new Subscription();
-
-  RANKED_SOLO_5x5 = { libelle: QueueTypeEnum.RANKED_SOLO_5x5, code: 420 };
-  RANKED_FLEX_SR = { libelle: QueueTypeEnum.RANKED_FLEX_SR, code: 440 };
 
   ngOnInit() {
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.isLoading = true;
     this.getDisplayedPlayerInfos();
+    this.route.paramMap.subscribe(() => {
+      this.initGetMoreButtonAndMessageState();
+    });
   }
 
   private getDataPlayerdetail(riotId: string) {
@@ -75,7 +96,7 @@ export class PlayerDetailsComponent implements OnDestroy {
     return of();
   }
 
-  computeTierEmblem(tier: string): string {
+  computeTierEmblem(tier: string | undefined): string {
     let urlEmblem = '';
     switch (tier) {
       case 'IRON':
@@ -108,6 +129,8 @@ export class PlayerDetailsComponent implements OnDestroy {
       case 'CHALLENGER':
         urlEmblem = 'images/Emblems/emblem-challenger.png';
         break;
+      default:
+        '';
     }
     return urlEmblem;
   }
@@ -138,12 +161,11 @@ export class PlayerDetailsComponent implements OnDestroy {
           this.leagueEntriesSignal.set(leagueEntries);
           this.isUnrankedFlex = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_FLEX_SR) ? false : true;
           this.isUnrankedSoloQ = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_SOLO_5x5) ? false : true;
-          return this.playerService.getChampionMasteriesDTO(puuid);
+          return this.playerService.getChampionMasteriesDTO(puuid).pipe(map((championMasteries) => ({ championMasteries, puuid })));
         })
       )
-      .subscribe({
-        next: (championMasteries) => {
-          this.isLoading = false;
+      .pipe(
+        switchMap(({ championMasteries }) => {
           this.championMasteriesSignal.set(championMasteries);
           this.resetListHistoryItems();
           if (championMasteries.length) {
@@ -151,6 +173,21 @@ export class PlayerDetailsComponent implements OnDestroy {
           } else {
             this.urlBackgroundBannerSignal.set(`url(images/default-banner.png)`);
           }
+          return this.getHistory(this.RANKED_SOLO_5x5.libelle);
+        })
+      )
+      .pipe(
+        switchMap((res: MatchDTO[]) => {
+          this.listMatchDataSoloQSignal.set(res);
+          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(res));
+          return this.getHistory(this.RANKED_FLEX_SR.libelle);
+        })
+      )
+      .subscribe({
+        next: (res: MatchDTO[]) => {
+          this.isLoading = false;
+          this.listMatchDataFlexQSignal.set(res);
+          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(res));
         },
         error: (error) => {
           console.log(error);
@@ -185,26 +222,70 @@ export class PlayerDetailsComponent implements OnDestroy {
       .filter((participant): participant is ParticipantMatchDTO => participant !== undefined);
   }
 
-  public getHistory(queueType: string) {
-    if (queueType === this.RANKED_SOLO_5x5.libelle && this.currentMatchsParticipantsSoloQSignal().length) {
+  private getHistory(queueType: string) {
+    return this.historyService.getHistoryByPuuidAndQueueType(this.summonerDto.puuid, this.computeQueueId(queueType));
+  }
+
+  onSwitch(queue: string) {
+    this.queueTypeSignal.set(queue);
+  }
+
+  moreHistory(queueType: string) {
+    const queueId = this.computeQueueId(queueType);
+    const currGamesByQueue = queueId === this.RANKED_FLEX_SR.code ? this.listMatchDataFlexQSignal() : this.listMatchDataSoloQSignal();
+
+    let olderGame = null;
+    if (currGamesByQueue.length) {
+      olderGame = currGamesByQueue.reduce((prev, current) => {
+        return prev.info.gameCreation < current.info.gameCreation ? prev : current;
+      });
+    }
+
+    if (!olderGame) {
       return;
     }
-    if (queueType === this.RANKED_FLEX_SR.libelle && this.currentMatchsParticipantsFlexQSignal().length) {
-      return;
-    }
-    this.gamesHistorySubscription = this.historyService.getHistoryByPuuidAndQueueType(this.summonerDto.puuid, this.computeQueueId(queueType)).subscribe({
+
+    this.historyService.getMoreHistory(this.summonerDto.puuid, olderGame.info.gameCreation, this.computeQueueId(queueType)).subscribe({
       next: (res: MatchDTO[]) => {
-        this.historyService.listMatchDataSignal.set(res);
-        const queueType = res[0].info.queueId;
-        if (queueType === this.RANKED_SOLO_5x5.code) {
-          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(res));
+        if (!res.length) {
+          if (queueId === this.RANKED_SOLO_5x5.code) {
+            this.isGetMoreButtonSoloQVisibleSignal.set(false);
+            this.noMoreHistoriqueMessageSoloQSignal.set(NO_MORE_HISTORIQUE_GAME);
+          }
+
+          if (queueId === this.RANKED_FLEX_SR.code) {
+            this.isGetMoreButtonFlexQVisibleSignal.set(false);
+            this.noMoreHistoriqueMessageFlexQSignal.set(NO_MORE_HISTORIQUE_GAME);
+          }
+
+          return;
         }
-        if (queueType === this.RANKED_FLEX_SR.code) {
-          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(res));
+
+        if (queueId === this.RANKED_SOLO_5x5.code) {
+          this.listMatchDataSoloQSignal.update((prev) => [...prev, ...res]);
+          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(this.listMatchDataSoloQSignal()));
+        }
+        if (queueId === this.RANKED_FLEX_SR.code) {
+          this.listMatchDataFlexQSignal.update((prev) => [...prev, ...res]);
+          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(this.listMatchDataFlexQSignal()));
         }
       },
-      error: (err) => console.log(err),
     });
+  }
+
+  private initGetMoreButtonAndMessageState() {
+    this.isGetMoreButtonFlexQVisibleSignal.set(true);
+    this.noMoreHistoriqueMessageFlexQSignal.set('');
+    this.isGetMoreButtonSoloQVisibleSignal.set(true);
+    this.noMoreHistoriqueMessageSoloQSignal.set('');
+  }
+
+  isMultipleOf10(value: number) {
+    return value !== 0 && value % 10 === 0;
+  }
+
+  private calculateWinRate(nbVictory: number, nbTotalGame: number) {
+    return ((nbVictory / nbTotalGame) * 100).toFixed(2);
   }
 
   ngOnDestroy(): void {

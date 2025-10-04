@@ -1,8 +1,55 @@
 insert into t_infos_match (creation_date, end_of_game_result, game_creation, game_duration, game_end_timestamp, game_id, game_mode, game_name, game_type, game_version, map_id, queue_id)
-    values (timestamp '2025-09-28 01:00', 'GameComplete', 1756249870149, 1742, 1756251627166, 7508515244, 'CLASSIC', 'teambuilder-match-7508515244', 'MATCHED_GAME', '15.16.706.7476', 11, 420);
+    values (timestamp '2025-09-28 01:00', 'GameComplete', 1756259870149, 1742, 1756251627166, 7508515244, 'CLASSIC', 'teambuilder-match-7508515244', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-09-29 01:00', 'GameComplete', 1756269870149, 1742, 1756251627166, 7508515245, 'CLASSIC', 'teambuilder-match-7508515245', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-09-30 01:00', 'GameComplete', 1756279870149, 1742, 1756251627166, 7508515246, 'CLASSIC', 'teambuilder-match-7508515246', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-01 01:00', 'GameComplete', 1756289870149, 1742, 1756251627166, 7508515247, 'CLASSIC', 'teambuilder-match-7508515247', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-02 01:00', 'GameComplete', 1756299870149, 1742, 1756251627166, 7508515248, 'CLASSIC', 'teambuilder-match-7508515248', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-03 01:00', 'GameComplete', 1756300970149, 1742, 1756251627166, 7508515249, 'CLASSIC', 'teambuilder-match-7508515249', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-04 01:00', 'GameComplete', 1756310970149, 1742, 1756251627166, 7508515250, 'CLASSIC', 'teambuilder-match-7508515250', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-05 01:00', 'GameComplete', 1756320970149, 1742, 1756251627166, 7508515251, 'CLASSIC', 'teambuilder-match-7508515251', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-06 01:00', 'GameComplete', 1756330970149, 1742, 1756251627166, 7508515252, 'CLASSIC', 'teambuilder-match-7508515252', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-07 01:00', 'GameComplete', 1756340970149, 1742, 1756251627166, 7508515253, 'CLASSIC', 'teambuilder-match-7508515253', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-08 01:00', 'GameComplete', 1756350970149, 1742, 1756251627166, 7508515254, 'CLASSIC', 'teambuilder-match-7508515254', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-09 01:00', 'GameComplete', 1756360970149, 1742, 1756251627166, 7508515255, 'CLASSIC', 'teambuilder-match-7508515255', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-10 01:00', 'GameComplete', 1756370970149, 1742, 1756251627166, 7508515256, 'CLASSIC', 'teambuilder-match-7508515256', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-11 01:00', 'GameComplete', 1756380970149, 1742, 1756251627166, 7508515257, 'CLASSIC', 'teambuilder-match-7508515257', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-12 01:00', 'GameComplete', 1756390970149, 1742, 1756251627166, 7508515258, 'CLASSIC', 'teambuilder-match-7508515258', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
+    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7508515259, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420);
 
-insert into t_challenges (game_length, kda) values (1742.83544921875, 4.199999809265137);
-insert into t_meta_data (data_version,game_id,match_id) values ('2', 7508515244, 'EUW1_7508515244');
+insert into t_challenges (game_length, kda) values
+(1742.83544921875, 4.199999809265137),
+(1743.83544921875, 8.0),
+(1744.83544921875, 8.6),
+(1745.83544921875, 12),
+(1746.83544921875, 14.0666),
+(1747.83544921875, 4),
+(1748.83544921875, 4.199999809265137),
+(1749.83544921875, 3.199999809265137),
+(1750.83544921875, 5.199999809265137),
+(1751.83544921875, 1.199999809265137),
+(1752.83544921875, 4.199999809265137),
+(1753.83544921875, 0.199999809265137),
+(1754.83544921875, 7.199999809265137),
+(1755.83544921875, 5.199999809265137),
+(1756.83544921875, 9.199999809265137),
+(1757.83544921875, 5.666666666666666);
+insert into t_meta_data (data_version,game_id,match_id) values
+('2', 7508515244, 'EUW1_7508515244'),
+('2', 7508515245, 'EUW1_7508515245'),
+('2', 7508515246, 'EUW1_7508515246'),
+('2', 7508515247, 'EUW1_7508515247'),
+('2', 7508515248, 'EUW1_7508515248'),
+('2', 7508515249, 'EUW1_7508515249'),
+('2', 7508515250, 'EUW1_7508515250'),
+('2', 7508515251, 'EUW1_7508515251'),
+('2', 7508515252, 'EUW1_7508515252'),
+('2', 7508515253, 'EUW1_7508515253'),
+('2', 7508515254, 'EUW1_7508515254'),
+('2', 7508515255, 'EUW1_7508515255'),
+('2', 7508515256, 'EUW1_7508515256'),
+('2', 7508515257, 'EUW1_7508515257'),
+('2', 7508515258, 'EUW1_7508515258'),
+('2', 7508515259, 'EUW1_7508515259');
 
 insert into t_participant_match (assists,
 challenges_id,
@@ -38,6 +85,38 @@ team_position,
 total_minions_killed,
 triple_kills,
 win)
-values (11, 1, 16, 126, 'Jayce', 0, 5, 0, 18565, 1, 1, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true);
+values
+(11, 1, 16, 126, 'Jayce', 0, 5, 0, 18565, 1, 1, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 2, 16, 126, 'Jayce', 0, 5, 0, 18565, 2, 2, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 3, 16, 126, 'Jayce', 0, 5, 0, 18565, 3, 3, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 4, 16, 126, 'Jayce', 0, 5, 0, 18565, 4, 4, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 5, 16, 126, 'Jayce', 0, 5, 0, 18565, 5, 5, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 6, 16, 126, 'Jayce', 0, 5, 0, 18565, 6, 6, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 7, 16, 126, 'Jayce', 0, 5, 0, 18565, 7, 7, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 8, 16, 126, 'Jayce', 0, 5, 0, 18565, 8, 8, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 9, 16, 126, 'Jayce', 0, 5, 0, 18565, 9, 9, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 10, 16, 126, 'Jayce', 0, 5, 0, 18565, 10, 10, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 11, 16, 126, 'Jayce', 0, 5, 0, 18565, 11, 11, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 12, 16, 126, 'Jayce', 0, 5, 0, 18565, 12, 12, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 13, 16, 126, 'Jayce', 0, 5, 0, 18565, 13, 13, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 14, 16, 126, 'Jayce', 0, 5, 0, 18565, 14, 14, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 15, 16, 126, 'Jayce', 0, 5, 0, 18565, 15, 15, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
+(11, 16, 16, 126, 'Jayce', 0, 5, 0, 18565, 16, 16, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true);
 
-insert into t_teams (info_match_id, team_id_numero, win) values (1, 100, true);
+insert into t_teams (info_match_id, team_id_numero, win) values
+(1, 100, true),
+(2, 100, true),
+(3, 100, true),
+(4, 100, true),
+(5, 100, true),
+(6, 100, true),
+(7, 100, true),
+(8, 100, true),
+(9, 100, true),
+(10, 100, true),
+(11, 100, true),
+(12, 100, true),
+(13, 100, true),
+(14, 100, true),
+(15, 100, true),
+(16, 100, true);

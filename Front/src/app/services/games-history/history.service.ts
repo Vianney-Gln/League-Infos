@@ -10,10 +10,13 @@ import { MatchDTO } from '../../common/models/games-history/matchDTO';
 export class HistoryService {
   constructor(private http: HttpClient) {}
 
-  listMatchDataSignal: WritableSignal<MatchDTO[]> = signal<MatchDTO[]>([]);
-
   getHistoryByPuuidAndQueueType(puuid: string, queueId: number): Observable<MatchDTO[]> {
     const url = `${environment.apiBaseUrl}/games-history/${puuid}?queue=${queueId}`;
+    return this.http.get<MatchDTO[]>(url);
+  }
+
+  getMoreHistory(puuid: string, gameCreation: number, queueId: number) {
+    const url = `${environment.apiBaseUrl}/games-history-before-creation-date/${puuid}?gameCreation=${gameCreation}&queue=${queueId}`;
     return this.http.get<MatchDTO[]>(url);
   }
 }

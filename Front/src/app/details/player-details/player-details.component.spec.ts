@@ -51,6 +51,62 @@ describe('PlayerDetailsComponent', () => {
     } as unknown as MatchDTO;
   }
 
+  function matchDTOMock2() {
+    return {
+      metadata: {
+        matchId: '12345',
+        participants: ['123'],
+        dataVersion: '1',
+      },
+      info: {
+        gameDuration: 1800,
+        gameCreation: 1620000000000,
+        queueId: 440,
+        participants: [mockMatchParticipant()],
+        teams: [
+          {
+            teamId: 100,
+            win: true,
+            bans: [11, 22, 33, 44, 55],
+          },
+          {
+            teamId: 200,
+            win: false,
+            bans: [66, 77, 88, 99, 101],
+          },
+        ],
+      },
+    } as unknown as MatchDTO;
+  }
+
+  function matchDTOOlderMock() {
+    return {
+      metadata: {
+        matchId: '567',
+        participants: ['1234'],
+        dataVersion: '1',
+      },
+      info: {
+        gameDuration: 1800,
+        gameCreation: 1619999999000,
+        queueId: 440,
+        participants: [mockMatchParticipant()],
+        teams: [
+          {
+            teamId: 100,
+            win: true,
+            bans: [11, 22, 33, 44, 55],
+          },
+          {
+            teamId: 200,
+            win: false,
+            bans: [66, 77, 88, 99, 101],
+          },
+        ],
+      },
+    } as unknown as MatchDTO;
+  }
+
   function mockMatchParticipant() {
     return {
       participantId: 1,
@@ -382,6 +438,7 @@ describe('PlayerDetailsComponent', () => {
     spyOn(router, 'navigate').and.stub();
 
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
 
     // WHEN
     fixture.detectChanges();
@@ -440,14 +497,15 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
 
     // WHEN
     fixture.detectChanges();
 
     // THEN
-    const blocUnrankedSolo = getByDataTestAttr(fixture.debugElement, 'bloc-unranked-solo');
+    const blocUnrankedSolo = getByDataTestAttr(fixture.debugElement, 'bloc-unranked-soloQ');
     expect(blocUnrankedSolo).toBeTruthy();
-    expect(blocUnrankedSolo?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked Solo");
+    expect(blocUnrankedSolo?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked SoloQ");
     expect(component.isUnrankedSoloQ).toBeTrue();
     expect(component.isUnrankedFlex).toBeFalse();
   });
@@ -496,16 +554,129 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    fixture.detectChanges();
 
     // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
 
     // THEN
-    const blocUnrankedFlex = getByDataTestAttr(fixture.debugElement, 'bloc_unranked_flex');
+    const blocUnrankedFlex = getByDataTestAttr(fixture.debugElement, 'bloc-unranked-flex');
     expect(blocUnrankedFlex).toBeTruthy();
     expect(blocUnrankedFlex?.textContent).toEqual("Ce joueur n'est pas encore classé en Ranked Flex");
     expect(component.isUnrankedSoloQ).toBeFalse();
     expect(component.isUnrankedFlex).toBeTrue();
+  });
+
+  it('should switch queue to RANKED_SOLO_5x5 on click on radioButton', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: 'mock-puuid',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-solo');
+    fixture.detectChanges();
+
+    // THEN
+    expect(component.queueTypeSignal()).toEqual('RANKED_SOLO_5x5');
+  });
+
+  it('should switch queue to RANKED_FLEX_SR on click on radioButton', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: 'mock-puuid',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
+    fixture.detectChanges();
+
+    // THEN
+    expect(component.queueTypeSignal()).toEqual('RANKED_FLEX_SR');
   });
 
   it('should reset itemsHistory', () => {
@@ -551,7 +722,7 @@ describe('PlayerDetailsComponent', () => {
     expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(0);
   });
 
-  it('should call historyService.getHistoryByPuuidAndQueueType on click on Historique_RANKED_SOLO_5x5 button', () => {
+  it('should call historyService.getHistoryByPuuidAndQueueType 2 times on init. One time for flex and one fore soloQ and set signals', () => {
     // GIVEN
     const mockAccountDTO = {
       puuid: '123',
@@ -595,22 +766,336 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
-    const listMatchDataSignalSetSpy = spyOn(historyService.listMatchDataSignal, 'set');
-    const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([matchDTOMock()]));
-    fixture.detectChanges();
+    const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.callFake((puuid: string, queueId: number) => {
+      if (queueId === 420) {
+        return of([matchDTOMock()]);
+      } else if (queueId === 440) {
+        return of([matchDTOMock2()]);
+      }
+      return of([]);
+    });
 
     // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'button historique RANKED_SOLO_5x5');
+    fixture.detectChanges();
 
     // THEN
     expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 420);
-    expect(listMatchDataSignalSetSpy).toHaveBeenCalledWith([matchDTOMock()]);
-    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(0);
+    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(1);
     expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(1);
     expect(component.currentMatchsParticipantsSoloQSignal()[0]).toEqual(mockMatchParticipant());
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledTimes(2);
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 420);
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 440);
+
+    expect(component.listMatchDataSoloQSignal()).toEqual(
+      jasmine.arrayContaining([
+        jasmine.objectContaining({
+          metadata: {
+            matchId: '12345',
+            participants: ['123'],
+            dataVersion: '1',
+          },
+          info: {
+            gameDuration: 1800,
+            gameCreation: 1620000000000,
+            queueId: 420,
+            participants: [mockMatchParticipant()],
+            teams: [
+              {
+                teamId: 100,
+                win: true,
+                bans: [11, 22, 33, 44, 55],
+              },
+              {
+                teamId: 200,
+                win: false,
+                bans: [66, 77, 88, 99, 101],
+              },
+            ],
+          },
+        }),
+      ])
+    );
+
+    expect(component.listMatchDataFlexQSignal()).toEqual(
+      jasmine.arrayContaining([
+        jasmine.objectContaining({
+          metadata: {
+            matchId: '12345',
+            participants: ['123'],
+            dataVersion: '1',
+          },
+          info: {
+            gameDuration: 1800,
+            gameCreation: 1620000000000,
+            queueId: 440,
+            participants: [mockMatchParticipant()],
+            teams: [
+              {
+                teamId: 100,
+                win: true,
+                bans: [11, 22, 33, 44, 55],
+              },
+              {
+                teamId: 200,
+                win: false,
+                bans: [66, 77, 88, 99, 101],
+              },
+            ],
+          },
+        }),
+      ])
+    );
   });
 
-  it('should call historyService.getHistoryByPuuidAndQueueType on click on Historique_Ranked_FLEX_SR button', () => {
+  it('should display get more button when current length list of game is equal to 10 case soloQ', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+
+    history.forEach((hist) => (hist.info.queueId = 420));
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    const getMoreHistoryButton = getByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
+    expect(getMoreHistoryButton).toBeTruthy();
+  });
+
+  it('should not display get more button when current length list of game is equal to 0 case soloQ', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    const getMoreHistoryButton = getByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
+    expect(getMoreHistoryButton).toBeFalsy();
+  });
+
+  it('should display get more button when current length list of game is a multiple to 10 case flexQ', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+
+    history.forEach((hist) => (hist.info.queueId = 440));
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
+    fixture.detectChanges();
+
+    // THEN
+    const getMoreHistoryButton = getByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button');
+    expect(getMoreHistoryButton).toBeTruthy();
+  });
+
+  it('should not display get more button when current length list of game is less than 10 case soloQ', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-solo');
+    fixture.detectChanges();
+
+    // THEN
+    const getMoreHistoryButton = getByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
+    expect(getMoreHistoryButton).toBeFalsy();
+  });
+
+  it('should call historyService.getMoreHistory on click on Plus de parties button, case flex q', () => {
     // GIVEN
     const mockAccountDTO = {
       puuid: '123',
@@ -654,22 +1139,445 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
-    const listMatchDataSignalSetSpy = spyOn(historyService.listMatchDataSignal, 'set');
 
-    const history = [matchDTOMock()];
-    history[0].info.queueId = 440;
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+    const historyOlder = [
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+    ];
+
+    historyOlder.forEach((hist) => {
+      hist.info.queueId = 440;
+    });
+
+    history.forEach((hist) => {
+      hist.info.queueId = 440;
+      hist.info.gameCreation = 175125125125;
+    });
 
     const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
     fixture.detectChanges();
 
+    expect(component.listMatchDataFlexQSignal()).toHaveSize(10);
+
     // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'button historique RANKED_FLEX_SR');
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
+    fixture.detectChanges();
+    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button');
+    fixture.detectChanges();
 
     // THEN
     expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 440);
-    expect(listMatchDataSignalSetSpy).toHaveBeenCalledWith(history);
-    expect(component.currentMatchsParticipantsSoloQSignal()).toHaveSize(0);
-    expect(component.currentMatchsParticipantsFlexQSignal()).toHaveSize(1);
-    expect(component.currentMatchsParticipantsFlexQSignal()[0]).toEqual(mockMatchParticipant());
+    expect(getMoreHistorySpy).toHaveBeenCalledWith('123', 175125125125, 440);
+    expect(component.listMatchDataFlexQSignal()).toHaveSize(20);
+  });
+
+  it('should call historyService.getMoreHistory on click on Plus de parties button, case solo q', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+    const historyOlder = [
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+      matchDTOOlderMock(),
+    ];
+
+    historyOlder.forEach((hist) => {
+      hist.info.queueId = 420;
+    });
+
+    history.forEach((hist) => {
+      hist.info.queueId = 420;
+      hist.info.gameCreation = 175125125125;
+    });
+
+    const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
+    fixture.detectChanges();
+
+    expect(component.listMatchDataSoloQSignal()).toHaveSize(10);
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
+    fixture.detectChanges();
+
+    // THEN
+    expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 420);
+    expect(getMoreHistorySpy).toHaveBeenCalledWith('123', 175125125125, 420);
+    expect(component.listMatchDataSoloQSignal()).toHaveSize(20);
+  });
+
+  it('should hide the getMore button if no result, and show a message instead, case solo q', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+
+    history.forEach((hist) => {
+      hist.info.queueId = 420;
+    });
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
+    fixture.detectChanges();
+
+    // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button')).toBeFalsy();
+    expect(getByDataTestAttr(fixture.debugElement, 'no-more-history-message-soloQ')?.innerText).toEqual("Plus d'autre partie historique disponible");
+  });
+
+  it('should hide the getMore button if no result, and show a message instead, case flex q', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: '123',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: '123',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+
+    const history = [
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+      matchDTOMock(),
+    ];
+
+    history.forEach((hist) => {
+      hist.info.queueId = 440;
+    });
+
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
+    spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
+    fixture.detectChanges();
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
+    fixture.detectChanges();
+    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button');
+    fixture.detectChanges();
+
+    // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button')).toBeFalsy();
+    expect(getByDataTestAttr(fixture.debugElement, 'no-more-history-message-flexQ')?.innerText).toEqual("Plus d'autre partie historique disponible");
+  });
+
+  it('Should call initGetMoreButtonAndMessageState if url param changed ', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(router, 'navigate').and.stub();
+
+    fixture.detectChanges();
+
+    // WHEN
+    paramMap$.next(convertToParamMap({ summoner: 'another#euw' }));
+    fixture.detectChanges();
+
+    // THEN
+    expect(component.isGetMoreButtonFlexQVisibleSignal()).toBeTrue();
+    expect(component.isGetMoreButtonSoloQVisibleSignal()).toBeTrue();
+    expect(component.noMoreHistoriqueMessageFlexQSignal()).toEqual('');
+    expect(component.noMoreHistoriqueMessageSoloQSignal()).toEqual('');
+  });
+
+  it('should calculate win rate and show it on IHM', () => {
+    // GIVEN
+    const mockAccountDTO = {
+      puuid: 'mock-puuid',
+      gameName: 'test',
+      tagLine: 'euw',
+      summonerId: 'mock-summoner-id',
+      profileIconId: 1234,
+      summonerLevel: 30,
+      revisionDate: 1680000000000,
+      id: 'mock-id',
+    } as AccountDTO;
+
+    const mockSummonerDTO = {
+      id: 'mock-summoner-id',
+      accountId: 'mock-account-id',
+      puuid: 'mock-puuid',
+      name: 'test',
+      profileIconId: 1234,
+      revisionDate: 1680000000000,
+      summonerLevel: 30,
+    } as SummonerDTO;
+
+    const mockLeagueEntryDTOFlex = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    const mockLeagueEntryDTOSoloQ = {
+      leagueId: 'mock-league-id',
+      puuid: '123',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 36,
+      losses: 36,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
+    spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+    spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTOFlex, mockLeagueEntryDTOSoloQ]));
+    spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(component.winRateFlexQ()).toEqual('57.14');
+    expect(component.winRateSoloQ()).toEqual('50.00');
+
+    expect(getByDataTestAttr(fixture.debugElement, 'win-rate')?.innerText).toEqual('50.00 % victoire');
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
+    fixture.detectChanges();
+
+    // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'win-rate')?.innerText).toEqual('57.14 % victoire');
   });
 });

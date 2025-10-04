@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal, Signal } from '@angular/core';
+import { Component, Input, OnInit, Output, signal, Signal } from '@angular/core';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { CommonModule } from '@angular/common';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
@@ -8,6 +8,7 @@ import { formatTimestampToDateStr } from '../../common/utils/date-utils';
 import { ItemUrl } from '../../common/types/types';
 import { durationSecondeToStr } from '../../common/utils/time-utils';
 import { summonerSpellIdToNameMap } from '../../common/constants/summoners';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-history-items',
@@ -20,12 +21,13 @@ export class HistoryItemsComponent implements OnInit {
   constructor(private versionService: GetVersionsService, private historyService: HistoryService) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
+  @Input() listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
   DDRAGON_BASE_CDN = DDRAGON_BASE_CDN;
   lastVersionLolSignal: Signal<string> = signal('');
   listUrlItems: ItemUrl[] = [];
   iconChampionUrl = '';
   nbCsKilled: number = 0;
-  listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
+
   currentMatch?: MatchDTO;
   dateCreationGameStr: string = '';
   gameDuration: string = '';
@@ -38,10 +40,9 @@ export class HistoryItemsComponent implements OnInit {
     this.listUrlItems = this.getListUrlItems();
     this.iconChampionUrl = this.computeIconChampionUrl();
     this.nbCsKilled = this.computeNbCsKilled();
-    this.listMatchDataSignal = this.historyService.listMatchDataSignal;
     this.currentMatch = this.getCurrentMatch();
-    this.dateCreationGameStr = formatTimestampToDateStr(this.currentMatch!.info.gameCreation);
-    this.gameDuration = durationSecondeToStr(this.currentMatch!.info.gameDuration);
+    this.dateCreationGameStr = formatTimestampToDateStr(this.currentMatch?.info.gameCreation);
+    this.gameDuration = durationSecondeToStr(this.currentMatch?.info.gameDuration);
     this.summoner1IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner1Id);
     this.summoner2IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner2Id);
   }

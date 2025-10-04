@@ -90,7 +90,23 @@ describe('HistoryService', () => {
     req.flush(mockResponse);
   });
 
-  it('should have listMatchDataSignal initialized as empty', () => {
-    expect(service.listMatchDataSignal()).toHaveSize(0);
+  it('should call getMoreHistory with correct URL', () => {
+    // GIVEN
+    const mockResponse = [matchDTOMock()];
+    const gamecreation: number = 1758490634927;
+    const queueType: number = 420;
+
+    // WHEN
+    service.getMoreHistory('puuid', gamecreation, queueType).subscribe((res) => {
+      expect(res).toHaveSize(1);
+      expect(res[0].metadata).toEqual(mockResponse[0].metadata);
+      expect(res[0].info).toEqual(mockResponse[0].info);
+    });
+
+    // THEN
+    const url = environment.apiBaseUrl + '/games-history-before-creation-date/puuid?gameCreation=1758490634927&queue=420';
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 });

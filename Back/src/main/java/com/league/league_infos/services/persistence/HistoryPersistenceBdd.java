@@ -58,4 +58,14 @@ public class HistoryPersistenceBdd implements HistoryPersistence {
         List<InfoMatchEntity> infoMatchEntities = infoMatchRepository.findRecentsMatchByPuuidAndQueue(puuid, oneHourAgo, queue);
         return !infoMatchEntities.isEmpty();
     }
+
+    @Override
+    public List<MatchDTO> findAllMatchByPuuidAndQueue(String puuid, Integer queue) {
+        return infoMatchRepository.findAllMatchByPuuidAndQueue(puuid, queue).stream().map(MatchMapper::infoMatchEntityToMatchDTO).toList();
+    }
+
+    @Override
+    public List<MatchDTO> findAllMatchByPuuidAndQueueBeforeGivenDate(String puuid, Long gameCreation, Integer queue) {
+        return infoMatchRepository.findAllMatchByPuuidAndQueueBeforeGivenDate(puuid, gameCreation, queue).stream().map(MatchMapper::infoMatchEntityToMatchDTO).toList();
+    }
 }

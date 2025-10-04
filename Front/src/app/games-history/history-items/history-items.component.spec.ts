@@ -13,34 +13,6 @@ describe('HistoryItemsComponent', () => {
   let historyService: HistoryService;
   let versionService: GetVersionsService;
 
-  function matchDTOMock() {
-    return {
-      metadata: {
-        matchId: 'mock-match-id-456',
-        participants: ['puuid-1'],
-        dataVersion: '1',
-      },
-      info: {
-        gameDuration: 1800,
-        gameCreation: 1620000000000,
-        queueId: 420,
-        participants: [mockMatchParticipant()],
-        teams: [
-          {
-            teamId: 100,
-            win: true,
-            bans: [11, 22, 33, 44, 55],
-          },
-          {
-            teamId: 200,
-            win: false,
-            bans: [66, 77, 88, 99, 101],
-          },
-        ],
-      },
-    } as unknown as MatchDTO;
-  }
-
   function mockMatchParticipant() {
     return {
       participantId: 1,
@@ -92,7 +64,6 @@ describe('HistoryItemsComponent', () => {
     fixture = TestBed.createComponent(HistoryItemsComponent);
     historyService = TestBed.inject(HistoryService);
     versionService = TestBed.inject(GetVersionsService);
-    historyService.listMatchDataSignal.set([matchDTOMock()]);
     versionService.lastVersionlolDTOSignal.set('14.1');
     component = fixture.componentInstance;
     component.currMatchParticipant = mockMatchParticipant() as ParticipantMatchDTO;

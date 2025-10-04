@@ -21,12 +21,13 @@ export class HistoryItemsComponent implements OnInit {
   constructor(private versionService: GetVersionsService, private historyService: HistoryService) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
+  @Input() listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
   DDRAGON_BASE_CDN = DDRAGON_BASE_CDN;
   lastVersionLolSignal: Signal<string> = signal('');
   listUrlItems: ItemUrl[] = [];
   iconChampionUrl = '';
   nbCsKilled: number = 0;
-  listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
+
   currentMatch?: MatchDTO;
   dateCreationGameStr: string = '';
   gameDuration: string = '';
@@ -39,7 +40,6 @@ export class HistoryItemsComponent implements OnInit {
     this.listUrlItems = this.getListUrlItems();
     this.iconChampionUrl = this.computeIconChampionUrl();
     this.nbCsKilled = this.computeNbCsKilled();
-    this.listMatchDataSignal = this.historyService.listMatchDataSignal;
     this.currentMatch = this.getCurrentMatch();
     this.dateCreationGameStr = formatTimestampToDateStr(this.currentMatch?.info.gameCreation);
     this.gameDuration = durationSecondeToStr(this.currentMatch?.info.gameDuration);

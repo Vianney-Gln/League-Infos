@@ -15,27 +15,35 @@
   background-color: var(--color-black-trans-1);
 }
 
-.first-entry {
-  border-right: 2px solid var(--color-gold-lol-1);
-}
-
-.second-entry {
-  border-left: 2px solid var(--color-gold-lol-1);
-}
-
 .league-entry {
   color: var(--color-gold-lol-1);
-  position: relative;
-}
-
-.img-rank-container .img-rank {
-  height: 450px;
-  position: absolute;
-  top: -100px;
-  right: -200px;
 }
 
 .data p {
   margin: 0;
   padding: 0;
+}
+
+.img-rank-emblem {
+  height: 140px;
+}
+
+.custom-button-radio {
+  border-color: var(--color-gold-lol-1);
+  color: var(--color-gold-lol-1);
+}
+
+.custom-button-radio:hover {
+  border-color: var(--color-gold-lol-1);
+  color: var(--color-gold-lol-1);
+}
+
+.btn-check:checked + .btn {
+  border-color: var(--color-gold-lol-1);
+  background-color: var(--color-gold-lol-1);
+  color: white;
+}
+
+.bloc_unranked {
+  height: 140px;
 }

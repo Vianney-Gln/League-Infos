@@ -19,68 +19,112 @@
       </div>
     </div>
   </div>
-  <div class="row mt-2">
-    @for (leagueEntry of leagueEntriesSignal(); track $index; let i = $index) {
-    <div data-test="bloc-data-league-entry" class="col-6 league-entry" [ngClass]="{ 'first-entry': i === 0, 'second-entry': i === 1 }">
-      <h3 class="text-center">{{ leagueEntry.queueType }}</h3>
-      <div class="data mt-4 pt-4 pb-4">
-        <p>{{ leagueEntry.tier }} {{ leagueEntry.rank }}</p>
-        <p>{{ leagueEntry.leaguePoints }} LP</p>
-        <p>Victoires: {{ leagueEntry.wins }} - Défaites: {{ leagueEntry.losses }}</p>
-      </div>
-      <div class="img-rank-container">
-        <img class="img-rank" alt="tier emblem" [src]="computeTierEmblem(leagueEntry.tier)" />
-      </div>
-      <button [attr.data-test]="'button historique ' + leagueEntry.queueType" (click)="getHistory(leagueEntry.queueType)" type="button" class="button-lol-style">Historique {{ leagueEntry.queueType }}</button>
-        @if(leagueEntry.queueType === RANKED_SOLO_5x5.libelle){ 
-          <div class="mt-4">
-            @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
-              <app-history-items data-test="history-item" [currMatchParticipant]="currMatchParticipant"></app-history-items>
-          } 
-          @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
-          <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(leagueEntry.queueType)">Plus de parties</button>
-        }
+  <div class="row mt-2 league-entry">
+    <h2 class="text-center mt-2 mb-4">Infos sur le joueur</h2>
+    @if(queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ){
+      <div class="col-2">
+          <img class="img-rank-emblem" alt="tier emblem" [src]="computeTierEmblem(leagueEntrySoloQSignal()?.tier)" />
         </div>
-        @if (noMoreHistoriqueMessageSoloQSignal()) {
-          <span data-test="no-more-history-message-soloQ">{{noMoreHistoriqueMessageSoloQSignal()}}</span>
-        }
-        } 
-        @if(leagueEntry.queueType === RANKED_FLEX_SR.libelle){ 
-          <div class="mt-4">
-            @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
-              <app-history-items [currMatchParticipant]="currMatchParticipant"></app-history-items>
-        }
-        @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
-          <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(leagueEntry.queueType)">Plus de parties</button>
-        }
+      <div data-test="bloc-data-league-entry-1" class="col-4 data">
+          <p class="fw-bold fs-4">{{ leagueEntrySoloQSignal()?.tier }} {{ leagueEntrySoloQSignal()?.rank }}</p>
+          <p>{{ leagueEntrySoloQSignal()?.queueType |translateFill }}</p>
+          <p>{{ leagueEntrySoloQSignal()?.leaguePoints }} LP</p>
+          <p>Victoires: {{ leagueEntrySoloQSignal()?.wins }} - Défaites: {{ leagueEntrySoloQSignal()?.losses }}</p>
       </div>
-       @if (noMoreHistoriqueMessageFlexQSignal()) {
-          <span data-test="no-more-history-message-flexQ">{{noMoreHistoriqueMessageFlexQSignal()}}</span>
-        }
+      <div data-test="bloc-data-league-entry-2" class="col-4 data mt-4">
+          <p>{{nbGameSoloQPlayed() }} parties jouées</p>
+          <p data-test="win-rate">{{winRateSoloQ()}} % victoire</p>
+      </div>
+    }@else if(queueTypeSignal() === 'RANKED_SOLO_5x5' && isUnrankedSoloQ){
+        <div class="col-8 bloc_unranked">
+          <p data-test="bloc-unranked-soloQ">Ce joueur n'est pas encore classé en Ranked SoloQ</p>
+        </div>
+    }
+    @if(queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex ){
+      <div class="col-2">
+          <img class="img-rank-emblem" alt="tier emblem" [src]="computeTierEmblem(leagueEntryFlexQSignal()?.tier)" />
+        </div>
+      <div data-test="bloc-data-league-entry-1" class="col-4 data">
+          <p class="fw-bold fs-4">{{ leagueEntryFlexQSignal()?.tier }} {{ leagueEntryFlexQSignal()?.rank }}</p>
+          <p>{{ leagueEntryFlexQSignal()?.queueType|translateFill }}</p>
+          <p>{{ leagueEntryFlexQSignal()?.leaguePoints }} LP</p>
+          <p>Victoires: {{ leagueEntryFlexQSignal()?.wins }} - Défaites: {{ leagueEntryFlexQSignal()?.losses }}</p>
+      </div>
+      <div data-test="bloc-data-league-entry-2" class="col-4 data mt-4">
+          <p>{{nbGameFlexQPlayed() }} parties jouées</p>
+          <p data-test="win-rate">{{winRateFlexQ()}} % victoire</p>
+      </div>
+    }@else if(queueTypeSignal() === 'RANKED_FLEX_SR' && isUnrankedFlex){
+        <div class="col-8 bloc_unranked">
+          <p data-test="bloc-unranked-flex">Ce joueur n'est pas encore classé en Ranked Flex</p>
+        </div>
+    }
+
+  <div class="col-2">
+    <div class="btn-group" role="group" aria-label="Choix du la file classée">
+      <input
+        type="radio"
+        class="btn-check custom-button-radio"
+        name="soloQ"
+        id="soloQ"
+        autocomplete="off"
+        data-test="radio-switch-queue-solo"
+        (change)="onSwitch(RANKED_SOLO_5x5.libelle)"
+        [checked]="queueTypeSignal() === RANKED_SOLO_5x5.libelle"
+      />
+      <label data-test="label-radio-queue-solo" class="btn custom-button-radio" for="soloQ">SoloQ</label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        name="flexQ"
+        id="flexQ"
+        data-test="radio-switch-queue-flex"
+        autocomplete="off"
+        (change)="onSwitch(RANKED_FLEX_SR.libelle)"
+        [checked]="queueTypeSignal() === RANKED_FLEX_SR.libelle"
+      />
+      <label data-test="label-radio-queue-flex" class="btn custom-button-radio" for="flexQ">FlexQ</label>
+    </div>
+  </div>
+
+  <h3 class="mt-3 text-center">Historique des parties</h3>
+
+    @if(queueTypeSignal() === RANKED_SOLO_5x5.libelle){
+      <div class="mt-4">
+        @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
+          <app-history-items data-test="history-item" [currMatchParticipant]="currMatchParticipant" [listMatchDataSignal]="listMatchDataSoloQSignal"></app-history-items>
       }
+      @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
+      <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
+    }
     </div>
-    @if(isUnrankedFlex){
-    <div class="col-6 league-entry">
-      <h3 class="text-center">RANKED_FLEX_SR</h3>
-      <div class="data mt-4 pt-4 pb-4">
-        <p data-test="bloc_unranked_flex" class="text-center">Ce joueur n'est pas encore classé en Ranked Flex</p>
-      </div>
-    </div>
-    } @if(isUnrankedSoloQ){
-    <div class="col-6 league-entry">
-      <h3 class="text-center">RANKED_SOLO_5x5</h3>
-      <div class="data mt-4 pt-4 pb-4">
-        <p data-test="bloc-unranked-solo" class="text-center">Ce joueur n'est pas encore classé en Ranked Solo</p>
-      </div>
-    </div>
-    }}@if(!leagueEntriesSignal().length) {
+      @if (noMoreHistoriqueMessageSoloQSignal()) {
+        <span data-test="no-more-history-message-soloQ">{{noMoreHistoriqueMessageSoloQSignal()}}</span>
+      }
+    }
+    @if(queueTypeSignal() === RANKED_FLEX_SR.libelle){
+      <div class="mt-4">
+        @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
+          <app-history-items [currMatchParticipant]="currMatchParticipant" [listMatchDataSignal]="listMatchDataFlexQSignal"></app-history-items>
+    }
+    @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
+      <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
+    }
+  </div>
+    @if (noMoreHistoriqueMessageFlexQSignal()) {
+      <span data-test="no-more-history-message-flexQ">{{noMoreHistoriqueMessageFlexQSignal()}}</span>
+    }
+}
+
+    @if(!leagueEntriesSignal().length) {
     <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
       <h3>Il n'y a pas d'informations sur ce joueur.</h3>
       <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>
     </div>
-    }
-  </div>
+  }
 
+</div>
   }@else {
   <div class="row text-white">
     <div class="col text-center">

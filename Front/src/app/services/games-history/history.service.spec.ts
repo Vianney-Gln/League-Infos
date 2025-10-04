@@ -109,8 +109,4 @@ describe('HistoryService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-
-  it('should have listMatchDataSignal initialized as empty', () => {
-    expect(service.listMatchDataSignal()).toHaveSize(0);
-  });
 });

@@ -6,16 +6,48 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { HistoryService } from '../../services/games-history/history.service';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
+import { clickButtonByDataTestAttr } from '../../common/utils/utils-tests';
+import { signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 describe('HistoryItemsComponent', () => {
   let component: HistoryItemsComponent;
   let fixture: ComponentFixture<HistoryItemsComponent>;
   let historyService: HistoryService;
   let versionService: GetVersionsService;
+  let routerService: Router;
+
+  function matchDTOMock() {
+    return {
+      metadata: {
+        matchId: 'mock-match-id-456',
+        participants: ['123'],
+        dataVersion: '1',
+      },
+      info: {
+        gameDuration: 1800,
+        gameCreation: 1620000000000,
+        queueId: 420,
+        participants: [mockMatchParticipant()],
+        teams: [
+          {
+            teamId: 100,
+            win: true,
+            bans: [11, 22, 33, 44, 55],
+          },
+          {
+            teamId: 200,
+            win: false,
+            bans: [66, 77, 88, 99, 101],
+          },
+        ],
+      },
+    } as unknown as MatchDTO;
+  }
 
   function mockMatchParticipant() {
     return {
-      participantId: 1,
+      participantId: 123,
       profileIcon: 1234,
       assists: 8,
       kills: 10,
@@ -65,6 +97,8 @@ describe('HistoryItemsComponent', () => {
     historyService = TestBed.inject(HistoryService);
     versionService = TestBed.inject(GetVersionsService);
     versionService.lastVersionlolDTOSignal.set('14.1');
+    routerService = TestBed.inject(Router);
+    fixture.componentRef.setInput('listMatchDataSignal', signal([matchDTOMock()]));
     component = fixture.componentInstance;
     component.currMatchParticipant = mockMatchParticipant() as ParticipantMatchDTO;
     fixture.detectChanges();
@@ -114,5 +148,47 @@ describe('HistoryItemsComponent', () => {
   it('should correctly initialize and compute icon summonerSpells url', () => {
     expect(component.summoner1IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerFlash.png');
     expect(component.summoner2IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerHeal.png');
+  });
+
+  it('should redirect user on click, and set currentMatchSignal with currentMatch', () => {
+    // GIVEN
+    component.currMatchParticipant = mockMatchParticipant();
+    fixture.detectChanges();
+
+    const routerSpy = spyOn(routerService, 'navigate');
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'game-item');
+    fixture.detectChanges();
+
+    // THEN
+    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123']);
+    expect(historyService.currentMatch()).toEqual(
+      jasmine.objectContaining({
+        metadata: {
+          matchId: 'mock-match-id-456',
+          participants: ['123'],
+          dataVersion: '1',
+        },
+        info: {
+          gameDuration: 1800,
+          gameCreation: 1620000000000,
+          queueId: 420,
+          participants: [mockMatchParticipant()],
+          teams: [
+            {
+              teamId: 100,
+              win: true,
+              bans: [11, 22, 33, 44, 55],
+            },
+            {
+              teamId: 200,
+              win: false,
+              bans: [66, 77, 88, 99, 101],
+            },
+          ],
+        },
+      })
+    );
   });
 });

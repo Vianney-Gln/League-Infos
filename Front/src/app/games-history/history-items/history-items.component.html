@@ -1,46 +1,45 @@
-<!-- prettier-ignore -->
 <span class="date-creation">{{dateCreationGameStr}}</span>
 <span class="date-creation ms-2">{{ gameDuration }}</span>
-<div class="match-history-row">
-  <div class="champion-info">
-    <div>
+<div data-test="game-item" (click)="goToGameDetail()" class="match-history-row row">
+  <div class="col-1">
+    <div class="champion-img-container">
       <img [src]="iconChampionUrl" alt="{{ currMatchParticipant.championName }}" class="champion-icon" />
-      <div class="summoner-spell-container">
-        <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
-        <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
-      </div>
+      <div class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
-    <div>
-      <span class="champion-name">{{ currMatchParticipant.championName }}</span
-      ><br />
-      <span class="champion-role">{{ role }}</span>
+    <div class="summoner-spell-container">
+      <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
+      <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
     </div>
   </div>
-  <div class="stats">
+  <div class="champion-info col-2">
+    <span>{{ currentQueue |translateFill}}</span>
+    <span class="champion-name">{{ currMatchParticipant.championName }}</span>
+    <span class="champion-role">{{ role }}</span>
+  </div>
+  <div class="stats col-3">
     <div>
-      <span class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span
-      ><br />
+      <span class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
       <span class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
-    <span class="gold">
+    <span class="gold ms-3">
       <img src="images/Icons/icon_gold.png" alt="Gold" class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
-    <span class="cs">
+    <span class="cs ms-3">
       <img src="images/Icons/icon_minions.png" alt="CS" class="cs-icon" />
       {{ nbCsKilled }}
     </span>
   </div>
-  <div class="items">
+  <div class="items col-5">
     @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
     <ng-container>
       <img [src]="itemUrl.url" alt="{{ itemUrl.itemId }}" class="item-icon" />
     </ng-container>
     }}
   </div>
-  <div class="result">
+  <div class="result col-1">
     <span [ngClass]="{ win: currMatchParticipant.win, loss: !currMatchParticipant.win }">
-      {{ currMatchParticipant.win ? "Victory" : "Defeat" }}
+      {{ currMatchParticipant.win ? "Victoire" : "Défaite" }}
     </span>
   </div>
 </div>

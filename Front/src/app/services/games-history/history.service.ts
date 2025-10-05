@@ -10,6 +10,8 @@ import { MatchDTO } from '../../common/models/games-history/matchDTO';
 export class HistoryService {
   constructor(private http: HttpClient) {}
 
+  currentMatch: WritableSignal<MatchDTO | undefined> = signal(undefined);
+
   getHistoryByPuuidAndQueueType(puuid: string, queueId: number): Observable<MatchDTO[]> {
     const url = `${environment.apiBaseUrl}/games-history/${puuid}?queue=${queueId}`;
     return this.http.get<MatchDTO[]>(url);

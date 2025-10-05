@@ -36,8 +36,8 @@
           <p data-test="win-rate">{{winRateSoloQ()}} % victoire</p>
       </div>
     }@else if(queueTypeSignal() === 'RANKED_SOLO_5x5' && isUnrankedSoloQ){
-        <div class="col-8 bloc_unranked">
-          <p data-test="bloc-unranked-soloQ">Ce joueur n'est pas encore classé en Ranked SoloQ</p>
+        <div class="col-10 bloc_unranked">
+          <p class="text-center" data-test="bloc-unranked-soloQ">Ce joueur n'est pas encore classé en Ranked SoloQ</p>
         </div>
     }
     @if(queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex ){
@@ -55,8 +55,8 @@
           <p data-test="win-rate">{{winRateFlexQ()}} % victoire</p>
       </div>
     }@else if(queueTypeSignal() === 'RANKED_FLEX_SR' && isUnrankedFlex){
-        <div class="col-8 bloc_unranked">
-          <p data-test="bloc-unranked-flex">Ce joueur n'est pas encore classé en Ranked Flex</p>
+        <div class="col-10 bloc_unranked">
+          <p class="text-center" data-test="bloc-unranked-flex">Ce joueur n'est pas encore classé en Ranked Flex</p>
         </div>
     }
 
@@ -88,12 +88,18 @@
     </div>
   </div>
 
-  <h3 class="mt-3 text-center">Historique des parties</h3>
+  @if((queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex) || (queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ)){
+    <h3 class="mt-3 text-center">Historique des parties</h3>
+  }
 
     @if(queueTypeSignal() === RANKED_SOLO_5x5.libelle){
       <div class="mt-4">
         @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
-          <app-history-items data-test="history-item" [currMatchParticipant]="currMatchParticipant" [listMatchDataSignal]="listMatchDataSoloQSignal"></app-history-items>
+          <app-history-items data-test="history-item" 
+          [currMatchParticipant]="currMatchParticipant" 
+          [listMatchDataSignal]="listMatchDataSoloQSignal"
+          [currentQueue]="RANKED_SOLO_5x5.libelle">
+        </app-history-items>
       }
       @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
       <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
@@ -106,7 +112,11 @@
     @if(queueTypeSignal() === RANKED_FLEX_SR.libelle){
       <div class="mt-4">
         @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
-          <app-history-items [currMatchParticipant]="currMatchParticipant" [listMatchDataSignal]="listMatchDataFlexQSignal"></app-history-items>
+          <app-history-items 
+          [currMatchParticipant]="currMatchParticipant" 
+          [listMatchDataSignal]="listMatchDataFlexQSignal"
+          [currentQueue]="RANKED_SOLO_5x5.libelle">
+        </app-history-items>
     }
     @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
       <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>

@@ -109,4 +109,8 @@ describe('HistoryService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+  it('should initialise currentMatch signal to undefined', () => {
+    expect(service.currentMatch()).toBeUndefined();
+  });
 });

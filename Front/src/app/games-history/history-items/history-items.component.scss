@@ -1,37 +1,42 @@
 .match-history-row {
-  display: flex;
-  align-items: center;
   padding: 12px 16px;
   border-bottom: 1px solid #e2e2e2;
   background: var(--color-black-background-1);
   color: #f5f5f5;
   font-size: 15px;
+  :hover {
+    cursor: pointer;
+  }
 }
 
 .champion-info {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  min-width: 160px;
+  justify-content: center;
 }
 
 .summoner-spell-container {
   display: flex;
   justify-content: center;
-  width: 48px;
+  width: 68px;
 }
 
-.champion-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
+.champion-img-container {
+  position: relative;
   margin-right: 10px;
+  border-radius: 8px;
   border: 2px solid var(--color-history-border-champ-icon);
   background: var(--color-history-background-color-champ-icon);
+  .champion-icon {
+    width: 68px;
+    height: 68px;
+  }
 }
 
 .summoner-spell-icon {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   border-radius: 2px;
   border: 1px solid var(--color-history-border-champ-icon);
   background: var(--color-history-background-color-champ-icon);
@@ -42,9 +47,7 @@
   font-size: 16px;
 }
 
-.champion-role,
-.date-creation,
-.kda-ratio {
+.date-creation {
   font-weight: 400;
   font-size: 12px;
 }
@@ -77,23 +80,20 @@
 .items {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-left: 24px;
-  min-width: 160px;
 }
 
 .item-icon {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   background: var(--color-history-background-color-champ-icon);
   border: 1px solid var(--color-history-border-champ-icon);
 }
 
 .result {
-  margin-left: auto;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -103,4 +103,23 @@
 
 .loss {
   color: var(--color-text-loss);
+}
+.champion-level-circle {
+  position: absolute;
+  bottom: calc(-0.5 * 22px);
+  right: calc(-0.5 * 22px);
+  width: 22px;
+  height: 22px;
+  background-color: var(--color-black-background-1);
+  z-index: 999;
+  border: 2px solid var(--color-gold-lol-1);
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 6px #0008;
+  pointer-events: none;
 }

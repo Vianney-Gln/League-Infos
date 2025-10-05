@@ -9,19 +9,22 @@ import { ItemUrl } from '../../common/types/types';
 import { durationSecondeToStr } from '../../common/utils/time-utils';
 import { summonerSpellIdToNameMap } from '../../common/constants/summoners';
 import { EventEmitter } from '@angular/core';
+import { TranslateFillPipe } from '../../common/pipes/translate-fill.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history-items',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateFillPipe],
   templateUrl: './history-items.component.html',
   styleUrl: './history-items.component.scss',
 })
 export class HistoryItemsComponent implements OnInit {
-  constructor(private versionService: GetVersionsService, private historyService: HistoryService) {}
+  constructor(private versionService: GetVersionsService, private historyService: HistoryService, private router: Router) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
   @Input() listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
+  @Input() currentQueue: string = '';
   DDRAGON_BASE_CDN = DDRAGON_BASE_CDN;
   lastVersionLolSignal: Signal<string> = signal('');
   listUrlItems: ItemUrl[] = [];
@@ -94,5 +97,10 @@ export class HistoryItemsComponent implements OnInit {
       default:
         return 'Inconnu'; // ou "", ou ne rien afficher
     }
+  }
+
+  goToGameDetail() {
+    this.historyService.currentMatch.set(this.currentMatch);
+    this.router.navigate(['/game/detail/', this.currMatchParticipant.puuid]);
   }
 }

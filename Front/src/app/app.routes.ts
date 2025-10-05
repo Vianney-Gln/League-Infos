@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { PlayerDetailsComponent } from './details/player-details/player-details.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ChampionDetailsComponent } from './details/champion-details/champion-details.component';
+import { GameDetailComponent } from './details/game-detail/game-detail.component';
 
 export const routes: Routes = [
   { path: 'Accueil', component: HomeComponent, title: 'LeagueInfos - Accueil' },
@@ -10,4 +11,5 @@ export const routes: Routes = [
   { path: 'Detail-summoner/:summoner', component: PlayerDetailsComponent, title: 'LeagueInfos - Invocateur' },
   { path: 'Detail-champion/:champion', component: ChampionDetailsComponent, title: 'LeagueInfos - Champion' },
   { path: 'NotFound', component: NotFoundComponent, title: 'LeagueInfos - ressource non trouvée' },
+  { path: 'game/detail/:puuid', component: GameDetailComponent, title: 'LeagueInfos - Détail partie' },
 ];

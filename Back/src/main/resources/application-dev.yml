@@ -1,14 +1,6 @@
-app:
-  cors:
-    allowed-origin: "http://localhost:4200"
-  game-history:
-    max-count: 10
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/league
-    username: leagueuser
-    password: leaguepass
-    driver-class-name: org.postgresql.Driver
+  config:
+    import: optional:classpath:/application-secret.yml
   jpa:
     hibernate:
       ddl-auto: validate
@@ -16,3 +8,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+app:
+  cors:
+    allowed-origin: "http://localhost:4200"
+  game-history:
+    max-count: 10
+

@@ -48,3 +48,5 @@ pnpm-debug.log*
 libpeerconnection.log
 testem.log
 connect.lock
+Docker/.env
+.env

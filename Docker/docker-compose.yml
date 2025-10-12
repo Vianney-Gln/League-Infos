@@ -7,12 +7,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: league
-      POSTGRES_USER: leagueuser
-      POSTGRES_PASSWORD: leaguepass
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

@@ -7,7 +7,17 @@ public class MatchMapper {
 
     public static MatchDTO infoMatchEntityToMatchDTO(InfoMatchEntity infoMatchEntity) {
         MatchDTO matchDTO = new MatchDTO();
-        matchDTO.setMetadata(MetaDataMapper.metaDataEntityToDTO(infoMatchEntity.getParticipantMatchEntityList().getFirst().getMetaDataEntity()));
+        if (infoMatchEntity == null) {
+            return null;
+        }
+
+        if (infoMatchEntity.getParticipantMatchEntityList() != null &&
+                infoMatchEntity.getParticipantMatchEntityList().getFirst() != null &&
+                infoMatchEntity.getParticipantMatchEntityList().getFirst().getMetaDataEntity() != null
+        ) {
+            matchDTO.setMetadata(MetaDataMapper.metaDataEntityToDTO(infoMatchEntity.getParticipantMatchEntityList().getFirst().getMetaDataEntity()));
+        }
+
         matchDTO.setInfo(InfoMatchMapper.infoMatchEntityToDTO(infoMatchEntity));
         return matchDTO;
     }

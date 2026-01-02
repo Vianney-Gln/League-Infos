@@ -1,1 +1,72 @@
-<p>Pas encore implémenté</p>
+ <div class="container">
+    <h3 class="mt-3 text-center text-gold-1">Résumé de la partie</h3>
+    <div class="row mb-4 mt-5 d-flex align-items-baseline">
+        <div class="col-2">
+            <h4 class="mt-3 ms-3 text-gold-1">Equipe 1</h4>
+        </div>
+         <div class="col-2">
+            <h5 class="mt-3">
+                <img class="icon-kill" src="images/Icons/loyaltytftdamageskincount_rewards.svg" alt="kills" />
+                <span class="ms-3">{{totalKillsTeam1() + " / " + totalDeathsTeam1() +  " / " + totalAssistsTeam1() }}</span>
+            </h5>
+        </div>
+        <div class="col-2">
+            <h5 class="mt-3">
+                <img class="icon-gold" src="images/Icons/icon_gold.png" alt="golds" />
+                <span class="ms-3">{{totalGoldEarnedTeam1()}}</span>
+            </h5>
+        </div>
+        <div class="col-1">
+            <h5 class="mt-3" [ngClass]="{ win:team1Signal()?.win,loss: !team1Signal()?.win }">
+                {{ team1Signal()?.win ? "Victoire" : "Défaite" }}
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @for (participant of listParticipantsTeam1Signal() ; track $index) {
+                    <app-history-items
+                        [currMatchParticipant]="participant"
+                        [isAllPlayerForAgame]="true"
+                    >
+                </app-history-items>
+            }
+        </div>
+    </div>
+    <div class="row d-flex mb-4 align-items-baseline mt-5">
+        <div class="col-2">
+            <h4 class="mt-3 ms-3 text-gold-1">Equipe 2</h4>
+        </div>
+         <div class="col-2">
+            <h5 class="mt-3">
+                <img class="icon-kill" src="images/Icons/loyaltytftdamageskincount_rewards.svg" alt="kills" />
+                <span class="ms-3">{{totalKillsTeam2() + "/" + totalDeathsTeam2() +  "/" + totalAssistsTeam2() }}</span>
+            </h5>
+        </div>
+        <div class="col-2">
+            <h5 class="mt-3">
+                <img class="icon-gold" src="images/Icons/icon_gold.png" alt="golds" />
+                <span class="ms-3">{{totalGoldEarnedTeam2()}}</span>
+            </h5>
+        </div>
+         <div class="col-1">
+            <h5 class="mt-3" [ngClass]="{ win:team2Signal()?.win,loss: !team2Signal()?.win}">
+                {{ team2Signal()?.win ? "Victoire" : "Défaite" }}
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @for (participant of listParticipantsTeam2Signal() ; track $index) {
+                    <app-history-items
+                    [currMatchParticipant]="participant"
+                    [currentQueue]="'test'"
+                    [isAllPlayerForAgame]="true"
+                    >
+                </app-history-items>
+            }
+        </div>
+    </div>
+</div>
+
+

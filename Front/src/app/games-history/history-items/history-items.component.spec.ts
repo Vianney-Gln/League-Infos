@@ -8,7 +8,7 @@ import { HistoryService } from '../../services/games-history/history.service';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { clickButtonByDataTestAttr } from '../../common/utils/utils-tests';
 import { signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 describe('HistoryItemsComponent', () => {
   let component: HistoryItemsComponent;
@@ -90,7 +90,7 @@ describe('HistoryItemsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HistoryItemsComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HistoryItemsComponent);
@@ -150,7 +150,7 @@ describe('HistoryItemsComponent', () => {
     expect(component.summoner2IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerHeal.png');
   });
 
-  it('should redirect user on click, and set currentMatchSignal with currentMatch', () => {
+  it('should redirect user on click', () => {
     // GIVEN
     component.currMatchParticipant = mockMatchParticipant();
     fixture.detectChanges();
@@ -162,8 +162,8 @@ describe('HistoryItemsComponent', () => {
     fixture.detectChanges();
 
     // THEN
-    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123']);
-    expect(historyService.currentMatch()).toEqual(
+    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123', 'mock-match-id-456']);
+    expect(component.currentMatch).toEqual(
       jasmine.objectContaining({
         metadata: {
           matchId: 'mock-match-id-456',

@@ -331,4 +331,66 @@ class HistoryPersistenceBddTest {
                 .extracting("win", "teamId")
                 .containsExactly(tuple(true, 20));
     }
+
+    @Test
+    void findMatchByGameId_success() {
+        // GIVEN
+        InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
+
+        ChallengesEntity challengesEntity = new ChallengesEntity();
+        challengesEntity.setKda(13F);
+        challengesEntity.setGameLength(1380F);
+
+        TeamEntity teamEntity = new TeamEntity();
+        teamEntity.setWin(true);
+        teamEntity.setIdTeam(20L);
+        teamEntity.setTeamIdNumero(20);
+
+        MetaDataEntity metaDataEntity = new MetaDataEntity();
+        metaDataEntity.setDataVersion("version");
+        metaDataEntity.setMatchId("#TAG_10");
+
+        ParticipantMatchEntity participantMatchEntity = new ParticipantMatchEntity();
+        participantMatchEntity.setWin(true);
+        participantMatchEntity.setChallengesEntity(challengesEntity);
+        participantMatchEntity.setMetaDataEntity(metaDataEntity);
+        participantMatchEntity.setIdParticipant(15L);
+
+        infoMatchEntity.setParticipantMatchEntityList(List.of(participantMatchEntity));
+        infoMatchEntity.setTeamEntity(List.of(teamEntity));
+
+        when(infoMatchRepository.findByGameId(anyLong())).thenReturn(infoMatchEntity);
+
+        // WHEN
+        MatchDTO result = historyPersistenceBdd.findMatchByGameId(10L);
+
+        // THEN
+        verify(infoMatchRepository, times(1)).findByGameId(10);
+        assertThat(result).isNotNull();
+
+        assertThat(result.getInfo()).isNotNull();
+        assertThat(result.getMetadata()).isNotNull();
+
+        assertThat(result.getInfo().getParticipants())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("participantId")
+                .containsExactly(15);
+
+        assertThat(result.getInfo().getParticipants().getFirst().getChallenges())
+                .isNotNull()
+                .extracting("kda", "gameLength")
+                .containsExactly(13F, 1380F);
+
+        assertThat(result.getMetadata())
+                .isNotNull()
+                .extracting("dataVersion", "matchId")
+                .containsExactly("version", "#TAG_10");
+
+        assertThat(result.getInfo().getTeams())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("win", "teamId")
+                .containsExactly(tuple(true, 20));
+    }
 }

@@ -1,7 +1,7 @@
 import { Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
-import { catchError, map, of, Subscription, switchMap, tap } from 'rxjs';
+import { catchError, map, of, Subscription, switchMap, takeUntil, tap } from 'rxjs';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
@@ -69,8 +69,13 @@ export class PlayerDetailsComponent implements OnDestroy {
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.isLoading = true;
     this.getDisplayedPlayerInfos();
-    this.route.paramMap.subscribe(() => {
-      this.initGetMoreButtonAndMessageState();
+    this.route.paramMap.subscribe({
+      next: () => {
+        this.initGetMoreButtonAndMessageState();
+      },
+      error: () => {
+        console.log('error');
+      },
     });
   }
 

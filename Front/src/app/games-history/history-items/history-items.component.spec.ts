@@ -194,8 +194,8 @@ describe('HistoryItemsComponent', () => {
       });
     });
 
-    it('should not display summoner spells', () => {
-      expect(getByDataTestAttr(fixture.debugElement, 'summoner-spells')).toBeFalsy();
+    it('should display summoner spells', () => {
+      expect(getByDataTestAttr(fixture.debugElement, 'summoner-spells')).toBeTruthy();
     });
 
     it('should redirect user on click', () => {

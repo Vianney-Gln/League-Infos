@@ -108,6 +108,15 @@ describe('HistoryItemsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should correctly initialize and compute champion url', () => {
+    expect(component.iconChampionUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/champion/MockChampion.png');
+  });
+
+  it('should correctly initialize and compute icon summonerSpells url', () => {
+    expect(component.summoner1IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerFlash.png');
+    expect(component.summoner2IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerHeal.png');
+  });
+
   it('should correctly initialize all items url', () => {
     expect(component.listUrlItems).toHaveSize(7);
     expect(component.listUrlItems).toEqual([
@@ -121,116 +130,227 @@ describe('HistoryItemsComponent', () => {
     ]);
   });
 
-  it('should correctly compute and display nb total cs killed', () => {
-    expect(component.nbCsKilled).toEqual(230);
-    expect(getByDataTestAttr(fixture.debugElement, 'nb-cs-kill')?.innerText).toEqual('230');
-  });
+  describe("HistoryItemsComponent - case current player's all games history", () => {
+    it('should correctly compute and display nb total cs killed', () => {
+      expect(component.nbCsKilled).toEqual(230);
+      expect(getByDataTestAttr(fixture.debugElement, 'nb-cs-kill')?.innerText).toEqual('230');
+    });
 
-  it('should correctly compute and display kda', () => {
-    expect(component.currMatchParticipant.kills).toEqual(10);
-    expect(component.currMatchParticipant.deaths).toEqual(2);
-    expect(component.currMatchParticipant.assists).toEqual(8);
-    expect(component.currMatchParticipant.challenges.kda).toEqual(9.0);
-    expect(getByDataTestAttr(fixture.debugElement, 'kda')?.innerText).toEqual('10/2/8');
-  });
+    it('should correctly compute and display kda', () => {
+      expect(component.currMatchParticipant.kills).toEqual(10);
+      expect(component.currMatchParticipant.deaths).toEqual(2);
+      expect(component.currMatchParticipant.assists).toEqual(8);
+      expect(component.currMatchParticipant.challenges.kda).toEqual(9.0);
+      expect(getByDataTestAttr(fixture.debugElement, 'kda')?.innerText).toEqual('10/2/8');
+      expect(getByDataTestAttr(fixture.debugElement, 'kda-ratio')?.innerText).toEqual('kda: 9.0');
+    });
 
-  it('should correctly compute and display gold earned', () => {
-    expect(component.currMatchParticipant.goldEarned).toEqual(15000);
-    expect(getByDataTestAttr(fixture.debugElement, 'gold-earned')?.innerText).toEqual('15000');
-  });
+    it('should correctly compute and display gold earned', () => {
+      expect(component.currMatchParticipant.goldEarned).toEqual(15000);
+      expect(getByDataTestAttr(fixture.debugElement, 'gold-earned')?.innerText).toEqual('15000');
+    });
 
-  it("should correctly compute and display champion's name selected", () => {
-    expect(getByDataTestAttr(fixture.debugElement, 'champion-name-selected')?.innerText).toEqual('MockChampion');
-  });
+    it("should correctly compute and display champion's name selected", () => {
+      expect(getByDataTestAttr(fixture.debugElement, 'champion-name-selected')?.innerText).toEqual('MockChampion');
+    });
 
-  it("should correctly compute and display champion's level", () => {
-    expect(getByDataTestAttr(fixture.debugElement, 'champ-level')?.innerText).toEqual('18');
-  });
+    it("should correctly compute and display champion's level", () => {
+      expect(getByDataTestAttr(fixture.debugElement, 'champ-level')?.innerText).toEqual('18');
+    });
 
-  [
-    { queueType: 'RANKED_SOLO_5x5', expectedView: 'Classée solo' },
-    { queueType: 'RANKED_FLEX_SR', expectedView: 'Classée flexible' },
-  ].forEach((queue) => {
-    it(`should correctly display the queue type ${queue.queueType}`, () => {
+    [
+      { queueType: 'RANKED_SOLO_5x5', expectedView: 'Classée solo' },
+      { queueType: 'RANKED_FLEX_SR', expectedView: 'Classée flexible' },
+    ].forEach((queue) => {
+      it(`should correctly display the queue type ${queue.queueType}`, () => {
+        // GIVEN
+        component.currentQueue = queue.queueType;
+
+        // WHEN
+        fixture.detectChanges();
+
+        // THEN
+        expect(getByDataTestAttr(fixture.debugElement, 'current-queue')?.innerText).toEqual(queue.expectedView);
+      });
+    });
+
+    [
+      { code: 'TOP', libelle: 'Top' },
+      { code: 'JUNGLE', libelle: 'Jungle' },
+      { code: 'MIDDLE', libelle: 'Mid' },
+      { code: 'BOTTOM', libelle: 'ADC' },
+      { code: 'UTILITY', libelle: 'Support' },
+    ].forEach((position) => {
+      it(`should correctly initialize and compute the role played with position: ${position.code}`, () => {
+        // GIVEN
+        component.currMatchParticipant.teamPosition = position.code;
+
+        // WHEN
+        fixture.detectChanges();
+
+        // THEN
+        expect(component.role).toEqual(position.libelle);
+        expect(getByDataTestAttr(fixture.debugElement, 'role')?.innerText).toEqual(position.libelle);
+      });
+    });
+
+    it('should not display summoner spells', () => {
+      expect(getByDataTestAttr(fixture.debugElement, 'summoner-spells')).toBeFalsy();
+    });
+
+    it('should redirect user on click', () => {
       // GIVEN
-      component.currentQueue = queue.queueType;
+      component.currMatchParticipant = mockMatchParticipant();
+      fixture.detectChanges();
+
+      const routerSpy = spyOn(routerService, 'navigate');
+
+      // WHEN
+      clickButtonByDataTestAttr(fixture.debugElement, 'game-item');
+      fixture.detectChanges();
+
+      // THEN
+      expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123', 'mock-match-id-456'], { state: { from: '/' } });
+      expect(component.currentMatch).toEqual(
+        jasmine.objectContaining({
+          metadata: {
+            matchId: 'mock-match-id-456',
+            participants: ['123'],
+            dataVersion: '1',
+          },
+          info: {
+            gameDuration: 1800,
+            gameCreation: 1620000000000,
+            queueId: 420,
+            participants: [mockMatchParticipant()],
+            teams: [
+              {
+                teamId: 100,
+                win: true,
+                bans: [11, 22, 33, 44, 55],
+              },
+              {
+                teamId: 200,
+                win: false,
+                bans: [66, 77, 88, 99, 101],
+              },
+            ],
+          },
+        })
+      );
+    });
+  });
+
+  describe("HistoryItemsComponent - case detail one player's game history with all participants", () => {
+    it('should correctly compute and display nb total cs killed', () => {
+      // GIVEN
+      component.isAllPlayerForAgame = true;
 
       // WHEN
       fixture.detectChanges();
 
       // THEN
-      expect(getByDataTestAttr(fixture.debugElement, 'current-queue')?.innerText).toEqual(queue.expectedView);
+      expect(component.nbCsKilled).toEqual(230);
+      expect(getByDataTestAttr(fixture.debugElement, 'nb-cs-kill')?.innerText).toEqual('230');
     });
-  });
 
-  [
-    { code: 'TOP', libelle: 'Top' },
-    { code: 'JUNGLE', libelle: 'Jungle' },
-    { code: 'MIDDLE', libelle: 'Mid' },
-    { code: 'BOTTOM', libelle: 'ADC' },
-    { code: 'UTILITY', libelle: 'Support' },
-  ].forEach((position) => {
-    it(`should correctly initialize and compute the role played with position: ${position.code}`, () => {
+    it('should correctly compute and display kda', () => {
       // GIVEN
-      component.currMatchParticipant.teamPosition = position.code;
+      component.isAllPlayerForAgame = true;
 
       // WHEN
       fixture.detectChanges();
 
       // THEN
-      expect(component.role).toEqual(position.libelle);
-      expect(getByDataTestAttr(fixture.debugElement, 'role')?.innerText).toEqual(position.libelle);
+      expect(component.currMatchParticipant.kills).toEqual(10);
+      expect(component.currMatchParticipant.deaths).toEqual(2);
+      expect(component.currMatchParticipant.assists).toEqual(8);
+      expect(component.currMatchParticipant.challenges.kda).toEqual(9.0);
+      expect(getByDataTestAttr(fixture.debugElement, 'kda')?.innerText).toEqual('10/2/8');
+      expect(getByDataTestAttr(fixture.debugElement, 'kda-ratio')?.innerText).toEqual('kda: 9.0');
     });
-  });
 
-  it('should correctly initialize and compute champion url', () => {
-    expect(component.iconChampionUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/champion/MockChampion.png');
-  });
+    it('should correctly compute and display gold earned', () => {
+      // GIVEN
+      component.isAllPlayerForAgame = true;
 
-  it('should correctly initialize and compute icon summonerSpells url', () => {
-    expect(component.summoner1IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerFlash.png');
-    expect(component.summoner2IconUrl).toEqual('https://ddragon.leagueoflegends.com/cdn/14.1/img/spell/SummonerHeal.png');
-  });
+      // WHEN
+      fixture.detectChanges();
 
-  it('should redirect user on click', () => {
-    // GIVEN
-    component.currMatchParticipant = mockMatchParticipant();
-    fixture.detectChanges();
+      // THEN
+      expect(component.currMatchParticipant.goldEarned).toEqual(15000);
+      expect(getByDataTestAttr(fixture.debugElement, 'gold-earned')?.innerText).toEqual('15000');
+    });
 
-    const routerSpy = spyOn(routerService, 'navigate');
+    it("should correctly compute and display champion's name selected", () => {
+      // GIVEN
+      component.isAllPlayerForAgame = true;
 
-    // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'game-item');
-    fixture.detectChanges();
+      // WHEN
+      fixture.detectChanges();
 
-    // THEN
-    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123', 'mock-match-id-456'], { state: { from: '/' } });
-    expect(component.currentMatch).toEqual(
-      jasmine.objectContaining({
-        metadata: {
-          matchId: 'mock-match-id-456',
-          participants: ['123'],
-          dataVersion: '1',
-        },
-        info: {
-          gameDuration: 1800,
-          gameCreation: 1620000000000,
-          queueId: 420,
-          participants: [mockMatchParticipant()],
-          teams: [
-            {
-              teamId: 100,
-              win: true,
-              bans: [11, 22, 33, 44, 55],
-            },
-            {
-              teamId: 200,
-              win: false,
-              bans: [66, 77, 88, 99, 101],
-            },
-          ],
-        },
-      })
-    );
+      // THEN
+      expect(getByDataTestAttr(fixture.debugElement, 'champion-name-selected')?.innerText).toEqual('MockChampion');
+    });
+
+    it("should correctly compute and display champion's level", () => {
+      // GIVEN
+      component.isAllPlayerForAgame = true;
+
+      // WHEN
+      fixture.detectChanges();
+
+      // THEN
+      expect(getByDataTestAttr(fixture.debugElement, 'champ-level')?.innerText).toEqual('18');
+    });
+
+    it('should display summoner spells', () => {
+      // GIVEN
+      component.isAllPlayerForAgame = true;
+
+      // WHEN
+      fixture.detectChanges();
+
+      // THEN
+      expect(getByDataTestAttr(fixture.debugElement, 'summoner-spells')).toBeTruthy();
+    });
+
+    [
+      { queueType: 'RANKED_SOLO_5x5', expectedView: 'Classée solo' },
+      { queueType: 'RANKED_FLEX_SR', expectedView: 'Classée flexible' },
+    ].forEach((queue) => {
+      it(`should not display the queue type ${queue.queueType}`, () => {
+        // GIVEN
+        component.currentQueue = queue.queueType;
+        component.isAllPlayerForAgame = true;
+
+        // WHEN
+        fixture.detectChanges();
+
+        // THEN
+        expect(getByDataTestAttr(fixture.debugElement, 'current-queue')).toBeFalsy();
+      });
+    });
+
+    [
+      { code: 'TOP', libelle: 'Top' },
+      { code: 'JUNGLE', libelle: 'Jungle' },
+      { code: 'MIDDLE', libelle: 'Mid' },
+      { code: 'BOTTOM', libelle: 'ADC' },
+      { code: 'UTILITY', libelle: 'Support' },
+    ].forEach((position) => {
+      it(`should correctly initialize and compute the role played with position: ${position.code}`, () => {
+        // GIVEN
+        component.currMatchParticipant.teamPosition = position.code;
+        component.isAllPlayerForAgame = true;
+
+        // WHEN
+        fixture.detectChanges();
+
+        // THEN
+        expect(component.role).toEqual(position.libelle);
+        expect(getByDataTestAttr(fixture.debugElement, 'role')?.innerText).toEqual(position.libelle);
+      });
+    });
   });
 });

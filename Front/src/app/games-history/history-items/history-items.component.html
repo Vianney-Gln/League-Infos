@@ -31,7 +31,7 @@
   <div class="stats col-3">
     <div>
       <span data-test="kda" class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
-      <span class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
+      <span data-test="kda-ratio" class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
     <span data-test="gold-earned" class="gold ms-3">
       <img loading="lazy"
@@ -73,9 +73,9 @@
           [src]="iconChampionUrl" 
           alt="{{ currMatchParticipant.championName }}" 
           class="champion-icon" />
-      <div class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
+      <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
-    <div class="summoner-spell-container">
+    <div data-test="summoner-spells" class="summoner-spell-container">
       <img loading="lazy"
           decoding="async" 
           class="summoner-spell-icon" 
@@ -88,15 +88,15 @@
   </div>
   <div class="champion-info col-2">
     <span>{{ accountDTOSignal()?.gameName}}</span>
-    <span class="champion-name">{{ currMatchParticipant.championName }}</span>
-    <span class="champion-role">{{ role }}</span>
+    <span data-test="champion-name-selected" class="champion-name">{{ currMatchParticipant.championName }}</span>
+    <span data-test="role" class="champion-role">{{ role }}</span>
   </div>
   <div class="stats col-3">
     <div>
-      <span>{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
-      <span>kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
+      <span data-test="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
+      <span data-test="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
-    <span class="gold ms-3">
+    <span data-test="gold-earned" class="gold ms-3">
       <img loading="lazy"
           decoding="async" 
           src="images/Icons/icon_gold.png" 
@@ -104,7 +104,7 @@
           class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
-    <span class="cs ms-3">
+    <span data-test="nb-cs-kill" class="cs ms-3">
       <img loading="lazy"
           decoding="async" 
           src="images/Icons/icon_minions.png" 

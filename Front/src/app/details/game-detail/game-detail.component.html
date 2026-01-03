@@ -1,4 +1,11 @@
  <div class="container">
+    <div class="row mb-3">
+        <div class="col">
+            <button class="btn btn-outline-gold text-gold-1" (click)="goBack()">
+                <i class="bi bi-arrow-left"></i> Retour
+            </button>
+        </div>
+    </div>
     <h3 class="mt-3 text-center text-gold-1">Résumé de la partie</h3>
     <div class="row mb-4 mt-5 d-flex align-items-baseline">
         <div class="col-2">
@@ -6,14 +13,22 @@
         </div>
          <div class="col-2">
             <h5 class="mt-3">
-                <img class="icon-kill" src="images/Icons/loyaltytftdamageskincount_rewards.svg" alt="kills" />
-                <span class="ms-3">{{totalKillsTeam1() + " / " + totalDeathsTeam1() +  " / " + totalAssistsTeam1() }}</span>
+                <img loading="lazy"
+                    decoding="async" 
+                    class="icon-kill" 
+                    src="images/Icons/loyaltytftdamageskincount_rewards.svg" 
+                    alt="kills" />
+                <span data-test="kda-team-1" class="ms-3">{{totalKillsTeam1() + "/" + totalDeathsTeam1() +  "/" + totalAssistsTeam1() }}</span>
             </h5>
         </div>
         <div class="col-2">
             <h5 class="mt-3">
-                <img class="icon-gold" src="images/Icons/icon_gold.png" alt="golds" />
-                <span class="ms-3">{{totalGoldEarnedTeam1()}}</span>
+                <img loading="lazy"
+                    decoding="async" 
+                    class="icon-gold" 
+                    src="images/Icons/icon_gold.png" 
+                    alt="golds" />
+                <span data-test="gold-earned-team-1" class="ms-3">{{totalGoldEarnedTeam1()}}</span>
             </h5>
         </div>
         <div class="col-1">
@@ -39,14 +54,22 @@
         </div>
          <div class="col-2">
             <h5 class="mt-3">
-                <img class="icon-kill" src="images/Icons/loyaltytftdamageskincount_rewards.svg" alt="kills" />
-                <span class="ms-3">{{totalKillsTeam2() + "/" + totalDeathsTeam2() +  "/" + totalAssistsTeam2() }}</span>
+                <img loading="lazy"
+                    decoding="async" 
+                    class="icon-kill" 
+                    src="images/Icons/loyaltytftdamageskincount_rewards.svg" 
+                    alt="kills" />
+                <span data-test="kda-team-2" class="ms-3">{{totalKillsTeam2() + "/" + totalDeathsTeam2() +  "/" + totalAssistsTeam2() }}</span>
             </h5>
         </div>
         <div class="col-2">
             <h5 class="mt-3">
-                <img class="icon-gold" src="images/Icons/icon_gold.png" alt="golds" />
-                <span class="ms-3">{{totalGoldEarnedTeam2()}}</span>
+                <img loading="lazy"
+                    decoding="async" 
+                    class="icon-gold" 
+                    src="images/Icons/icon_gold.png" 
+                    alt="golds" />
+                <span data-test="gold-earned-team-2" class="ms-3">{{totalGoldEarnedTeam2()}}</span>
             </h5>
         </div>
          <div class="col-1">
@@ -60,7 +83,6 @@
             @for (participant of listParticipantsTeam2Signal() ; track $index) {
                     <app-history-items
                     [currMatchParticipant]="participant"
-                    [currentQueue]="'test'"
                     [isAllPlayerForAgame]="true"
                     >
                 </app-history-items>

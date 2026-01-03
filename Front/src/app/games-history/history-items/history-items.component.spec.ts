@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { HistoryItemsComponent } from './history-items.component';
 import { provideHttpClient } from '@angular/common/http';
@@ -6,7 +6,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { HistoryService } from '../../services/games-history/history.service';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
-import { clickButtonByDataTestAttr } from '../../common/utils/utils-tests';
+import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
 import { signal } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 
@@ -121,8 +121,46 @@ describe('HistoryItemsComponent', () => {
     ]);
   });
 
-  it('should correctly initialize and compute nb total cs killed', () => {
+  it('should correctly compute and display nb total cs killed', () => {
     expect(component.nbCsKilled).toEqual(230);
+    expect(getByDataTestAttr(fixture.debugElement, 'nb-cs-kill')?.innerText).toEqual('230');
+  });
+
+  it('should correctly compute and display kda', () => {
+    expect(component.currMatchParticipant.kills).toEqual(10);
+    expect(component.currMatchParticipant.deaths).toEqual(2);
+    expect(component.currMatchParticipant.assists).toEqual(8);
+    expect(component.currMatchParticipant.challenges.kda).toEqual(9.0);
+    expect(getByDataTestAttr(fixture.debugElement, 'kda')?.innerText).toEqual('10/2/8');
+  });
+
+  it('should correctly compute and display gold earned', () => {
+    expect(component.currMatchParticipant.goldEarned).toEqual(15000);
+    expect(getByDataTestAttr(fixture.debugElement, 'gold-earned')?.innerText).toEqual('15000');
+  });
+
+  it("should correctly compute and display champion's name selected", () => {
+    expect(getByDataTestAttr(fixture.debugElement, 'champion-name-selected')?.innerText).toEqual('MockChampion');
+  });
+
+  it("should correctly compute and display champion's level", () => {
+    expect(getByDataTestAttr(fixture.debugElement, 'champ-level')?.innerText).toEqual('18');
+  });
+
+  [
+    { queueType: 'RANKED_SOLO_5x5', expectedView: 'Classée solo' },
+    { queueType: 'RANKED_FLEX_SR', expectedView: 'Classée flexible' },
+  ].forEach((queue) => {
+    it(`should correctly display the queue type ${queue.queueType}`, () => {
+      // GIVEN
+      component.currentQueue = queue.queueType;
+
+      // WHEN
+      fixture.detectChanges();
+
+      // THEN
+      expect(getByDataTestAttr(fixture.debugElement, 'current-queue')?.innerText).toEqual(queue.expectedView);
+    });
   });
 
   [
@@ -136,8 +174,12 @@ describe('HistoryItemsComponent', () => {
       // GIVEN
       component.currMatchParticipant.teamPosition = position.code;
 
+      // WHEN
+      fixture.detectChanges();
+
       // THEN
       expect(component.role).toEqual(position.libelle);
+      expect(getByDataTestAttr(fixture.debugElement, 'role')?.innerText).toEqual(position.libelle);
     });
   });
 
@@ -162,7 +204,7 @@ describe('HistoryItemsComponent', () => {
     fixture.detectChanges();
 
     // THEN
-    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123', 'mock-match-id-456']);
+    expect(routerSpy).toHaveBeenCalledWith(['/game/detail/', 'mock-puuid-123', 'mock-match-id-456'], { state: { from: '/' } });
     expect(component.currentMatch).toEqual(
       jasmine.objectContaining({
         metadata: {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { CommonModule } from '@angular/common';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
@@ -12,6 +12,7 @@ import { TranslateFillPipe } from '../../common/pipes/translate-fill.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
 import { AccountDTO } from '../../common/models/accountDTO';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-history-items',
@@ -20,7 +21,7 @@ import { AccountDTO } from '../../common/models/accountDTO';
   templateUrl: './history-items.component.html',
   styleUrl: './history-items.component.scss',
 })
-export class HistoryItemsComponent implements OnInit {
+export class HistoryItemsComponent implements OnInit, OnDestroy {
   constructor(private versionService: GetVersionsService, private playerService: PlayersService, private router: Router, private route: ActivatedRoute) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
@@ -42,7 +43,7 @@ export class HistoryItemsComponent implements OnInit {
 
   accountDTOSignal: WritableSignal<AccountDTO | undefined> = signal(undefined);
   isCurrentPlayerSignal: WritableSignal<boolean> = signal(false);
-
+  private destroy$ = new Subject<void>();
   ngOnInit(): void {
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.listUrlItems = this.getListUrlItems();
@@ -66,10 +67,13 @@ export class HistoryItemsComponent implements OnInit {
   }
 
   private getAccountByPuuid() {
-    this.playerService.getAccountByPuuid(this.currMatchParticipant.puuid).subscribe({
-      next: (res) => this.accountDTOSignal.set(res),
-      error: (err) => console.log(err),
-    });
+    this.playerService
+      .getAccountByPuuid(this.currMatchParticipant.puuid)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => this.accountDTOSignal.set(res),
+        error: (err) => console.log(err),
+      });
   }
 
   private getCurrentMatch(): MatchDTO | undefined {
@@ -122,6 +126,11 @@ export class HistoryItemsComponent implements OnInit {
   }
 
   goToGameDetail() {
-    this.router.navigate(['/game/detail/', this.currMatchParticipant.puuid, this.currMatchParticipant.matchId]);
+    this.router.navigate(['/game/detail/', this.currMatchParticipant.puuid, this.currMatchParticipant.matchId], { state: { from: this.router.url } });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

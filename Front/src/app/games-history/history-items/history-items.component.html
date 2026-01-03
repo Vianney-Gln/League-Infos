@@ -5,30 +5,48 @@
 <div data-test="game-item" (click)="goToGameDetail()" class="match-history-row row">
   <div class="col-1">
     <div class="champion-img-container">
-      <img [src]="iconChampionUrl" alt="{{ currMatchParticipant.championName }}" class="champion-icon" />
-      <div class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
+      <img loading="lazy"
+          decoding="async" 
+          [src]="iconChampionUrl" 
+          alt="{{ currMatchParticipant.championName }}" 
+          class="champion-icon" />
+      <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
     <div class="summoner-spell-container">
-      <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
-      <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner1IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner2IconUrl" />
     </div>
   </div>
   <div class="champion-info col-2">
-    <span>{{ currentQueue |translateFill}}</span>
-    <span class="champion-name">{{ currMatchParticipant.championName }}</span>
-    <span class="champion-role">{{ role }}</span>
+    <span data-test="current-queue">{{ currentQueue |translateFill}}</span>
+    <span data-test="champion-name-selected" class="champion-name">{{ currMatchParticipant.championName }}</span>
+    <span data-test="role" class="champion-role">{{ role }}</span>
   </div>
   <div class="stats col-3">
     <div>
-      <span class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
+      <span data-test="kda" class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
       <span class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
-    <span class="gold ms-3">
-      <img src="images/Icons/icon_gold.png" alt="Gold" class="gold-icon" />
+    <span data-test="gold-earned" class="gold ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_gold.png" 
+          alt="Gold" 
+          class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
-    <span class="cs ms-3">
-      <img src="images/Icons/icon_minions.png" alt="CS" class="cs-icon" />
+    <span data-test="nb-cs-kill" class="cs ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_minions.png" 
+          alt="CS" 
+          class="cs-icon" />
       {{ nbCsKilled }}
     </span>
   </div>
@@ -50,12 +68,22 @@
 <div data-test="game-item" [ngClass]="{'text-gold-2': isCurrentPlayerSignal() }" class="match-history-row row">
   <div class="col-1">
     <div class="champion-img-container">
-      <img [src]="iconChampionUrl" alt="{{ currMatchParticipant.championName }}" class="champion-icon" />
+      <img loading="lazy"
+          decoding="async" 
+          [src]="iconChampionUrl" 
+          alt="{{ currMatchParticipant.championName }}" 
+          class="champion-icon" />
       <div class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
     <div class="summoner-spell-container">
-      <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
-      <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner1IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner2IconUrl" />
     </div>
   </div>
   <div class="champion-info col-2">
@@ -69,18 +97,29 @@
       <span>kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
     <span class="gold ms-3">
-      <img src="images/Icons/icon_gold.png" alt="Gold" class="gold-icon" />
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_gold.png" 
+          alt="Gold" 
+          class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
     <span class="cs ms-3">
-      <img src="images/Icons/icon_minions.png" alt="CS" class="cs-icon" />
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_minions.png" 
+          alt="CS" class="cs-icon" />
       {{ nbCsKilled }}
     </span>
   </div>
   <div class="items col-5">
     @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
     <ng-container>
-      <img [src]="itemUrl.url" alt="{{ itemUrl.itemId }}" class="item-icon" />
+      <img loading="lazy"
+          decoding="async" 
+          [src]="itemUrl.url" 
+          alt="{{ itemUrl.itemId }}" 
+          class="item-icon" />
     </ng-container>
     }}
   </div>

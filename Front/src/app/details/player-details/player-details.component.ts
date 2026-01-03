@@ -1,7 +1,7 @@
-import { Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
-import { catchError, map, of, Subscription, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, concatMap, map, of, Subscription, switchMap, takeUntil, tap } from 'rxjs';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
@@ -143,7 +143,7 @@ export class PlayerDetailsComponent implements OnDestroy {
   private getDisplayedPlayerInfos(): void {
     this.displayInfosPlayerSubscription = this.route.paramMap
       .pipe(
-        switchMap((param) => {
+        concatMap((param) => {
           const riotId = param.get('summoner');
           return this.getDataPlayerdetail(riotId ? riotId : '');
         }),
@@ -153,7 +153,7 @@ export class PlayerDetailsComponent implements OnDestroy {
         })
       )
       .pipe(
-        switchMap((summoner: SummonerDTO) => {
+        concatMap((summoner: SummonerDTO) => {
           this.summonerDto = summoner;
           if (!summoner.puuid) {
             this.router.navigate(['/NotFound']);
@@ -162,7 +162,7 @@ export class PlayerDetailsComponent implements OnDestroy {
         })
       )
       .pipe(
-        switchMap(({ leagueEntries, puuid }) => {
+        concatMap(({ leagueEntries, puuid }) => {
           this.leagueEntriesSignal.set(leagueEntries);
           this.isUnrankedFlex = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_FLEX_SR) ? false : true;
           this.isUnrankedSoloQ = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_SOLO_5x5) ? false : true;
@@ -170,7 +170,7 @@ export class PlayerDetailsComponent implements OnDestroy {
         })
       )
       .pipe(
-        switchMap(({ championMasteries }) => {
+        concatMap(({ championMasteries }) => {
           this.championMasteriesSignal.set(championMasteries);
           this.resetListHistoryItems();
           if (championMasteries.length) {
@@ -182,7 +182,7 @@ export class PlayerDetailsComponent implements OnDestroy {
         })
       )
       .pipe(
-        switchMap((res: MatchDTO[]) => {
+        concatMap((res: MatchDTO[]) => {
           this.listMatchDataSoloQSignal.set(res);
           this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(res));
           return this.getHistory(this.RANKED_FLEX_SR.libelle);

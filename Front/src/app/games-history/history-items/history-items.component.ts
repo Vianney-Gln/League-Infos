@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { CommonModule } from '@angular/common';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
@@ -8,9 +8,11 @@ import { formatTimestampToDateStr } from '../../common/utils/date-utils';
 import { ItemUrl } from '../../common/types/types';
 import { durationSecondeToStr } from '../../common/utils/time-utils';
 import { summonerSpellIdToNameMap } from '../../common/constants/summoners';
-import { EventEmitter } from '@angular/core';
 import { TranslateFillPipe } from '../../common/pipes/translate-fill.pipe';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PlayersService } from '../../services/players/players.service';
+import { AccountDTO } from '../../common/models/accountDTO';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-history-items',
@@ -19,12 +21,13 @@ import { Router } from '@angular/router';
   templateUrl: './history-items.component.html',
   styleUrl: './history-items.component.scss',
 })
-export class HistoryItemsComponent implements OnInit {
-  constructor(private versionService: GetVersionsService, private historyService: HistoryService, private router: Router) {}
+export class HistoryItemsComponent implements OnInit, OnDestroy {
+  constructor(private versionService: GetVersionsService, private playerService: PlayersService, private router: Router, private route: ActivatedRoute) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
   @Input() listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
   @Input() currentQueue: string = '';
+  @Input() isAllPlayerForAgame: boolean = false;
   DDRAGON_BASE_CDN = DDRAGON_BASE_CDN;
   lastVersionLolSignal: Signal<string> = signal('');
   listUrlItems: ItemUrl[] = [];
@@ -38,6 +41,9 @@ export class HistoryItemsComponent implements OnInit {
   summoner2IconUrl: string = '';
   SUMMONER_SPELL_ID_TO_NAME_MAP = summonerSpellIdToNameMap;
 
+  accountDTOSignal: WritableSignal<AccountDTO | undefined> = signal(undefined);
+  isCurrentPlayerSignal: WritableSignal<boolean> = signal(false);
+  private destroy$ = new Subject<void>();
   ngOnInit(): void {
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.listUrlItems = this.getListUrlItems();
@@ -48,6 +54,26 @@ export class HistoryItemsComponent implements OnInit {
     this.gameDuration = durationSecondeToStr(this.currentMatch?.info.gameDuration);
     this.summoner1IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner1Id);
     this.summoner2IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner2Id);
+
+    this.getAccountByPuuid();
+    this.findCurrentPlayer();
+  }
+
+  private findCurrentPlayer() {
+    const puuidFromUrl = this.route.snapshot?.paramMap.get('puuid');
+    if (puuidFromUrl === this.currMatchParticipant.puuid) {
+      this.isCurrentPlayerSignal.set(true);
+    }
+  }
+
+  private getAccountByPuuid() {
+    this.playerService
+      .getAccountByPuuid(this.currMatchParticipant.puuid)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => this.accountDTOSignal.set(res),
+        error: (err) => console.log(err),
+      });
   }
 
   private getCurrentMatch(): MatchDTO | undefined {
@@ -95,12 +121,16 @@ export class HistoryItemsComponent implements OnInit {
       case 'UTILITY':
         return 'Support';
       default:
-        return 'Inconnu'; // ou "", ou ne rien afficher
+        return 'Inconnu';
     }
   }
 
   goToGameDetail() {
-    this.historyService.currentMatch.set(this.currentMatch);
-    this.router.navigate(['/game/detail/', this.currMatchParticipant.puuid]);
+    this.router.navigate(['/game/detail/', this.currMatchParticipant.puuid, this.currMatchParticipant.matchId], { state: { from: this.router.url } });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

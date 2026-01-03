@@ -33,4 +33,10 @@ public class HistoryGamesController {
                                                                             @Nullable @RequestParam Integer queue) {
         return ResponseEntity.status(200).body(historyPersistence.findAllMatchByPuuidAndQueueBeforeGivenDate(puuid, gameCreation, queue));
     }
+
+    @GetMapping("game-history/{gameId}")
+    public ResponseEntity<MatchDTO> getGamesHistory(@PathVariable Long gameId) {
+        return ResponseEntity.status(200).body(historyPersistence.findMatchByGameId(gameId));
+    }
+
 }

@@ -11,5 +11,6 @@ export const routes: Routes = [
   { path: 'Detail-summoner/:summoner', component: PlayerDetailsComponent, title: 'LeagueInfos - Invocateur' },
   { path: 'Detail-champion/:champion', component: ChampionDetailsComponent, title: 'LeagueInfos - Champion' },
   { path: 'NotFound', component: NotFoundComponent, title: 'LeagueInfos - ressource non trouvée' },
-  { path: 'game/detail/:puuid', component: GameDetailComponent, title: 'LeagueInfos - Détail partie' },
+  { path: 'game/detail/:puuid/:matchId', component: GameDetailComponent, title: 'LeagueInfos - Détail partie' },
+  { path: '**', component: NotFoundComponent },
 ];

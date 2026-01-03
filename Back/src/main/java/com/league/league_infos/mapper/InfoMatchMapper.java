@@ -10,7 +10,7 @@ public class InfoMatchMapper {
 
     public static InfoMatchEntity infoMatchdtoToEntity(MatchDTO matchDTO) {
         Objects.requireNonNull(matchDTO, "matchDTO cannot be null");
-        
+
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
         infoMatchEntity.setEndOfGameResult(matchDTO.getInfo().getEndOfGameResult());
         infoMatchEntity.setGameCreation(matchDTO.getInfo().getGameCreation());
@@ -43,7 +43,9 @@ public class InfoMatchMapper {
         infoMatchDTO.setGameVersion(infoMatchEntity.getGameVersion());
         infoMatchDTO.setQueueId(infoMatchEntity.getQueueId());
         infoMatchDTO.setMapId(infoMatchEntity.getMapId());
-        infoMatchDTO.setParticipants(infoMatchEntity.getParticipantMatchEntityList().stream().map(ParticipantMatchMapper::participantMatchEntityToDTO).toList());
+        if (infoMatchEntity.getParticipantMatchEntityList() != null) {
+            infoMatchDTO.setParticipants(infoMatchEntity.getParticipantMatchEntityList().stream().map(ParticipantMatchMapper::participantMatchEntityToDTO).toList());
+        }
         infoMatchDTO.setTeams(infoMatchEntity.getTeamEntity().stream().map(TeamMapper::teamEntityToDTO).toList());
         infoMatchDTO.setCreationDate(infoMatchEntity.getCreationDate());
         return infoMatchDTO;

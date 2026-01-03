@@ -6,6 +6,8 @@
       <div class="mt-3 row w-100">
         <div class="icon-player-container col-1">
           <img
+            loading="lazy"
+            decoding="async"
             class="icon-player-image"
             [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/profileicon/' + summonerDto.profileIconId + '.png'"
           />
@@ -23,7 +25,11 @@
     <h2 class="text-center mt-2 mb-4">Infos sur le joueur</h2>
     @if(queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ){
       <div class="col-2">
-          <img class="img-rank-emblem" alt="tier emblem" [src]="computeTierEmblem(leagueEntrySoloQSignal()?.tier)" />
+          <img loading="lazy"
+                decoding="async" 
+                class="img-rank-emblem" 
+                alt="tier emblem" 
+                [src]="computeTierEmblem(leagueEntrySoloQSignal()?.tier)" />
         </div>
       <div data-test="bloc-data-league-entry-1" class="col-4 data">
           <p class="fw-bold fs-4">{{ leagueEntrySoloQSignal()?.tier }} {{ leagueEntrySoloQSignal()?.rank }}</p>
@@ -42,7 +48,10 @@
     }
     @if(queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex ){
       <div class="col-2">
-          <img class="img-rank-emblem" alt="tier emblem" [src]="computeTierEmblem(leagueEntryFlexQSignal()?.tier)" />
+          <img loading="lazy"
+              decoding="async" 
+              class="img-rank-emblem" 
+              alt="tier emblem" [src]="computeTierEmblem(leagueEntryFlexQSignal()?.tier)" />
         </div>
       <div data-test="bloc-data-league-entry-1" class="col-4 data">
           <p class="fw-bold fs-4">{{ leagueEntryFlexQSignal()?.tier }} {{ leagueEntryFlexQSignal()?.rank }}</p>
@@ -88,7 +97,7 @@
     </div>
   </div>
 
-  @if((queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex) || (queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ)){
+  @if((queueTypeSignal() === RANKED_FLEX_SR.libelle && !isUnrankedFlex) || (queueTypeSignal() === RANKED_SOLO_5x5.libelle && !isUnrankedSoloQ)){
     <h3 class="mt-3 text-center">Historique des parties</h3>
   }
 
@@ -113,9 +122,10 @@
       <div class="mt-4">
         @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
           <app-history-items 
+          data-test="history-item" 
           [currMatchParticipant]="currMatchParticipant" 
           [listMatchDataSignal]="listMatchDataFlexQSignal"
-          [currentQueue]="RANKED_SOLO_5x5.libelle">
+          [currentQueue]="RANKED_FLEX_SR.libelle">
         </app-history-items>
     }
     @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){

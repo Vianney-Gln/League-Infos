@@ -1,32 +1,52 @@
+@if(!isAllPlayerForAgame){
+  <!-- Historic games from player -->
 <span class="date-creation">{{dateCreationGameStr}}</span>
 <span class="date-creation ms-2">{{ gameDuration }}</span>
 <div data-test="game-item" (click)="goToGameDetail()" class="match-history-row row">
   <div class="col-1">
     <div class="champion-img-container">
-      <img [src]="iconChampionUrl" alt="{{ currMatchParticipant.championName }}" class="champion-icon" />
-      <div class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
+      <img loading="lazy"
+          decoding="async" 
+          [src]="iconChampionUrl" 
+          alt="{{ currMatchParticipant.championName }}" 
+          class="champion-icon" />
+      <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
     <div class="summoner-spell-container">
-      <img class="summoner-spell-icon" [src]="summoner1IconUrl" />
-      <img class="summoner-spell-icon" [src]="summoner2IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner1IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner2IconUrl" />
     </div>
   </div>
   <div class="champion-info col-2">
-    <span>{{ currentQueue |translateFill}}</span>
-    <span class="champion-name">{{ currMatchParticipant.championName }}</span>
-    <span class="champion-role">{{ role }}</span>
+    <span data-test="current-queue">{{ currentQueue |translateFill}}</span>
+    <span data-test="champion-name-selected" class="champion-name">{{ currMatchParticipant.championName }}</span>
+    <span data-test="role" class="champion-role">{{ role }}</span>
   </div>
   <div class="stats col-3">
     <div>
-      <span class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
-      <span class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
+      <span data-test="kda" class="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
+      <span data-test="kda-ratio" class="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
     </div>
-    <span class="gold ms-3">
-      <img src="images/Icons/icon_gold.png" alt="Gold" class="gold-icon" />
+    <span data-test="gold-earned" class="gold ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_gold.png" 
+          alt="Gold" 
+          class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
-    <span class="cs ms-3">
-      <img src="images/Icons/icon_minions.png" alt="CS" class="cs-icon" />
+    <span data-test="nb-cs-kill" class="cs ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_minions.png" 
+          alt="CS" 
+          class="cs-icon" />
       {{ nbCsKilled }}
     </span>
   </div>
@@ -37,9 +57,71 @@
     </ng-container>
     }}
   </div>
-  <div class="result col-1">
-    <span [ngClass]="{ win: currMatchParticipant.win, loss: !currMatchParticipant.win }">
-      {{ currMatchParticipant.win ? "Victoire" : "Défaite" }}
+    <div class="result col-1">
+        <span [ngClass]="{ win: currMatchParticipant.win, loss: !currMatchParticipant.win }">
+          {{ currMatchParticipant.win ? "Victoire" : "Défaite" }}
+        </span>
+    </div>
+</div>
+}@else {
+    <!-- Resume game from one player with all participants -->
+<div data-test="game-item" [ngClass]="{'text-gold-2': isCurrentPlayerSignal() }" class="match-history-row row">
+  <div class="col-1">
+    <div class="champion-img-container">
+      <img loading="lazy"
+          decoding="async" 
+          [src]="iconChampionUrl" 
+          alt="{{ currMatchParticipant.championName }}" 
+          class="champion-icon" />
+      <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
+    </div>
+    <div data-test="summoner-spells" class="summoner-spell-container">
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner1IconUrl" />
+      <img loading="lazy"
+          decoding="async" 
+          class="summoner-spell-icon" 
+          [src]="summoner2IconUrl" />
+    </div>
+  </div>
+  <div class="champion-info col-2">
+    <span>{{ accountDTOSignal()?.gameName}}</span>
+    <span data-test="champion-name-selected" class="champion-name">{{ currMatchParticipant.championName }}</span>
+    <span data-test="role" class="champion-role">{{ role }}</span>
+  </div>
+  <div class="stats col-3">
+    <div>
+      <span data-test="kda">{{ currMatchParticipant.kills }}/{{ currMatchParticipant.deaths }}/{{ currMatchParticipant.assists }}</span><br />
+      <span data-test="kda-ratio">kda: {{ currMatchParticipant.challenges.kda.toFixed(1) }}</span>
+    </div>
+    <span data-test="gold-earned" class="gold ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_gold.png" 
+          alt="Gold" 
+          class="gold-icon" />
+      {{ currMatchParticipant.goldEarned }}
+    </span>
+    <span data-test="nb-cs-kill" class="cs ms-3">
+      <img loading="lazy"
+          decoding="async" 
+          src="images/Icons/icon_minions.png" 
+          alt="CS" class="cs-icon" />
+      {{ nbCsKilled }}
     </span>
   </div>
+  <div class="items col-5">
+    @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
+    <ng-container>
+      <img loading="lazy"
+          decoding="async" 
+          [src]="itemUrl.url" 
+          alt="{{ itemUrl.itemId }}" 
+          class="item-icon" />
+    </ng-container>
+    }}
+  </div>
 </div>
+}

@@ -14,4 +14,6 @@ public interface HistoryPersistence {
     List<MatchDTO> findAllMatchByPuuidAndQueue(String puuid, Integer queue);
 
     List<MatchDTO> findAllMatchByPuuidAndQueueBeforeGivenDate(String puuid, Long gameCreation, Integer queue);
+
+    MatchDTO findMatchByGameId(Long gameId);
 }

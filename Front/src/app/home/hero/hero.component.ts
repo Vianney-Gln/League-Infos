@@ -34,7 +34,6 @@ export class HeroComponent implements OnInit, OnDestroy {
   lastVersionLolSignal: Signal<string> = signal('');
   lastTwentyVersionsLolSignal: Signal<string[]> = signal([]);
   mostRecentChampionDtoSignal: WritableSignal<Champion | undefined> = signal(undefined);
-  mostBannedChampSignal: WritableSignal<Champion | undefined> = signal(undefined);
 
   leagueBestPlayerSoloQ: string | undefined = '';
   leagueBestPlayerFlex: string | undefined = '';
@@ -69,21 +68,6 @@ export class HeroComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getDataBestSoloqPlayer();
     this.getDataBestFlexPlayer();
-    this.getMostBannedChampion();
-  }
-
-  private getMostBannedChampion() {
-    this.getChampionsService.getMostBannedChampionId().subscribe({
-      next: (mostBannedChampId) => {
-        const championData = this.getChampionsService.championDataSignal();
-        const championBanned = championData ? Object.values(championData.data).filter((champion) => Number(champion.key) === mostBannedChampId)[0] : undefined;
-        if (championBanned) {
-          this.mostBannedChampSignal.set(championBanned);
-          this.urlBackgroundMostBannedChampion.set(`url(https://lolg-cdn.porofessor.gg/img/d/champion-banners/${championBanned.key}.jpg)`);
-        }
-      },
-      error: (err) => console.log(err),
-    });
   }
 
   private getDataBestSoloqPlayer(): void {

@@ -1,7 +1,8 @@
 @if (!isCarouselLoading && !isCarouselError){
 <div class="d-flex justify-content-center">
   <ngb-carousel class="w-50" [interval]="INTERVAL_CAROUSSEL" [pauseOnHover]="true" [wrap]="true">
-    <ng-template ngbSlide>
+    @if(firstChallengerPlayerSoloQSignal()){
+      <ng-template ngbSlide>
       <div
         data-test="bloc-best-challenger-player-soloQ"
         (click)="goToPlayerDataLeagueEntries(gameNameBestChalPlayerSoloQ!, tagLineChalSoloQPlayer!)"
@@ -35,7 +36,10 @@
         </div>
       </div>
     </ng-template>
-    <ng-template ngbSlide>
+    }
+    
+    @if(firstChallengerSummonerFlexSignal()){
+      <ng-template ngbSlide>
       <div
         data-test="bloc-best-challenger-player-flexQ"
         (click)="goToPlayerDataLeagueEntries(gameNameBestChalPlayerFlex!, tagLineChalFlexPlayer!)"
@@ -69,6 +73,8 @@
         </div>
       </div>
     </ng-template>
+    }
+    
     @if(mostRecentChampionDtoSignal()){
     <ng-template ngbSlide>
       <div data-test="bloc-most-recent-champion" class="element-carrousel-challenger" [ngStyle]="{ 'background-image': urlBackgroundMostRecentChampion() }">

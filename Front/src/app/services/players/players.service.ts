@@ -47,7 +47,7 @@ export class PlayersService {
     return this.http.get<LeagueEntryDTO[]>(url);
   }
 
-  getChampionMasteriesDTO(puuid: string): Observable<ChampionMasteryDto[]> {
+  getChampionMasteriesDTO(puuid: string | undefined): Observable<ChampionMasteryDto[]> {
     const url = `${environment.apiBaseUrl}/champion-masteries/${puuid}/top`;
     return this.http.get<ChampionMasteryDto[]>(url);
   }

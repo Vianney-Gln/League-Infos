@@ -218,47 +218,51 @@ describe('HeroComponentComponent', () => {
     component = fixture.componentInstance;
   });
 
-  const mockLeagueListDTO = {
-    leagueId: '12345',
-    tier: 'CHALLENGER',
-    entries: [
-      {
-        summonerId: 'summoner123',
-        puuid: '1234',
-        leaguePoints: 1000,
-        rank: 'I',
-        wins: 100,
-        losses: 50,
-        veteran: false,
-        inactive: false,
-        freshBlood: true,
-        hotStreak: false,
-      },
-    ],
-    queue: 'RANKED_SOLO_5x5',
-    name: 'Challenger League',
-  } as LeagueListDTO;
+  function mockLeagueListDTO() {
+    return {
+      leagueId: '12345',
+      tier: 'CHALLENGER',
+      entries: [
+        {
+          summonerId: 'summoner123',
+          puuid: '1234',
+          leaguePoints: 1000,
+          rank: 'I',
+          wins: 100,
+          losses: 50,
+          veteran: false,
+          inactive: false,
+          freshBlood: true,
+          hotStreak: false,
+        },
+      ],
+      queue: 'RANKED_SOLO_5x5',
+      name: 'Challenger League',
+    } as LeagueListDTO;
+  }
 
-  const mockLeagueListDTOFlex = {
-    leagueId: '23456',
-    tier: 'CHALLENGER',
-    entries: [
-      {
-        summonerId: 'summoner345',
-        puuid: '678',
-        leaguePoints: 1370,
-        rank: 'I',
-        wins: 120,
-        losses: 77,
-        veteran: false,
-        inactive: false,
-        freshBlood: true,
-        hotStreak: false,
-      },
-    ],
-    queue: 'RANKED_FLEX_5x5',
-    name: 'Challenger League',
-  } as LeagueListDTO;
+  function mockLeagueListDTOFlex() {
+    return {
+      leagueId: '23456',
+      tier: 'CHALLENGER',
+      entries: [
+        {
+          summonerId: 'summoner345',
+          puuid: '678',
+          leaguePoints: 1370,
+          rank: 'I',
+          wins: 120,
+          losses: 77,
+          veteran: false,
+          inactive: false,
+          freshBlood: true,
+          hotStreak: false,
+        },
+      ],
+      queue: 'RANKED_FLEX_5x5',
+      name: 'Challenger League',
+    } as LeagueListDTO;
+  }
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -266,7 +270,7 @@ describe('HeroComponentComponent', () => {
 
   it('should call getLeagueChallengerDataSoloQ', () => {
     // GIVEN
-    const getLeagueChallengerDataSoloQSpy = spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
+    const getLeagueChallengerDataSoloQSpy = spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
     const leagueChallengerListDTOSignalSpy = spyOn(playerservice.leagueChallengerSoloQListDTOSignal, 'set').and.callThrough();
 
     // WHEN
@@ -274,14 +278,14 @@ describe('HeroComponentComponent', () => {
 
     // THEN
     expect(getLeagueChallengerDataSoloQSpy).toHaveBeenCalled();
-    expect(leagueChallengerListDTOSignalSpy).toHaveBeenCalledWith(mockLeagueListDTO);
-    expect(component.firstChallengerPlayerSoloQSignal()).toBe(mockLeagueListDTO.entries[0]);
+    expect(leagueChallengerListDTOSignalSpy).toHaveBeenCalledWith(mockLeagueListDTO());
+    expect(component.firstChallengerPlayerSoloQSignal()).toEqual(mockLeagueListDTO().entries[0]);
     expect(component.leagueBestPlayerSoloQ).toEqual('CHALLENGER');
   });
 
   it('should call getAccountByPuuid and get the gameName of the best player Challenger soloQ', () => {
     // GIVEN
-    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const getAccountByPuuidSpy = spyOn(playerservice, 'getAccountByPuuid').and.returnValue(of(accountDTOMock));
 
@@ -295,7 +299,7 @@ describe('HeroComponentComponent', () => {
 
   it('should call getSummonerByPuuid and get the summonerDTO of the best player Challenger soloQ', () => {
     // GIVEN
-    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const summonerDTOMock = {
       puuid: '12345',
@@ -315,9 +319,49 @@ describe('HeroComponentComponent', () => {
     expect(component.firstChallengerSummonerSoloQSignal()).toEqual(summonerDTOMock);
   });
 
+  it("shouldn't call any other services if getLeagueChallengerDataSoloQ has no result", () => {
+    // GIVEN
+    const mockLeagueListDTOWithNoEntry = mockLeagueListDTO();
+    mockLeagueListDTOWithNoEntry.entries = [];
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTOWithNoEntry));
+
+    const getChampionMasteriesDTO = spyOn(playerservice, 'getChampionMasteriesDTO');
+    const getAccountSpy = spyOn(playerservice, 'getAccountByPuuid');
+    const getSummonerSpy = spyOn(playerservice, 'getSummonerByPuuid');
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(getSummonerSpy).not.toHaveBeenCalled();
+    expect(getAccountSpy).not.toHaveBeenCalled();
+    expect(getChampionMasteriesDTO).not.toHaveBeenCalled();
+    expect(component.isCarouselLoading).toBeFalse;
+  });
+
+  it("shouldn't call any other services if getLeagueChallengerDataFlexQ has no result", () => {
+    // GIVEN
+    const mockLeagueListDTOWithNoEntry = mockLeagueListDTOFlex();
+    mockLeagueListDTOWithNoEntry.entries = [];
+    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOWithNoEntry));
+
+    const getChampionMasteriesDTO = spyOn(playerservice, 'getChampionMasteriesDTO');
+    const getAccountSpy = spyOn(playerservice, 'getAccountByPuuid');
+    const getSummonerSpy = spyOn(playerservice, 'getSummonerByPuuid');
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(getSummonerSpy).not.toHaveBeenCalled();
+    expect(getAccountSpy).not.toHaveBeenCalled();
+    expect(getChampionMasteriesDTO).not.toHaveBeenCalled();
+    expect(component.isCarouselLoading).toBeFalse;
+  });
+
   it('should call getLeagueChallengerDataFlex', () => {
     // GIVEN
-    const getLeagueChallengerDataFlexSpy = spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex));
+    const getLeagueChallengerDataFlexSpy = spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex()));
     const leagueChallengerListDTOSignalSpy = spyOn(playerservice.leagueChallengerFlexListDTOSignal, 'set').and.callThrough();
 
     // WHEN
@@ -325,14 +369,14 @@ describe('HeroComponentComponent', () => {
 
     // THEN
     expect(getLeagueChallengerDataFlexSpy).toHaveBeenCalled();
-    expect(leagueChallengerListDTOSignalSpy).toHaveBeenCalledWith(mockLeagueListDTOFlex);
-    expect(component.firstChallengerPlayerFlexSignal()).toBe(mockLeagueListDTOFlex.entries[0]);
+    expect(leagueChallengerListDTOSignalSpy).toHaveBeenCalledWith(mockLeagueListDTOFlex());
+    expect(component.firstChallengerPlayerFlexSignal()).toEqual(mockLeagueListDTOFlex().entries[0]);
     expect(component.leagueBestPlayerFlex).toEqual('CHALLENGER');
   });
 
   it('should call getAccountByPuuid and get the gameName of the best player Challenger flexQ', () => {
     // GIVEN
-    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex));
+    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const getAccountByPuuidSpy = spyOn(playerservice, 'getAccountByPuuid').and.returnValue(of(accountDTOMock));
 
@@ -358,7 +402,7 @@ describe('HeroComponentComponent', () => {
       chestGranted: true,
     } as ChampionMasteryDto;
 
-    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex));
+    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const summonerDTOMock = {
       puuid: '12345',
@@ -392,7 +436,7 @@ describe('HeroComponentComponent', () => {
       chestGranted: true,
     } as ChampionMasteryDto;
 
-    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const summonerDTOMock = {
       puuid: '12345',
@@ -414,7 +458,7 @@ describe('HeroComponentComponent', () => {
 
   it('should call getChampionMasteriesDTO and compute a default url background bannner if no data case soloQ', () => {
     // GIVEN
-    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const summonerDTOMock = {
       puuid: '12345',
@@ -436,7 +480,7 @@ describe('HeroComponentComponent', () => {
 
   it('should call getChampionMasteriesDTO and compute a default url background bannner if no data case flexQ', () => {
     // GIVEN
-    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex));
+    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex()));
     const accountDTOMock = { puuid: '12345', gameName: 'test name', tagLine: 'EUW' } as AccountDTO;
     const summonerDTOMock = {
       puuid: '12345',
@@ -454,6 +498,24 @@ describe('HeroComponentComponent', () => {
     // THEN
     expect(getChampionMasteriesDTOSpy).toHaveBeenCalledWith('12345');
     expect(component.urlBackgroundBannerFlexQSignal()).toEqual('url(images/default-banner.png)');
+  });
+
+  it('should not try to display any best player slide if riot api give no result', () => {
+    // GIVEN
+    const mockLeagueListDTOWithNoEntry = mockLeagueListDTOFlex();
+    mockLeagueListDTOWithNoEntry.entries = [];
+
+    const mockLeagueListDTOFlexWithNoEntry = mockLeagueListDTOFlex();
+    mockLeagueListDTOFlexWithNoEntry.entries = [];
+    spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTOWithNoEntry));
+    spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlexWithNoEntry));
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'bloc-best-challenger-player-flexQ')).toBeFalsy();
+    expect(getByDataTestAttr(fixture.debugElement, 'bloc-best-challenger-player-soloQ')).toBeFalsy();
   });
 
   ['bloc-best-challenger-player-soloQ', 'bloc-best-challenger-player-flexQ'].forEach((dataTest) => {
@@ -480,8 +542,8 @@ describe('HeroComponentComponent', () => {
       } as ChampionMasteryDto;
 
       getVersionService.lastVersionlolDTOSignal.set('0');
-      spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO));
-      spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex));
+      spyOn(playerservice, 'getLeagueChallengerDataSoloQ').and.returnValue(of(mockLeagueListDTO()));
+      spyOn(playerservice, 'getLeagueChallengerDataFlexQ').and.returnValue(of(mockLeagueListDTOFlex()));
       spyOn(playerservice, 'getAccountByPuuid').and.returnValue(of(accountDTOMock));
       spyOn(playerservice, 'getSummonerByPuuid').and.returnValue(of(summonerDTOMock));
       spyOn(playerservice, 'getChampionMasteriesDTO').and.returnValue(of([championMasteriesDTOMock]));

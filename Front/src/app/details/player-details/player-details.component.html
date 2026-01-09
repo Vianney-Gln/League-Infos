@@ -137,7 +137,10 @@
     }
 }
 
-    @if(!leagueEntriesSignal().length) {
+    @if(
+      (!currentMatchsParticipantsSoloQSignal().length && queueTypeSignal() === RANKED_SOLO_5x5.libelle) ||
+      (!currentMatchsParticipantsFlexQSignal().length && queueTypeSignal() === RANKED_FLEX_SR.libelle) 
+    ) {
     <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
       <h3>Il n'y a pas d'informations sur ce joueur.</h3>
       <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>

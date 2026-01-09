@@ -408,7 +408,7 @@ describe('PlayerDetailsComponent', () => {
     expect(component.urlBackgroundBannerSignal()).toEqual(`url(images/default-banner.png)`);
   });
 
-  it('should call playerService.getChampionMasteriesDTO and display a default bloc message if not data from getleagueEntries', () => {
+  it('should call playerService.getChampionMasteriesDTO and display a default bloc message if not data from currentMatchsParticipantsSoloQSignal or currentMatchsParticipantsFlexQSignal', () => {
     // GIVEN
     const mockAccountDTO = {
       puuid: 'mock-puuid',
@@ -431,9 +431,26 @@ describe('PlayerDetailsComponent', () => {
       summonerLevel: 30,
     } as SummonerDTO;
 
+    const mockLeagueEntryDTO = {
+      leagueId: 'mock-league-id',
+      puuid: 'mock-puuid',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'GOLD',
+      rank: 'IV',
+      summonerId: 'mock-summoner-id',
+      summonerName: 'test',
+      leaguePoints: 50,
+      wins: 20,
+      losses: 15,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false,
+    } as LeagueEntryDTO;
+
     spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
-    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([]));
+    spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(router, 'navigate').and.stub();
 
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
@@ -450,6 +467,66 @@ describe('PlayerDetailsComponent', () => {
       "Il n'y a pas d'informations sur ce joueur.Il n'a peut être pas encore joué de parties classées ou est peut être inactif."
     );
     expect(blocDataLeagueEntry).toBeFalsy();
+  });
+
+  ['RANKED_SOLO_5x5', 'RANKED_FLEX_SR'].forEach((queueType) => {
+    it(`should not display a default bloc message if data from currentMatchsParticipantsSoloQSignal or currentMatchsParticipantsFlexQSignal is present, case ${queueType}`, () => {
+      // GIVEN
+      const mockAccountDTO = {
+        puuid: '123',
+        gameName: 'test',
+        tagLine: 'euw',
+        summonerId: 'mock-summoner-id',
+        profileIconId: 1234,
+        summonerLevel: 30,
+        revisionDate: 1680000000000,
+        id: 'mock-id',
+      } as AccountDTO;
+
+      const mockSummonerDTO = {
+        id: 'mock-summoner-id',
+        accountId: 'mock-account-id',
+        puuid: '123',
+        name: 'test',
+        profileIconId: 1234,
+        revisionDate: 1680000000000,
+        summonerLevel: 30,
+      } as SummonerDTO;
+
+      const mockLeagueEntryDTO = {
+        leagueId: 'mock-league-id',
+        puuid: 'mock-puuid',
+        queueType: 'RANKED_SOLO_5x5',
+        tier: 'GOLD',
+        rank: 'IV',
+        summonerId: 'mock-summoner-id',
+        summonerName: 'test',
+        leaguePoints: 50,
+        wins: 20,
+        losses: 15,
+        veteran: false,
+        inactive: false,
+        freshBlood: true,
+        hotStreak: false,
+      } as LeagueEntryDTO;
+
+      component.queueTypeSignal.set(queueType);
+
+      spyOn(playerService, 'getAccountByRiotId').and.returnValue(of(mockAccountDTO));
+      spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
+      spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
+      spyOn(router, 'navigate').and.stub();
+
+      spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+      spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([matchDTOMock()]));
+
+      // WHEN
+      fixture.detectChanges();
+
+      // THEN
+      const blocdefaultMessage = getByDataTestAttr(fixture.debugElement, 'bloc-default-no-data-league-entry');
+      expect(blocdefaultMessage).toBeFalsy();
+    });
   });
 
   it('should display a message if data is missing for RANKED_SOLO_5x5', () => {

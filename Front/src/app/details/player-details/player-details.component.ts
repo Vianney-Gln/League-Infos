@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
-import { catchError, concatMap, map, of, Subscription, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, concatMap, finalize, map, of, Subscription, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
@@ -56,7 +56,7 @@ export class PlayerDetailsComponent implements OnDestroy {
   isUnrankedFlex = false;
   isUnrankedSoloQ = false;
   tagLine: string = '';
-  isLoading = false;
+  isLoading: WritableSignal<boolean> = signal(false);
   isGetMoreButtonSoloQVisibleSignal: WritableSignal<boolean> = signal(true);
   isGetMoreButtonFlexQVisibleSignal: WritableSignal<boolean> = signal(true);
   noMoreHistoriqueMessageSoloQSignal: WritableSignal<string> = signal('');
@@ -66,12 +66,17 @@ export class PlayerDetailsComponent implements OnDestroy {
   gamesHistorySubscription: Subscription = new Subscription();
 
   ngOnInit() {
+    this.isLoading.set(true);
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
-    this.isLoading = true;
     this.getDisplayedPlayerInfos();
     this.route.paramMap.subscribe({
-      next: () => {
+      next: (params) => {
         this.initGetMoreButtonAndMessageState();
+        const summonerId = params.get('summoner');
+        if (summonerId) {
+          this.isLoading.set(true);
+          this.initGetMoreButtonAndMessageState();
+        }
       },
       error: () => {
         console.log('error');
@@ -150,26 +155,20 @@ export class PlayerDetailsComponent implements OnDestroy {
         catchError(() => {
           this.gameName = '';
           return of(new SummonerDTO());
-        })
-      )
-      .pipe(
+        }),
         concatMap((summoner: SummonerDTO) => {
           this.summonerDto = summoner;
           if (!summoner.puuid) {
             this.router.navigate(['/NotFound']);
           }
           return this.playerService.getLeagueEntryByPuuid(summoner.puuid).pipe(map((leagueEntries) => ({ leagueEntries, puuid: summoner.puuid })));
-        })
-      )
-      .pipe(
+        }),
         concatMap(({ leagueEntries, puuid }) => {
           this.leagueEntriesSignal.set(leagueEntries);
           this.isUnrankedFlex = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_FLEX_SR) ? false : true;
           this.isUnrankedSoloQ = leagueEntries.find((entry) => entry.queueType === QueueTypeEnum.RANKED_SOLO_5x5) ? false : true;
           return this.playerService.getChampionMasteriesDTO(puuid).pipe(map((championMasteries) => ({ championMasteries, puuid })));
-        })
-      )
-      .pipe(
+        }),
         concatMap(({ championMasteries }) => {
           this.championMasteriesSignal.set(championMasteries);
           this.resetListHistoryItems();
@@ -179,9 +178,7 @@ export class PlayerDetailsComponent implements OnDestroy {
             this.urlBackgroundBannerSignal.set(`url(images/default-banner.png)`);
           }
           return this.getHistory(this.RANKED_SOLO_5x5.libelle);
-        })
-      )
-      .pipe(
+        }),
         concatMap((res: MatchDTO[]) => {
           this.listMatchDataSoloQSignal.set(res);
           this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(res));
@@ -190,13 +187,13 @@ export class PlayerDetailsComponent implements OnDestroy {
       )
       .subscribe({
         next: (res: MatchDTO[]) => {
-          this.isLoading = false;
           this.listMatchDataFlexQSignal.set(res);
           this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(res));
+          this.isLoading.set(false);
         },
         error: (error) => {
+          this.isLoading.set(false);
           console.log(error);
-          this.isLoading = false;
         },
       });
   }

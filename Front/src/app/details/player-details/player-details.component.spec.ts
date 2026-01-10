@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { PlayerDetailsComponent } from './player-details.component';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Route, Router } from '@angular/router';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -14,8 +14,7 @@ import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
 import { HistoryService } from '../../services/games-history/history.service';
 import { MatchDTO } from '../../common/models/games-history/matchDTO';
-import { HistoryItemsComponent } from '../../games-history/history-items/history-items.component';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { QueueTypeEnum } from '../../common/constants/queueTypeEnum';
 
 function matchDTOMock() {
@@ -151,6 +150,7 @@ describe('PlayerDetailsComponent', () => {
   let historyService: HistoryService;
   let paramMap$: any;
   let router: Router;
+  let route: ActivatedRoute;
 
   beforeEach(async () => {
     paramMap$ = new BehaviorSubject(convertToParamMap({ summoner: 'test#euw' }));
@@ -171,11 +171,25 @@ describe('PlayerDetailsComponent', () => {
     playerService = TestBed.inject(PlayersService);
     historyService = TestBed.inject(HistoryService);
     router = TestBed.inject(Router);
+    route = TestBed.inject(ActivatedRoute);
     component = fixture.componentInstance;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set loading to true when paramMap emits summoner', () => {
+    // GIVEN
+    spyOn(component as any, 'getDisplayedPlayerInfos').and.stub();
+    const initSpy = spyOn(component as any, 'initGetMoreButtonAndMessageState').and.callThrough();
+
+    // WHEN
+    fixture.detectChanges(); // ngOnInit()
+
+    // THEN
+    expect(initSpy).toHaveBeenCalled();
+    expect(component.isLoading()).toBeTrue();
   });
 
   it('should call services with correct params and return data for a given player', () => {
@@ -408,7 +422,7 @@ describe('PlayerDetailsComponent', () => {
     expect(component.urlBackgroundBannerSignal()).toEqual(`url(images/default-banner.png)`);
   });
 
-  it('should call playerService.getChampionMasteriesDTO and display a default bloc message if not data from currentMatchsParticipantsSoloQSignal or currentMatchsParticipantsFlexQSignal', () => {
+  it('should display a default bloc message if not data from currentMatchsParticipantsSoloQSignal or currentMatchsParticipantsFlexQSignal', () => {
     // GIVEN
     const mockAccountDTO = {
       puuid: 'mock-puuid',
@@ -456,12 +470,16 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
 
+    fixture.detectChanges();
+    component.isLoading.set(false);
+
     // WHEN
     fixture.detectChanges();
 
     // THEN
     const blocdefaultMessage = getByDataTestAttr(fixture.debugElement, 'bloc-default-no-data-league-entry');
     const blocDataLeagueEntry = getByDataTestAttr(fixture.debugElement, 'bloc-data-league-entry');
+
     expect(blocdefaultMessage).toBeTruthy();
     expect(blocdefaultMessage?.textContent).toEqual(
       "Il n'y a pas d'informations sur ce joueur.Il n'a peut être pas encore joué de parties classées ou est peut être inactif."
@@ -519,6 +537,8 @@ describe('PlayerDetailsComponent', () => {
 
       spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
       spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([matchDTOMock()]));
+      fixture.detectChanges();
+      component.isLoading.set(false);
 
       // WHEN
       fixture.detectChanges();
@@ -574,6 +594,8 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -632,8 +654,10 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
+    fixture.detectChanges();
     clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
 
@@ -746,8 +770,10 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
+    fixture.detectChanges();
     clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
 
@@ -983,6 +1009,8 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1037,6 +1065,8 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getSummonerByPuuid').and.returnValue(of(mockSummonerDTO));
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
+    fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1106,8 +1136,10 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
+    fixture.detectChanges();
     clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
 
@@ -1171,7 +1203,7 @@ describe('PlayerDetailsComponent', () => {
     expect(getMoreHistoryButton).toBeFalsy();
   });
 
-  it('should call historyService.getMoreHistory on click on Plus de parties button, case flex q', () => {
+  it('should call historyService.getMoreHistory on click on Plus de parties button, case flex q', fakeAsync(() => {
     // GIVEN
     const mockAccountDTO = {
       puuid: '123',
@@ -1252,21 +1284,22 @@ describe('PlayerDetailsComponent', () => {
 
     const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
     const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
+    component.queueTypeSignal.set('RANKED_FLEX_SR');
     fixture.detectChanges();
+    component.isLoading.set(false);
 
     expect(component.listMatchDataFlexQSignal()).toHaveSize(10);
 
     // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
     clickButtonByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button');
-    fixture.detectChanges();
 
     // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button')).toBeTruthy();
     expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 440);
     expect(getMoreHistorySpy).toHaveBeenCalledWith('123', 175125125125, 440);
     expect(component.listMatchDataFlexQSignal()).toHaveSize(20);
-  });
+  }));
 
   it('should call historyService.getMoreHistory on click on Plus de parties button, case solo q', () => {
     // GIVEN
@@ -1350,12 +1383,13 @@ describe('PlayerDetailsComponent', () => {
     const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
     const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
     fixture.detectChanges();
+    component.isLoading.set(false);
 
     expect(component.listMatchDataSoloQSignal()).toHaveSize(10);
 
     // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
     fixture.detectChanges();
+    clickButtonByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
 
     // THEN
     expect(getHistoryByPuuidAndQueueTypeSpy).toHaveBeenCalledWith('123', 420);
@@ -1467,6 +1501,8 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTOFlex, mockLeagueEntryDTOSoloQ]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
+    fixture.detectChanges();
+    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1567,14 +1603,12 @@ describe('PlayerDetailsComponent', () => {
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
     spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
 
+    fixture.detectChanges();
+    component.isLoading.set(false);
+
     // WHEN
-
     fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-
     clickButtonByDataTestAttr(fixture.debugElement, 'more-history-soloQ-button');
-    tick();
     fixture.detectChanges();
 
     // THEN
@@ -1582,7 +1616,7 @@ describe('PlayerDetailsComponent', () => {
     expect(getByDataTestAttr(fixture.debugElement, 'no-more-history-message-soloQ')?.innerText).toEqual("Plus d'autre partie historique disponible");
   }));
 
-  it('should hide the getMore button if no result, and show a message instead, case flex q', fakeAsync(() => {
+  it('should hide the getMore button if no result, and show a message instead, case flex q', () => {
     // GIVEN
     component.queueTypeSignal.set(QueueTypeEnum.RANKED_FLEX_SR);
 
@@ -1635,16 +1669,16 @@ describe('PlayerDetailsComponent', () => {
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
     spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
 
+    fixture.detectChanges();
+    component.isLoading.set(false);
+
     // WHEN
-    clickButtonByDataTestAttr(fixture.debugElement, 'label-radio-queue-flex');
     fixture.detectChanges();
     clickButtonByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button');
-    fixture.detectChanges();
-    tick();
     fixture.detectChanges();
 
     // THEN
     expect(getByDataTestAttr(fixture.debugElement, 'more-history-flexQ-button')).toBeFalsy();
     expect(getByDataTestAttr(fixture.debugElement, 'no-more-history-message-flexQ')?.innerText).toEqual("Plus d'autre partie historique disponible");
-  }));
+  });
 });

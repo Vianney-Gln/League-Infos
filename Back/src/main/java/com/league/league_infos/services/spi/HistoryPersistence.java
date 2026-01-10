@@ -5,11 +5,9 @@ import com.league.league_infos.dto.match.MatchDTO;
 import java.util.List;
 
 public interface HistoryPersistence {
-    void persistMatchHistory(List<MatchDTO> listMatch);
+    void persistAndRefreshFromRiotMatchHistory(List<MatchDTO> listMatch);
 
     List<MatchDTO> getMatchHistoryByGameIds(List<String> gameIds);
-
-    boolean wasCreatedWithinLastHour(String puuid, Integer queue);
 
     List<MatchDTO> findAllMatchByPuuidAndQueue(String puuid, Integer queue);
 

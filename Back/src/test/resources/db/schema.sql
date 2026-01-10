@@ -18,7 +18,8 @@ CREATE TABLE T_INFOS_MATCH (
     game_id BIGINT NOT NULL,
     map_id INTEGER NOT NULL,
     queue_id INTEGER NOT NULL,
-    creation_date TIMESTAMP NOT NULL
+    creation_date TIMESTAMP NOT NULL,
+    last_refresh_from_riot TIMESTAMP NOT NULL
 );
 
 CREATE TABLE T_TEAMS (

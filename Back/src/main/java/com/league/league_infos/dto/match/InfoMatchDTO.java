@@ -18,6 +18,7 @@ public class InfoMatchDTO {
     private List<ParticipantMatchDTO> participants;
     private List<TeamDTO> teams;
     private LocalDateTime creationDate;
+    private LocalDateTime lastRefreshFromRiot;
 
     public String getEndOfGameResult() {
         return endOfGameResult;
@@ -131,6 +132,14 @@ public class InfoMatchDTO {
         this.creationDate = creationDate;
     }
 
+    public LocalDateTime getLastRefreshFromRiot() {
+        return lastRefreshFromRiot;
+    }
+
+    public void setLastRefreshFromRiot(LocalDateTime lastRefreshFromRiot) {
+        this.lastRefreshFromRiot = lastRefreshFromRiot;
+    }
+
     public static class Builder {
         private String endOfGameResult;
         private String gameMode;
@@ -146,6 +155,7 @@ public class InfoMatchDTO {
         private List<ParticipantMatchDTO> participants;
         private List<TeamDTO> teams;
         private LocalDateTime creationDate;
+        private LocalDateTime lastRefreshFromRiot;
 
         public InfoMatchDTO.Builder endOfGameResult(String endOfGameResult) {
             this.endOfGameResult = endOfGameResult;
@@ -217,6 +227,11 @@ public class InfoMatchDTO {
             return this;
         }
 
+        public InfoMatchDTO.Builder lastRefreshFromRiot(LocalDateTime lastRefreshFromRiot) {
+            this.lastRefreshFromRiot = lastRefreshFromRiot;
+            return this;
+        }
+
         public InfoMatchDTO build() {
             InfoMatchDTO dto = new InfoMatchDTO();
             dto.setEndOfGameResult(this.endOfGameResult);
@@ -233,6 +248,7 @@ public class InfoMatchDTO {
             dto.setParticipants(this.participants);
             dto.setTeams(this.teams);
             dto.setCreationDate(this.creationDate);
+            dto.setLastRefreshFromRiot(this.lastRefreshFromRiot);
             return dto;
         }
     }

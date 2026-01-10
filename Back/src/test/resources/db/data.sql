@@ -1,20 +1,20 @@
-insert into t_infos_match (creation_date, end_of_game_result, game_creation, game_duration, game_end_timestamp, game_id, game_mode, game_name, game_type, game_version, map_id, queue_id)
-    values (timestamp '2025-09-28 01:00', 'GameComplete', 1756259870149, 1742, 1756251627166, 7508515244, 'CLASSIC', 'teambuilder-match-7508515244', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-09-29 01:00', 'GameComplete', 1756269870149, 1742, 1756251627166, 7508515245, 'CLASSIC', 'teambuilder-match-7508515245', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-09-30 01:00', 'GameComplete', 1756279870149, 1742, 1756251627166, 7508515246, 'CLASSIC', 'teambuilder-match-7508515246', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-01 01:00', 'GameComplete', 1756289870149, 1742, 1756251627166, 7508515247, 'CLASSIC', 'teambuilder-match-7508515247', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-02 01:00', 'GameComplete', 1756299870149, 1742, 1756251627166, 7508515248, 'CLASSIC', 'teambuilder-match-7508515248', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-03 01:00', 'GameComplete', 1756300970149, 1742, 1756251627166, 7508515249, 'CLASSIC', 'teambuilder-match-7508515249', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-04 01:00', 'GameComplete', 1756310970149, 1742, 1756251627166, 7508515250, 'CLASSIC', 'teambuilder-match-7508515250', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-05 01:00', 'GameComplete', 1756320970149, 1742, 1756251627166, 7508515251, 'CLASSIC', 'teambuilder-match-7508515251', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-06 01:00', 'GameComplete', 1756330970149, 1742, 1756251627166, 7508515252, 'CLASSIC', 'teambuilder-match-7508515252', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-07 01:00', 'GameComplete', 1756340970149, 1742, 1756251627166, 7508515253, 'CLASSIC', 'teambuilder-match-7508515253', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-08 01:00', 'GameComplete', 1756350970149, 1742, 1756251627166, 7508515254, 'CLASSIC', 'teambuilder-match-7508515254', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-09 01:00', 'GameComplete', 1756360970149, 1742, 1756251627166, 7508515255, 'CLASSIC', 'teambuilder-match-7508515255', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-10 01:00', 'GameComplete', 1756370970149, 1742, 1756251627166, 7508515256, 'CLASSIC', 'teambuilder-match-7508515256', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-11 01:00', 'GameComplete', 1756380970149, 1742, 1756251627166, 7508515257, 'CLASSIC', 'teambuilder-match-7508515257', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-12 01:00', 'GameComplete', 1756390970149, 1742, 1756251627166, 7508515258, 'CLASSIC', 'teambuilder-match-7508515258', 'MATCHED_GAME', '15.16.706.7476', 11, 420),
-    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7508515259, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420);
+insert into t_infos_match (creation_date, end_of_game_result, game_creation, game_duration, game_end_timestamp, game_id, game_mode, game_name, game_type, game_version, map_id, queue_id,last_refresh_from_riot)
+    values (timestamp '2025-09-28 01:00', 'GameComplete', 1756259870149, 1742, 1756251627166, 7508515244, 'CLASSIC', 'teambuilder-match-7508515244', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-09-29 01:00', 'GameComplete', 1756269870149, 1742, 1756251627166, 7508515245, 'CLASSIC', 'teambuilder-match-7508515245', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-09-30 01:00', 'GameComplete', 1756279870149, 1742, 1756251627166, 7508515246, 'CLASSIC', 'teambuilder-match-7508515246', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-01 01:00', 'GameComplete', 1756289870149, 1742, 1756251627166, 7508515247, 'CLASSIC', 'teambuilder-match-7508515247', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-02 01:00', 'GameComplete', 1756299870149, 1742, 1756251627166, 7508515248, 'CLASSIC', 'teambuilder-match-7508515248', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-03 01:00', 'GameComplete', 1756300970149, 1742, 1756251627166, 7508515249, 'CLASSIC', 'teambuilder-match-7508515249', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-04 01:00', 'GameComplete', 1756310970149, 1742, 1756251627166, 7508515250, 'CLASSIC', 'teambuilder-match-7508515250', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-05 01:00', 'GameComplete', 1756320970149, 1742, 1756251627166, 7508515251, 'CLASSIC', 'teambuilder-match-7508515251', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-06 01:00', 'GameComplete', 1756330970149, 1742, 1756251627166, 7508515252, 'CLASSIC', 'teambuilder-match-7508515252', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-07 01:00', 'GameComplete', 1756340970149, 1742, 1756251627166, 7508515253, 'CLASSIC', 'teambuilder-match-7508515253', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-08 01:00', 'GameComplete', 1756350970149, 1742, 1756251627166, 7508515254, 'CLASSIC', 'teambuilder-match-7508515254', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-09 01:00', 'GameComplete', 1756360970149, 1742, 1756251627166, 7508515255, 'CLASSIC', 'teambuilder-match-7508515255', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-10 01:00', 'GameComplete', 1756370970149, 1742, 1756251627166, 7508515256, 'CLASSIC', 'teambuilder-match-7508515256', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-11 01:00', 'GameComplete', 1756380970149, 1742, 1756251627166, 7508515257, 'CLASSIC', 'teambuilder-match-7508515257', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-12 01:00', 'GameComplete', 1756390970149, 1742, 1756251627166, 7508515258, 'CLASSIC', 'teambuilder-match-7508515258', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7508515259, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00');
 
 insert into t_challenges (game_length, kda) values
 (1742.83544921875, 4.199999809265137),

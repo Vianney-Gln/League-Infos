@@ -48,6 +48,7 @@ public class InfoMatchMapper {
         }
         infoMatchDTO.setTeams(infoMatchEntity.getTeamEntity().stream().map(TeamMapper::teamEntityToDTO).toList());
         infoMatchDTO.setCreationDate(infoMatchEntity.getCreationDate());
+        infoMatchDTO.setLastRefreshFromRiot(infoMatchEntity.getLastRefreshFromRiot());
         return infoMatchDTO;
     }
 }

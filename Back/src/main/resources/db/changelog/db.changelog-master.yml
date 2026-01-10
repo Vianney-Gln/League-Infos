@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/changes/db.changelog-update-table-T_TEAMS-add-column-info_match_id.yml
   - include:
       file: db/changelog/changes/db.changelog-update-table-T_PARTICIPANT_MATCH-add-column-meta_data_id.yml
+  - include:
+      file: db/changelog/changes/db.changelog-update-table-T_INFOS_MATCH-add-column-last_refresh_from_riot.yml

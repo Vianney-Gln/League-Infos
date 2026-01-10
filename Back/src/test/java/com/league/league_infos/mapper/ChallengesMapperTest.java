@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ChallengesMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void challengesDtoToEntity_success() {
         // GIVEN
         ChallengesDTO challengesDTO = new ChallengesDTO.Builder().kda(27.5F).gameLength(1380F).build();
@@ -74,7 +74,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengesDTO is null")
+    @DisplayName("Should throw an exception if challengesDTO is null")
     void challengesDtoToEntity_fail_1() {
         // GIVEN
         ParticipantMatchEntity participantMatchEntity1 = new ParticipantMatchEntity();
@@ -119,7 +119,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if infoMatchEntity is null")
+    @DisplayName("Should throw an exception if infoMatchEntity is null")
     void challengesDtoToEntity_fail_2() {
         // GIVEN
         ChallengesDTO challengesDTO = new ChallengesDTO.Builder().kda(27.5F).gameLength(1380F).build();
@@ -131,7 +131,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengesDTO.kda is null")
+    @DisplayName("Should throw an exception if challengesDTO.kda is null")
     void challengesDtoToEntity_fail_3() {
         // GIVEN
         ChallengesDTO challengesDTO = new ChallengesDTO.Builder().gameLength(1380F).build();
@@ -177,7 +177,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengesDTO.gameLength is null")
+    @DisplayName("Should throw an exception if challengesDTO.gameLength is null")
     void challengesDtoToEntity_fail_4() {
         // GIVEN
         ChallengesDTO challengesDTO = new ChallengesDTO.Builder().kda(27.5F).build();
@@ -224,7 +224,7 @@ class ChallengesMapperTest {
 
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void challengesEntityToDTO_sucess() {
         // GIVEN
         ChallengesEntity challengesEntity = new ChallengesEntity();
@@ -239,7 +239,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengeEntity is null")
+    @DisplayName("Should throw an exception if challengeEntity is null")
     void challengesEntityToDTO_fail_1() {
         // GIVEN + WHEN + THEN
         assertThatThrownBy(() -> ChallengesMapper.challengesEntityToDTO(null))
@@ -248,7 +248,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengeEntity.gameLength is null")
+    @DisplayName("Should throw an exception if challengeEntity.gameLength is null")
     void challengesEntityToDTO_fail_2() {
         // GIVEN
         ChallengesEntity challengesEntity = new ChallengesEntity();
@@ -261,7 +261,7 @@ class ChallengesMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if challengeEntity.kda is null")
+    @DisplayName("Should throw an exception if challengeEntity.kda is null")
     void challengesEntityToDTO_fail_3() {
         // GIVEN
         ChallengesEntity challengesEntity = new ChallengesEntity();

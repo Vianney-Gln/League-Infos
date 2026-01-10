@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MetaDataMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void metaDatadtoToEntity_success() {
         // GIVEN
         MetadataDTO metadataDTO = new MetadataDTO.Builder()
@@ -28,7 +28,7 @@ class MetaDataMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if metadataDTO is null")
+    @DisplayName("Should throw an exception if metadataDTO is null")
     void metaDatadtoToEntity_fail_1() {
         // GIVEN + WHEN + THEN
         assertThatThrownBy(() -> MetaDataMapper.metaDatadtoToEntity(null, 100L))
@@ -37,7 +37,7 @@ class MetaDataMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if gameId is null")
+    @DisplayName("Should throw an exception if gameId is null")
     void metaDatadtoToEntity_fail_2() {
         // GIVEN
         MetadataDTO metadataDTO = new MetadataDTO.Builder()
@@ -52,7 +52,7 @@ class MetaDataMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if metadataDTO.matchId is null")
+    @DisplayName("Should throw an exception if metadataDTO.matchId is null")
     void metaDatadtoToEntity_fail_3() {
         // GIVEN
         MetadataDTO metadataDTO = new MetadataDTO.Builder()
@@ -66,7 +66,7 @@ class MetaDataMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if metadataDTO.dataVersion is null")
+    @DisplayName("Should throw an exception if metadataDTO.dataVersion is null")
     void metaDatadtoToEntity_fail_4() {
         // GIVEN
         MetadataDTO metadataDTO = new MetadataDTO.Builder()

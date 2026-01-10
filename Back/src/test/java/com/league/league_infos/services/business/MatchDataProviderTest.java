@@ -1,5 +1,7 @@
 package com.league.league_infos.services.business;
 
+import com.league.league_infos.common.utils.CurrentLocalDateTime;
+import com.league.league_infos.dto.match.InfoMatchDTO;
 import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.services.api.HistoryGamesService;
 import com.league.league_infos.services.spi.HistoryPersistence;
@@ -10,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,11 +33,14 @@ class MatchDataProviderTest {
     @Mock
     private HistoryPersistence historyPersistence;
 
+    @Mock
+    private CurrentLocalDateTime currentLocalDateTime;
+
     @InjectMocks
     private MatchDataProvider matchDataProvider;
 
     @Test
-    @DisplayName("Must call historyGamesService.getHistoryIds")
+    @DisplayName("Should call historyGamesService.getHistoryIds")
     void getMatchsHistory_success_1() {
 
         // WHEN
@@ -45,13 +51,21 @@ class MatchDataProviderTest {
     }
 
     @Test
-    @DisplayName("Must call historyPersistence.getMatchHistoryByGameIds and do not call historyGamesService.getMatchHistory")
+    @DisplayName("Should call historyPersistence.getMatchHistoryByGameIds and findAllMatchByPuuidAndQueue " +
+            "do not call historyGamesService.getMatchHistory" +
+            "do not call historyGamesService.getHistoryIds" +
+            "case lastRefreshFromRiot < 12h"
+    )
     void getMatchsHistory_success_2() {
-
         // GIVEN
-        when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1", "2"));
-        when(historyPersistence.wasCreatedWithinLastHour(anyString(), any(Integer.class))).thenReturn(true);
-        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(new MatchDTO()));
+        MatchDTO matchDTO = new MatchDTO.Builder()
+                .info(new InfoMatchDTO.Builder()
+                        .lastRefreshFromRiot(LocalDateTime.of(2025, 10, 9, 20, 13, 0))
+                        .build())
+                .build();
+
+        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(matchDTO));
+        when(currentLocalDateTime.getCurrentLocalDateTime()).thenReturn(LocalDateTime.of(2025, 10, 10, 0, 0, 0));
 
         // WHEN
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
@@ -59,18 +73,25 @@ class MatchDataProviderTest {
         // THEN
         verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyGamesService, never()).getMatchHistory(any());
-
+        verify(historyGamesService, never()).getHistoryIds(any(), any());
         assertThat(result).isNotEmpty().hasSize(1);
     }
 
     @Test
-    @DisplayName("Must call historyPersistence.getMatchHistoryByGameIds and call historyGamesService.getMatchHistory")
+    @DisplayName("Should call historyGamesService.getHistoryIds, historyPersistence.getMatchHistoryByGameIds and findAllMatchByPuuidAndQueue  " +
+            " historyGamesService.getMatchHistory case lastRefreshFromRiot > 12h")
     void getMatchsHistory_success_3() {
 
         // GIVEN
+        MatchDTO matchDTO = new MatchDTO.Builder()
+                .info(new InfoMatchDTO.Builder()
+                        .lastRefreshFromRiot(LocalDateTime.of(2025, 8, 1, 10, 8, 14))
+                        .build())
+                .build();
+
         when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(List.of("1", "2"));
-        when(historyPersistence.wasCreatedWithinLastHour(anyString(), any(Integer.class))).thenReturn(false);
-        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(new MatchDTO()));
+        when(historyPersistence.findAllMatchByPuuidAndQueue(anyString(), any(Integer.class))).thenReturn(List.of(matchDTO));
+        when(currentLocalDateTime.getCurrentLocalDateTime()).thenReturn(LocalDateTime.of(2025, 10, 10, 0, 0, 0));
 
         // WHEN
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
@@ -78,12 +99,12 @@ class MatchDataProviderTest {
         // THEN
         verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyGamesService, times(1)).getMatchHistory(List.of("1", "2"));
-
+        verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
         assertThat(result).isNotEmpty().hasSize(1);
     }
 
     @Test
-    @DisplayName("Must return an empty list if listGameids is null")
+    @DisplayName("Should return an empty list if listGameids is null")
     void getMatchsHistory_success_4() {
 
         // GIVEN
@@ -97,7 +118,7 @@ class MatchDataProviderTest {
     }
 
     @Test
-    @DisplayName("Must return an empty list if listGameids is empty")
+    @DisplayName("Should return an empty list if listGameids is empty")
     void getMatchsHistory_success_5() {
 
         // GIVEN

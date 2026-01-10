@@ -9,6 +9,7 @@ import com.league.league_infos.dto.match.MatchDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MatchMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void infoMatchEntityToMatchDTO_success_1() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
@@ -52,6 +53,7 @@ class MatchMapperTest {
         infoMatchEntity.setGameVersion("version");
         infoMatchEntity.setQueueId(420);
         infoMatchEntity.setMapId(35);
+        infoMatchEntity.setLastRefreshFromRiot(LocalDateTime.of(2024, 10, 10, 0, 0, 0));
 
         // WHEN
         MatchDTO result = MatchMapper.infoMatchEntityToMatchDTO(infoMatchEntity);
@@ -73,15 +75,18 @@ class MatchMapperTest {
                         "gameEndTimestamp",
                         "gameVersion",
                         "queueId",
-                        "mapId")
-                .containsExactly("result", 2055L, 5000L, "CLASSIC", "RANKED", 5600L, "version", 420, 35);
+                        "mapId",
+                        "lastRefreshFromRiot"
+
+                )
+                .containsExactly("result", 2055L, 5000L, "CLASSIC", "RANKED", 5600L, "version", 420, 35, LocalDateTime.of(2024, 10, 10, 0, 0, 0));
 
         assertThat(result.getInfo().getParticipants()).isNotEmpty().hasSize(1);
         assertThat(result.getInfo().getTeams()).isNotEmpty().hasSize(1);
     }
 
     @Test
-    @DisplayName("Must map metaData to null, if listParticipants is null")
+    @DisplayName("Should map metaData to null, if listParticipants is null")
     void infoMatchEntityToMatchDTO_success_2() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
@@ -133,7 +138,7 @@ class MatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must map metaData to null, if metaData is null")
+    @DisplayName("Should map metaData to null, if metaData is null")
     void infoMatchEntityToMatchDTO_success_3() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
@@ -187,7 +192,7 @@ class MatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must map participants to null, if listParticipants is null")
+    @DisplayName("Should map participants to null, if listParticipants is null")
     void infoMatchEntityToMatchDTO_success_4() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TeamMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void teamDtoToEntity_success() {
         // GIVEN
         TeamDTO teamDTO = new TeamDTO.Builder()
@@ -29,7 +29,7 @@ public class TeamMapperTest {
     }
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void teamEntityToDTO_success() {
         // GIVEN
         TeamEntity teamEntity = new TeamEntity();

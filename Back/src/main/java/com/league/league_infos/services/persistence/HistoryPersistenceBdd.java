@@ -1,5 +1,6 @@
 package com.league.league_infos.services.persistence;
 
+import com.league.league_infos.common.utils.CurrentLocalDateTime;
 import com.league.league_infos.dao.entity.InfoMatchEntity;
 import com.league.league_infos.dao.repository.InfoMatchRepository;
 import com.league.league_infos.dto.match.MatchDTO;
@@ -18,25 +19,27 @@ import java.util.List;
 public class HistoryPersistenceBdd implements HistoryPersistence {
 
     private final InfoMatchRepository infoMatchRepository;
+    private final CurrentLocalDateTime currentLocalDateTime;
 
     @Autowired
-    public HistoryPersistenceBdd(InfoMatchRepository infoMatchRepository) {
+    public HistoryPersistenceBdd(InfoMatchRepository infoMatchRepository, CurrentLocalDateTime currentLocalDateTime) {
         this.infoMatchRepository = infoMatchRepository;
+        this.currentLocalDateTime = currentLocalDateTime;
     }
 
     @Override
-    @Transactional()
-    public void persistMatchHistory(List<MatchDTO> listMatch) {
-        List<InfoMatchEntity> infoMatchEntitiesToPersist = new ArrayList<>();
-
+    @Transactional
+    public void persistAndRefreshFromRiotMatchHistory(List<MatchDTO> listMatch) {
+        final LocalDateTime NOW = currentLocalDateTime.getCurrentLocalDateTime();
         listMatch.forEach(match -> {
             InfoMatchEntity infoMatchEntity = infoMatchRepository.findByGameId(match.getInfo().getGameId());
             if (infoMatchEntity == null) {
-                infoMatchEntitiesToPersist.add(InfoMatchMapper.infoMatchdtoToEntity(match));
+                infoMatchEntity = InfoMatchMapper.infoMatchdtoToEntity(match);
+                infoMatchEntity.setCreationDate(NOW);
             }
+            infoMatchEntity.setLastRefreshFromRiot(NOW);
+            infoMatchRepository.save(infoMatchEntity);
         });
-        infoMatchEntitiesToPersist.forEach(match -> match.setCreationDate(LocalDateTime.now()));
-        infoMatchRepository.saveAll(infoMatchEntitiesToPersist);
     }
 
     @Override
@@ -50,13 +53,6 @@ public class HistoryPersistenceBdd implements HistoryPersistence {
             }
         });
         return infoMatchs.stream().map(MatchMapper::infoMatchEntityToMatchDTO).toList();
-    }
-
-    @Override
-    public boolean wasCreatedWithinLastHour(String puuid, Integer queue) {
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1L);
-        List<InfoMatchEntity> infoMatchEntities = infoMatchRepository.findRecentsMatchByPuuidAndQueue(puuid, oneHourAgo, queue);
-        return !infoMatchEntities.isEmpty();
     }
 
     @Override

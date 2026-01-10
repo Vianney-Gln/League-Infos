@@ -1,5 +1,6 @@
 package com.league.league_infos.services.persistence;
 
+import com.league.league_infos.common.utils.CurrentLocalDateTime;
 import com.league.league_infos.dao.entity.ChallengesEntity;
 import com.league.league_infos.dao.entity.InfoMatchEntity;
 import com.league.league_infos.dao.entity.MetaDataEntity;
@@ -30,7 +31,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,15 +42,18 @@ class HistoryPersistenceBddTest {
     @Mock
     private InfoMatchRepository infoMatchRepository;
 
+    @Mock
+    private CurrentLocalDateTime currentLocalDateTime;
+
     @InjectMocks
     private HistoryPersistenceBdd historyPersistenceBdd;
 
     @Captor
-    private ArgumentCaptor<List<InfoMatchEntity>> listInfoMatchEntityArgumentCaptor;
+    private ArgumentCaptor<InfoMatchEntity> infoMatchEntityArgumentCaptor;
 
     @Test
-    @DisplayName("Must persist all match history that doesn't exist in db")
-    void persistMatchHistory_success_1() {
+    @DisplayName("Should create if entity not exist or update if exist")
+    void persistAndRefreshFromRiotMatchHistory_success_1() {
         // GIVEN
         ParticipantMatchDTO participantMatchDTO = new ParticipantMatchDTO.Builder()
                 .participantId(10)
@@ -63,6 +67,7 @@ class HistoryPersistenceBddTest {
         MatchDTO match1 = new MatchDTO.Builder()
                 .info(new InfoMatchDTO.Builder()
                         .gameId(10L)
+                        .gameName("test1")
                         .build())
                 .build();
 
@@ -70,6 +75,7 @@ class HistoryPersistenceBddTest {
                 .info(new InfoMatchDTO.Builder()
                         .gameId(20L)
                         .participants(List.of(participantMatchDTO))
+                        .gameName("test2")
                         .teams(List.of(new TeamDTO.Builder()
                                 .teamId(10)
                                 .win(true)
@@ -83,32 +89,39 @@ class HistoryPersistenceBddTest {
 
         when(infoMatchRepository.findByGameId(10L)).thenReturn(new InfoMatchEntity());
         when(infoMatchRepository.findByGameId(20L)).thenReturn(null);
+        when(currentLocalDateTime.getCurrentLocalDateTime())
+                .thenReturn(LocalDateTime.of(2025, 10, 10, 0, 0, 0));
 
         // WHEN
-        historyPersistenceBdd.persistMatchHistory(List.of(match1, match2));
+        historyPersistenceBdd.persistAndRefreshFromRiotMatchHistory(List.of(match1, match2));
 
         // THEN
         verify(infoMatchRepository, times(1)).findByGameId(10L);
         verify(infoMatchRepository, times(1)).findByGameId(20L);
-        verify(infoMatchRepository, times(1)).saveAll(listInfoMatchEntityArgumentCaptor.capture());
+        verify(infoMatchRepository, times(2)).save(infoMatchEntityArgumentCaptor.capture());
 
-        assertThat(listInfoMatchEntityArgumentCaptor.getValue()).isNotEmpty().hasSize(1)
-                .extracting("gameId").containsExactly(20L);
+        InfoMatchEntity infoMatchEntity = infoMatchEntityArgumentCaptor.getAllValues().getFirst();
+        assertThat(infoMatchEntity).isNotNull()
+                .extracting("lastRefreshFromRiot")
+                .isEqualTo(LocalDateTime.of(2025, 10, 10, 0, 0, 0));
+
+        assertThat(infoMatchEntityArgumentCaptor.getAllValues().getLast()).isNotNull()
+                .extracting("gameId", "gameName", "lastRefreshFromRiot")
+                .containsExactly(20L, "test2", LocalDateTime.of(2025, 10, 10, 0, 0, 0));
     }
 
     @Test
-    @DisplayName("Must not persist any match history if listMatch is empty")
-    void persistMatchHistory_success_2() {
+    @DisplayName("Should not save any match history if listMatch is empty")
+    void persistAndRefreshFromRiotMatchHistory_success_2() {
         // WHEN
-        historyPersistenceBdd.persistMatchHistory(Collections.emptyList());
+        historyPersistenceBdd.persistAndRefreshFromRiotMatchHistory(Collections.emptyList());
 
         // THEN
-        verify(infoMatchRepository, times(1)).saveAll(listInfoMatchEntityArgumentCaptor.capture());
-        assertThat(listInfoMatchEntityArgumentCaptor.getValue()).isEmpty();
+        verify(infoMatchRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Must return a list of MatchDTO")
+    @DisplayName("Should return a list of MatchDTO")
     void getMatchHistoryByGameIds_success_1() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
@@ -169,7 +182,7 @@ class HistoryPersistenceBddTest {
     }
 
     @Test
-    @DisplayName("Don't add object null in the list")
+    @DisplayName("Should not add object null in the list")
     void getMatchHistoryByGameIds_success_2() {
         // GIVEN
         when(infoMatchRepository.findByGameId(anyLong())).thenReturn(null);
@@ -180,34 +193,6 @@ class HistoryPersistenceBddTest {
         // THEN
         verify(infoMatchRepository, times(1)).findByGameId(10L);
         assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Must return true if the repository returns a match less than one hour old.")
-    void wasCreatedWithinLastHour_success_1() {
-
-        // GIVEN
-        when(infoMatchRepository.findRecentsMatchByPuuidAndQueue(anyString(), any(LocalDateTime.class), any(Integer.class)))
-                .thenReturn(List.of(new InfoMatchEntity()));
-
-        // WHEN
-        boolean result = historyPersistenceBdd.wasCreatedWithinLastHour("puuid", 420);
-        verify(infoMatchRepository, times(1)).findRecentsMatchByPuuidAndQueue(eq("puuid"), any(LocalDateTime.class), eq(420));
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("Must return false if the repository doesn't returns a match less than one hour old.")
-    void wasCreatedWithinLastHour_success_2() {
-
-        // GIVEN
-        when(infoMatchRepository.findRecentsMatchByPuuidAndQueue(anyString(), any(LocalDateTime.class), any(Integer.class)))
-                .thenReturn(Collections.emptyList());
-
-        // WHEN
-        boolean result = historyPersistenceBdd.wasCreatedWithinLastHour("puuid", 420);
-        verify(infoMatchRepository, times(1)).findRecentsMatchByPuuidAndQueue(eq("puuid"), any(LocalDateTime.class), eq(420));
-        assertThat(result).isFalse();
     }
 
     @Test

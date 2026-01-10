@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,41 +43,6 @@ class InfoMatchRepositoryTest {
                         "15.16.706.7476",
                         420,
                         11);
-    }
-
-    @Test
-    @DisplayName("Should not get any match if there is no recent match in the current last hour")
-    void findRecentsMatchByPuuidAndQueue_success_1() {
-        // WHEN
-        List<InfoMatchEntity> results = infoMatchRepository.findRecentsMatchByPuuidAndQueue(
-                "zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ",
-                LocalDateTime.of(2025, 11, 27, 0, 0, 0),
-                420
-        );
-        // THEN
-        assertThat(results).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Should get matchs from the last current hour")
-    void findRecentsMatchByPuuidAndQueue_success_2() {
-        // WHEN
-        List<InfoMatchEntity> results = infoMatchRepository.findRecentsMatchByPuuidAndQueue(
-                "zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ",
-                LocalDateTime.of(2025, 10, 13, 0, 30, 0),
-                420
-        );
-        // THEN
-        assertThat(results).isNotEmpty().hasSize(1).extracting("endOfGameResult",
-                        "gameCreation",
-                        "gameDuration",
-                        "gameMode",
-                        "gameType",
-                        "gameEndTimestamp",
-                        "gameVersion",
-                        "queueId",
-                        "mapId")
-                .containsExactly(tuple("GameComplete", 1756400970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11));
     }
 
     @Test

@@ -224,7 +224,7 @@ class RiotHistoryGamesServiceTest {
     }
 
     @Test
-    @DisplayName("Should call historyPersistence.persistMatchHistory with data from riot game api")
+    @DisplayName("Should call historyPersistence.persistAndRefreshFromRiotMatchHistory with data from riot game api")
     void getMatchHistory_success_1() {
         // GIVEN
         MatchDTO matchDTO = new MatchDTO.Builder()
@@ -342,7 +342,7 @@ class RiotHistoryGamesServiceTest {
         riotHistoryGamesService.getMatchHistory(List.of("id"));
 
         // THEN
-        verify(historyPersistence, times(1)).persistMatchHistory(listMatchCaptor.capture());
+        verify(historyPersistence, times(1)).persistAndRefreshFromRiotMatchHistory(listMatchCaptor.capture());
         assertThat(listMatchCaptor.getValue()).isNotEmpty().hasSize(1);
         assertThat(listMatchCaptor.getValue().getFirst().getMetadata()).isNotNull().extracting("matchId", "dataVersion")
                 .containsExactly("200", "dataVersion");

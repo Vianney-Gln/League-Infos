@@ -79,7 +79,7 @@ public class RiotHistoryGamesService implements HistoryGamesService {
                 return result.getBody();
             }).toList();
 
-            historyPersistence.persistMatchHistory(listMatchDTO);
+            historyPersistence.persistAndRefreshFromRiotMatchHistory(listMatchDTO);
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {

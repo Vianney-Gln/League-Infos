@@ -19,7 +19,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 class InfoMatchMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void infoMatchdtoToEntity_success() {
         // GIVEN
         MetadataDTO metaDataDTO = new MetadataDTO.Builder().dataVersion("version").matchId("100").build();
@@ -146,7 +146,7 @@ class InfoMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if matchDTO is null")
+    @DisplayName("Should throw an exception if matchDTO is null")
     void infoMatchdtoToEntity_fail() {
 
         // WHEN + THEN

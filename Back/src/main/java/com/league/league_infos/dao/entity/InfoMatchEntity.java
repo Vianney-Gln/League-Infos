@@ -59,7 +59,11 @@ public class InfoMatchEntity {
     @OneToMany(mappedBy = "infoMatchEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParticipantMatchEntity> participantMatchEntityList;
 
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
+    @Column(name = "last_refresh_from_riot")
+    private LocalDateTime lastRefreshFromRiot;
 
     public Long getIdInfoMatch() {
         return idInfoMatch;
@@ -179,6 +183,14 @@ public class InfoMatchEntity {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getLastRefreshFromRiot() {
+        return lastRefreshFromRiot;
+    }
+
+    public void setLastRefreshFromRiot(LocalDateTime lastRefreshFromRiot) {
+        this.lastRefreshFromRiot = lastRefreshFromRiot;
     }
 }
 

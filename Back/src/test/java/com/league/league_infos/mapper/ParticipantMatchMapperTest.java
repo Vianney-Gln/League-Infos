@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ParticipantMatchMapperTest {
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void participantMatchDtoToEntity_success() {
         // GIVEN
         Long gameId = 105L;
@@ -136,7 +136,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if participantMatchDTO is null")
+    @DisplayName("Should throw an exception if participantMatchDTO is null")
     void participantMatchDtoToEntity_fail_1() {
         // GIVEN
         Long gameId = 105L;
@@ -152,7 +152,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if participantMatchDTO.participantId is null")
+    @DisplayName("Should throw an exception if participantMatchDTO.participantId is null")
     void participantMatchDtoToEntity_fail_2() {
         // GIVEN
         Long gameId = 105L;
@@ -203,7 +203,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if metadataDTO is null")
+    @DisplayName("Should throw an exception if metadataDTO is null")
     void participantMatchDtoToEntity_fail_3() {
         // GIVEN
         Long gameId = 105L;
@@ -254,7 +254,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if gameId is null")
+    @DisplayName("Should throw an exception if gameId is null")
     void participantMatchDtoToEntity_fail_4() {
         // GIVEN
         InfoMatchEntity infoMatchEntity = new InfoMatchEntity();
@@ -305,7 +305,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must map correctly")
+    @DisplayName("Should map correctly")
     void participantMatchEntityToDTO_success() {
         ParticipantMatchEntity participantMatchEntity = new ParticipantMatchEntity();
         participantMatchEntity.setIdParticipant(135L);
@@ -418,7 +418,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if participantMatchEntity is null")
+    @DisplayName("Should throw an exception if participantMatchEntity is null")
     void participantMatchEntityToDTO_fail_1() {
 
         // WHEN + WHEN
@@ -429,7 +429,7 @@ class ParticipantMatchMapperTest {
     }
 
     @Test
-    @DisplayName("Must throw an exception if participantMatchEntity.participantId is null")
+    @DisplayName("Should throw an exception if participantMatchEntity.participantId is null")
     void participantMatchEntityToDTO_fail_2() {
         // GIVEN
         ParticipantMatchEntity participantMatchEntity = new ParticipantMatchEntity();

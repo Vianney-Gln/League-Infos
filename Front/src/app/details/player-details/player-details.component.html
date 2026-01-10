@@ -1,6 +1,7 @@
 <!-- prettier-ignore -->
-<div class="container">
-  @if(!isLoading){
+<div class="container player-container">
+  @if(!isLoading()){
+  
   <div class="row">
     <div [ngStyle]="{ 'background-image': urlBackgroundBannerSignal() }" class="col-12 main-champion-banner">
       <div class="mt-3 row w-100">
@@ -97,62 +98,61 @@
     </div>
   </div>
 
-  @if((queueTypeSignal() === RANKED_FLEX_SR.libelle && !isUnrankedFlex) || (queueTypeSignal() === RANKED_SOLO_5x5.libelle && !isUnrankedSoloQ)){
-    <h3 class="mt-3 text-center">Historique des parties</h3>
-  }
-
-    @if(queueTypeSignal() === RANKED_SOLO_5x5.libelle){
-      <div class="mt-4">
-        @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
-          <app-history-items data-test="history-item" 
-          [currMatchParticipant]="currMatchParticipant" 
-          [listMatchDataSignal]="listMatchDataSoloQSignal"
-          [currentQueue]="RANKED_SOLO_5x5.libelle">
-        </app-history-items>
+      @if((queueTypeSignal() === RANKED_FLEX_SR.libelle && listMatchDataFlexQSignal().length) || (queueTypeSignal() === RANKED_SOLO_5x5.libelle && listMatchDataSoloQSignal().length)){
+        <h3 class="mt-3 text-center">Historique des parties</h3>
       }
-      @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
-      <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
-    }
-    </div>
-      @if (noMoreHistoriqueMessageSoloQSignal()) {
-        <span data-test="no-more-history-message-soloQ">{{noMoreHistoriqueMessageSoloQSignal()}}</span>
+
+      @if(queueTypeSignal() === RANKED_SOLO_5x5.libelle){
+        <div class="mt-4">
+            @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
+              <app-history-items data-test="history-item" 
+              [currMatchParticipant]="currMatchParticipant" 
+              [listMatchDataSignal]="listMatchDataSoloQSignal"
+              [currentQueue]="RANKED_SOLO_5x5.libelle">
+            </app-history-items>
+          }
+        @if(isMultipleOf10(currentMatchsParticipantsSoloQSignal().length) && !noMoreHistoriqueMessageSoloQSignal()){
+          <button data-test="more-history-soloQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
+        }
+        </div>
+          @if (noMoreHistoriqueMessageSoloQSignal()) {
+            <span data-test="no-more-history-message-soloQ">{{noMoreHistoriqueMessageSoloQSignal()}}</span>
+          }
+        }
+        @if(queueTypeSignal() === RANKED_FLEX_SR.libelle){
+          <div class="mt-4">
+            @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
+              <app-history-items 
+              data-test="history-item" 
+              [currMatchParticipant]="currMatchParticipant" 
+              [listMatchDataSignal]="listMatchDataFlexQSignal"
+              [currentQueue]="RANKED_FLEX_SR.libelle">
+            </app-history-items>
+        }
+        @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
+          <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
+        }
+      </div>
+      @if (noMoreHistoriqueMessageFlexQSignal()) {
+        <span data-test="no-more-history-message-flexQ">{{noMoreHistoriqueMessageFlexQSignal()}}</span>
       }
     }
-    @if(queueTypeSignal() === RANKED_FLEX_SR.libelle){
-      <div class="mt-4">
-        @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
-          <app-history-items 
-          data-test="history-item" 
-          [currMatchParticipant]="currMatchParticipant" 
-          [listMatchDataSignal]="listMatchDataFlexQSignal"
-          [currentQueue]="RANKED_FLEX_SR.libelle">
-        </app-history-items>
-    }
-    @if(isMultipleOf10(currentMatchsParticipantsFlexQSignal().length) && !noMoreHistoriqueMessageFlexQSignal()){
-      <button data-test="more-history-flexQ-button" type="button" class="button-lol-style mt-2" (click)="moreHistory(queueTypeSignal())">Plus de parties</button>
-    }
-  </div>
-    @if (noMoreHistoriqueMessageFlexQSignal()) {
-      <span data-test="no-more-history-message-flexQ">{{noMoreHistoriqueMessageFlexQSignal()}}</span>
-    }
-}
 
-    @if(
-      (!currentMatchsParticipantsSoloQSignal().length && queueTypeSignal() === RANKED_SOLO_5x5.libelle) ||
+    @if((!currentMatchsParticipantsSoloQSignal().length && queueTypeSignal() === RANKED_SOLO_5x5.libelle) ||
       (!currentMatchsParticipantsFlexQSignal().length && queueTypeSignal() === RANKED_FLEX_SR.libelle) 
     ) {
-    <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
-      <h3>Il n'y a pas d'informations sur ce joueur.</h3>
-      <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>
-    </div>
-  }
-
+      <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
+        <h3>Il n'y a pas d'informations sur ce joueur.</h3>
+        <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>
+      </div>
+      }   
 </div>
-  }@else {
-  <div class="row text-white">
+}@else {
+  <div class="row text-white spinner-container">
     <div class="col text-center">
       <div class="spinner-border spinner-custom"></div>
     </div>
   </div>
   }
-</div>
+  </div>
+

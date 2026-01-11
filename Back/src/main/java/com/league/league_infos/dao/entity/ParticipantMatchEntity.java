@@ -112,6 +112,9 @@ public class ParticipantMatchEntity {
     @Column(name = "puuid", nullable = false)
     private String puuid;
 
+    @Column(name = "pseudo")
+    private String pseudo;
+
     @Column(name = "win", nullable = false)
     private boolean win;
 
@@ -389,6 +392,14 @@ public class ParticipantMatchEntity {
 
     public void setPuuid(String puuid) {
         this.puuid = puuid;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public boolean isWin() {

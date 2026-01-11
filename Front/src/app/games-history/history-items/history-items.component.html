@@ -6,20 +6,20 @@
   <div class="col-1">
     <div class="champion-img-container">
       <img loading="lazy"
-          decoding="async" 
-          [src]="iconChampionUrl" 
-          alt="{{ currMatchParticipant.championName }}" 
+          decoding="async"
+          [src]="iconChampionUrl"
+          alt="{{ currMatchParticipant.championName }}"
           class="champion-icon" />
       <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
     <div data-test="summoner-spells" class="summoner-spell-container">
       <img loading="lazy"
-          decoding="async" 
-          class="summoner-spell-icon" 
+          decoding="async"
+          class="summoner-spell-icon"
           [src]="summoner1IconUrl" />
       <img loading="lazy"
-          decoding="async" 
-          class="summoner-spell-icon" 
+          decoding="async"
+          class="summoner-spell-icon"
           [src]="summoner2IconUrl" />
     </div>
   </div>
@@ -35,17 +35,17 @@
     </div>
     <span data-test="gold-earned" class="gold ms-3">
       <img loading="lazy"
-          decoding="async" 
-          src="images/Icons/icon_gold.png" 
-          alt="Gold" 
+          decoding="async"
+          src="images/Icons/icon_gold.png"
+          alt="Gold"
           class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
     <span data-test="nb-cs-kill" class="cs ms-3">
       <img loading="lazy"
-          decoding="async" 
-          src="images/Icons/icon_minions.png" 
-          alt="CS" 
+          decoding="async"
+          src="images/Icons/icon_minions.png"
+          alt="CS"
           class="cs-icon" />
       {{ nbCsKilled }}
     </span>
@@ -69,25 +69,25 @@
   <div class="col-1">
     <div class="champion-img-container">
       <img loading="lazy"
-          decoding="async" 
-          [src]="iconChampionUrl" 
-          alt="{{ currMatchParticipant.championName }}" 
+          decoding="async"
+          [src]="iconChampionUrl"
+          alt="{{ currMatchParticipant.championName }}"
           class="champion-icon" />
       <div data-test="champ-level" class="champion-level-circle">{{ currMatchParticipant.champLevel }}</div>
     </div>
     <div data-test="summoner-spells" class="summoner-spell-container">
       <img loading="lazy"
-          decoding="async" 
-          class="summoner-spell-icon" 
+          decoding="async"
+          class="summoner-spell-icon"
           [src]="summoner1IconUrl" />
       <img loading="lazy"
-          decoding="async" 
-          class="summoner-spell-icon" 
+          decoding="async"
+          class="summoner-spell-icon"
           [src]="summoner2IconUrl" />
     </div>
   </div>
   <div class="champion-info col-2">
-    <span>{{ accountDTOSignal()?.gameName}}</span>
+    <span>{{ currMatchParticipant.pseudo?currMatchParticipant.pseudo:'inconnu'}}</span>
     <span data-test="champion-name-selected" class="champion-name">{{ currMatchParticipant.championName }}</span>
     <span data-test="role" class="champion-role">{{ role }}</span>
   </div>
@@ -98,16 +98,16 @@
     </div>
     <span data-test="gold-earned" class="gold ms-3">
       <img loading="lazy"
-          decoding="async" 
-          src="images/Icons/icon_gold.png" 
-          alt="Gold" 
+          decoding="async"
+          src="images/Icons/icon_gold.png"
+          alt="Gold"
           class="gold-icon" />
       {{ currMatchParticipant.goldEarned }}
     </span>
     <span data-test="nb-cs-kill" class="cs ms-3">
       <img loading="lazy"
-          decoding="async" 
-          src="images/Icons/icon_minions.png" 
+          decoding="async"
+          src="images/Icons/icon_minions.png"
           alt="CS" class="cs-icon" />
       {{ nbCsKilled }}
     </span>
@@ -116,9 +116,9 @@
     @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
     <ng-container>
       <img loading="lazy"
-          decoding="async" 
-          [src]="itemUrl.url" 
-          alt="{{ itemUrl.itemId }}" 
+          decoding="async"
+          [src]="itemUrl.url"
+          alt="{{ itemUrl.itemId }}"
           class="item-icon" />
     </ng-container>
     }}

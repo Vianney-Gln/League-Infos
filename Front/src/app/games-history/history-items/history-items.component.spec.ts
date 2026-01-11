@@ -4,7 +4,6 @@ import { HistoryItemsComponent } from './history-items.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
-import { HistoryService } from '../../services/games-history/history.service';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
 import { signal } from '@angular/core';
@@ -13,7 +12,6 @@ import { provideRouter, Router } from '@angular/router';
 describe('HistoryItemsComponent', () => {
   let component: HistoryItemsComponent;
   let fixture: ComponentFixture<HistoryItemsComponent>;
-  let historyService: HistoryService;
   let versionService: GetVersionsService;
   let routerService: Router;
 
@@ -77,6 +75,7 @@ describe('HistoryItemsComponent', () => {
       lane: 'MIDDLE',
       role: 'SOLO',
       puuid: 'mock-puuid-123',
+      pseudo: 'joueur 1',
       teamPosition: '',
       win: true,
       matchId: 'mock-match-id-456',
@@ -94,7 +93,6 @@ describe('HistoryItemsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(HistoryItemsComponent);
-    historyService = TestBed.inject(HistoryService);
     versionService = TestBed.inject(GetVersionsService);
     versionService.lastVersionlolDTOSignal.set('14.1');
     routerService = TestBed.inject(Router);

@@ -38,6 +38,7 @@ public class ParticipantMatchMapper {
         participantMatchEntity.setNeutralMinionsKilled(participantMatchDTO.getNeutralMinionsKilled());
         participantMatchEntity.setTotalMinionsKilled(participantMatchDTO.getTotalMinionsKilled());
         participantMatchEntity.setPuuid(participantMatchDTO.getPuuid());
+        participantMatchEntity.setPseudo(participantMatchDTO.getPseudo());
         participantMatchEntity.setProfileIcon(participantMatchDTO.getProfileIcon());
         participantMatchEntity.setTeamId(participantMatchDTO.getTeamId());
         participantMatchEntity.setTeamPosition(participantMatchDTO.getTeamPosition());
@@ -60,7 +61,7 @@ public class ParticipantMatchMapper {
     public static ParticipantMatchDTO participantMatchEntityToDTO(ParticipantMatchEntity participantMatchEntity) {
         Objects.requireNonNull(participantMatchEntity, "participantMatchEntity cannot be null");
         Objects.requireNonNull(participantMatchEntity.getIdParticipant(), "participantMatchEntity.participantId cannot be null");
-        
+
         ParticipantMatchDTO participantMatchDTO = new ParticipantMatchDTO();
         participantMatchDTO.setParticipantId(Math.toIntExact(participantMatchEntity.getIdParticipant()));
         participantMatchDTO.setAssists(participantMatchEntity.getAssists());
@@ -95,6 +96,7 @@ public class ParticipantMatchMapper {
         participantMatchDTO.setItem5(participantMatchEntity.getItem5());
         participantMatchDTO.setItem6(participantMatchEntity.getItem6());
         participantMatchDTO.setChallenges(ChallengesMapper.challengesEntityToDTO(participantMatchEntity.getChallengesEntity()));
+        participantMatchDTO.setPseudo(participantMatchEntity.getPseudo());
         return participantMatchDTO;
     }
 }

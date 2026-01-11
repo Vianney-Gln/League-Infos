@@ -34,6 +34,7 @@ public class ParticipantMatchDTO {
     private String teamPosition;
     private Boolean win;
     private ChallengesDTO challenges;
+    private String pseudo;
 
     public Integer getParticipantId() {
         return participantId;
@@ -299,6 +300,14 @@ public class ParticipantMatchDTO {
         this.challenges = challenges;
     }
 
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
     public static class Builder {
         private Integer participantId;
         private Integer profileIcon;
@@ -333,6 +342,7 @@ public class ParticipantMatchDTO {
         private String teamPosition;
         private Boolean win;
         private ChallengesDTO challenges;
+        private String pseudo;
 
         public ParticipantMatchDTO.Builder participantId(Integer participantId) {
             this.participantId = participantId;
@@ -499,6 +509,11 @@ public class ParticipantMatchDTO {
             return this;
         }
 
+        public ParticipantMatchDTO.Builder pseudo(String pseudo) {
+            this.pseudo = pseudo;
+            return this;
+        }
+
         public ParticipantMatchDTO build() {
             ParticipantMatchDTO dto = new ParticipantMatchDTO();
             dto.setParticipantId(this.participantId);
@@ -534,6 +549,7 @@ public class ParticipantMatchDTO {
             dto.setTeamPosition(this.teamPosition);
             dto.setWin(this.win);
             dto.setChallenges(this.challenges);
+            dto.setPseudo(this.pseudo);
             return dto;
         }
     }

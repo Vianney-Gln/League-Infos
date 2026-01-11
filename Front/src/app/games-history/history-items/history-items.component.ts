@@ -55,7 +55,6 @@ export class HistoryItemsComponent implements OnInit, OnDestroy {
     this.summoner1IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner1Id);
     this.summoner2IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner2Id);
 
-    this.getAccountByPuuid();
     this.findCurrentPlayer();
   }
 
@@ -64,16 +63,6 @@ export class HistoryItemsComponent implements OnInit, OnDestroy {
     if (puuidFromUrl === this.currMatchParticipant.puuid) {
       this.isCurrentPlayerSignal.set(true);
     }
-  }
-
-  private getAccountByPuuid() {
-    this.playerService
-      .getAccountByPuuid(this.currMatchParticipant.puuid)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => this.accountDTOSignal.set(res),
-        error: (err) => console.log(err),
-      });
   }
 
   private getCurrentMatch(): MatchDTO | undefined {

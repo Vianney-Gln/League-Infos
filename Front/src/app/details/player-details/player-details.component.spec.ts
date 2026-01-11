@@ -136,6 +136,7 @@ function mockMatchParticipant() {
     teamPosition: '',
     win: true,
     matchId: '12345',
+    pseudo: 'pseudo',
     challenges: {
       kda: 9.0,
       gameLength: 2555,

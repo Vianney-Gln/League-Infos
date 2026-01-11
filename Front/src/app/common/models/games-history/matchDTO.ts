@@ -61,6 +61,7 @@ export class ParticipantMatchDTO {
   lane!: string;
   role!: string;
   puuid!: string;
+  pseudo!: string;
   teamPosition!: string;
   win!: boolean;
   challenges!: ChallengeDTO;

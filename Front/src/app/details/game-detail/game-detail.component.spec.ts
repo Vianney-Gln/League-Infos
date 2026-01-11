@@ -77,6 +77,7 @@ describe('GameDetailComponent', () => {
       teamPosition: '',
       win: true,
       matchId: 'mock-match-id-456',
+      pseudo: 'pseudo',
       challenges: {
         kda: 9.0,
         gameLength: 2555,
@@ -119,6 +120,7 @@ describe('GameDetailComponent', () => {
       teamPosition: '',
       win: true,
       matchId: 'mock-match-id-456',
+      pseudo: 'pseudo',
       challenges: {
         kda: 8.0,
         gameLength: 2555,

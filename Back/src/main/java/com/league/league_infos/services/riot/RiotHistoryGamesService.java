@@ -4,7 +4,6 @@ import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.services.api.HistoryGamesService;
-import com.league.league_infos.services.spi.HistoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -30,15 +29,13 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 public class RiotHistoryGamesService implements HistoryGamesService {
 
     private final RestTemplate restTemplate;
-    private final HistoryPersistence historyPersistence;
 
     @Value("${app.game-history.max-count}")
     private int MAX_COUNT_MATCH_HISTORY;
 
     @Autowired
-    public RiotHistoryGamesService(RestTemplate restTemplate, HistoryPersistence historyPersistence) {
+    public RiotHistoryGamesService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.historyPersistence = historyPersistence;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class RiotHistoryGamesService implements HistoryGamesService {
     }
 
     @Override
-    public void getMatchHistory(List<String> listMatchId) {
+    public List<MatchDTO> getMatchHistory(List<String> listMatchId) {
 
         List<MatchDTO> listMatchDTO = new ArrayList<>();
         try {
@@ -79,7 +76,7 @@ public class RiotHistoryGamesService implements HistoryGamesService {
                 return result.getBody();
             }).toList();
 
-            historyPersistence.persistAndRefreshFromRiotMatchHistory(listMatchDTO);
+            return listMatchDTO;
 
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {

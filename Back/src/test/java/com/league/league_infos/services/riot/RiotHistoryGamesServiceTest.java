@@ -8,13 +8,10 @@ import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.dto.match.MetadataDTO;
 import com.league.league_infos.dto.match.ParticipantMatchDTO;
 import com.league.league_infos.dto.match.TeamDTO;
-import com.league.league_infos.services.spi.HistoryPersistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,6 +32,9 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,14 +45,8 @@ class RiotHistoryGamesServiceTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private HistoryPersistence historyPersistence;
-
     @InjectMocks
     private RiotHistoryGamesService riotHistoryGamesService;
-
-    @Captor
-    ArgumentCaptor<List<MatchDTO>> listMatchCaptor;
 
     @BeforeEach
     void init() {
@@ -224,7 +218,7 @@ class RiotHistoryGamesServiceTest {
     }
 
     @Test
-    @DisplayName("Should call historyPersistence.persistAndRefreshFromRiotMatchHistory with data from riot game api")
+    @DisplayName("Should return MatchDTO data from riot game api")
     void getMatchHistory_success_1() {
         // GIVEN
         MatchDTO matchDTO = new MatchDTO.Builder()
@@ -339,15 +333,13 @@ class RiotHistoryGamesServiceTest {
                 .thenReturn(response);
 
         // WHEN
-        riotHistoryGamesService.getMatchHistory(List.of("id"));
+        List<MatchDTO> result = riotHistoryGamesService.getMatchHistory(List.of("id"));
 
         // THEN
-        verify(historyPersistence, times(1)).persistAndRefreshFromRiotMatchHistory(listMatchCaptor.capture());
-        assertThat(listMatchCaptor.getValue()).isNotEmpty().hasSize(1);
-        assertThat(listMatchCaptor.getValue().getFirst().getMetadata()).isNotNull().extracting("matchId", "dataVersion")
+        assertThat(result.getFirst().getMetadata()).isNotNull().extracting("matchId", "dataVersion")
                 .containsExactly("200", "dataVersion");
 
-        assertThat(listMatchCaptor.getValue().getFirst().getInfo()).isNotNull().extracting("endOfGameResult",
+        assertThat(result.getFirst().getInfo()).isNotNull().extracting("endOfGameResult",
                         "gameCreation",
                         "gameDuration",
                         "gameMode",
@@ -366,13 +358,13 @@ class RiotHistoryGamesServiceTest {
                         420,
                         10);
 
-        assertThat(listMatchCaptor.getValue().getFirst().getInfo().getTeams()).isNotEmpty().hasSize(2).extracting("win", "teamId")
+        assertThat(result.getFirst().getInfo().getTeams()).isNotEmpty().hasSize(2).extracting("win", "teamId")
                 .containsExactly(
                         tuple(true, 50),
                         tuple(false, 60)
                 );
 
-        assertThat(listMatchCaptor.getValue().getFirst().getInfo().getParticipants()).isNotEmpty().hasSize(2).extracting("assists",
+        assertThat(result.getFirst().getInfo().getParticipants()).isNotEmpty().hasSize(2).extracting("assists",
                 "deaths",
                 "kills",
                 "championId",
@@ -407,5 +399,7 @@ class RiotHistoryGamesServiceTest {
                 tuple(13, 5, 20, 125, "Shyvana", 0, 18, 2, 18566, 135, 136, 95, 77, 122, 123, 126, "JUNGLE", 104, 1, "puuid", 13, 1, 0, "", 27, 28, "", 50, 125, 0, true),
                 tuple(5, 10, 3, 98, "Garen", 0, 17, 0, 14056, 135, 136, 94, 75, 100, null, null, "TOP", 0, 0, "puuid1", 36, 2, 0, "", 27, 45, "", 60, 185, 0, false)
         );
+
+        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.GET), isNull(), eq(MatchDTO.class));
     }
 }

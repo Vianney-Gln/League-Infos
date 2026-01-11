@@ -45,6 +45,7 @@ class ParticipantMatchMapperTest {
                 .neutralMinionsKilled(104)
                 .totalMinionsKilled(125)
                 .puuid("puuid")
+                .pseudo("Luuuna44")
                 .profileIcon(14)
                 .teamId(10)
                 .teamPosition("")
@@ -98,7 +99,9 @@ class ParticipantMatchMapperTest {
                         "item3",
                         "item4",
                         "item5",
-                        "item6")
+                        "item6",
+                        "pseudo"
+                )
                 .containsExactly(135L,
                         12,
                         98,
@@ -130,7 +133,9 @@ class ParticipantMatchMapperTest {
                         53,
                         54,
                         55,
-                        56);
+                        56,
+                        "Luuuna44"
+                );
 
         assertThat(result.getChallengesEntity()).isNotNull();
     }
@@ -340,6 +345,7 @@ class ParticipantMatchMapperTest {
         participantMatchEntity.setItem4(54);
         participantMatchEntity.setItem5(55);
         participantMatchEntity.setItem6(56);
+        participantMatchEntity.setPseudo("Luuuna44");
 
         ChallengesEntity challengesEntity = new ChallengesEntity();
         challengesEntity.setGameLength(1330F);
@@ -382,7 +388,9 @@ class ParticipantMatchMapperTest {
                         "item3",
                         "item4",
                         "item5",
-                        "item6")
+                        "item6",
+                        "pseudo"
+                )
                 .containsExactly(135,
                         12,
                         98,
@@ -414,7 +422,9 @@ class ParticipantMatchMapperTest {
                         53,
                         54,
                         55,
-                        56);
+                        56,
+                        "Luuuna44"
+                );
     }
 
     @Test

@@ -68,6 +68,9 @@ class MatchDataProviderTest {
         MatchDTO matchDTO = new MatchDTO.Builder()
                 .info(new InfoMatchDTO.Builder()
                         .lastRefreshFromRiot(LocalDateTime.of(2025, 10, 9, 20, 13, 0))
+                        .participants(List.of(new ParticipantMatchDTO.Builder()
+                                .puuid("puuid")
+                                .build()))
                         .build())
                 .build();
 
@@ -78,7 +81,7 @@ class MatchDataProviderTest {
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
 
         // THEN
-        verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
+        verify(historyPersistence, times(2)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyPersistence, never()).persistAndRefreshFromRiotMatchHistory(any());
         verify(historyGamesService, never()).getMatchHistory(any());
         verify(historyGamesService, never()).getHistoryIds(any(), any());
@@ -214,7 +217,7 @@ class MatchDataProviderTest {
         List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
 
         // THEN
-        verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
+        verify(historyPersistence, times(2)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyGamesService, times(1)).getMatchHistory(List.of("1", "2"));
         verify(historyGamesService, times(1)).getHistoryIds("puuid", 420);
         verify(riotAccountService, times(1)).getAccountByPuuid("puuid");

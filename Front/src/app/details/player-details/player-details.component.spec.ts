@@ -472,7 +472,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
 
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -483,7 +482,7 @@ describe('PlayerDetailsComponent', () => {
 
     expect(blocdefaultMessage).toBeTruthy();
     expect(blocdefaultMessage?.textContent).toEqual(
-      "Il n'y a pas d'informations sur ce joueur.Il n'a peut être pas encore joué de parties classées ou est peut être inactif."
+      "Il n'y a pas d'informations sur ce joueur.Il n'a peut être pas encore joué de parties classées ou est peut être inactif.",
     );
     expect(blocDataLeagueEntry).toBeFalsy();
   });
@@ -539,7 +538,6 @@ describe('PlayerDetailsComponent', () => {
       spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
       spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([matchDTOMock()]));
       fixture.detectChanges();
-      component.isLoading.set(false);
 
       // WHEN
       fixture.detectChanges();
@@ -596,7 +594,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -655,7 +652,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -771,7 +767,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -917,7 +912,7 @@ describe('PlayerDetailsComponent', () => {
             ],
           },
         }),
-      ])
+      ]),
     );
 
     expect(component.listMatchDataFlexQSignal()).toEqual(
@@ -947,7 +942,7 @@ describe('PlayerDetailsComponent', () => {
             ],
           },
         }),
-      ])
+      ]),
     );
   });
 
@@ -1011,7 +1006,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1067,7 +1061,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1137,7 +1130,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getLeagueEntryByPuuid').and.returnValue(of([mockLeagueEntryDTO]));
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1287,7 +1279,6 @@ describe('PlayerDetailsComponent', () => {
     const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
     component.queueTypeSignal.set('RANKED_FLEX_SR');
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     expect(component.listMatchDataFlexQSignal()).toHaveSize(10);
 
@@ -1384,7 +1375,6 @@ describe('PlayerDetailsComponent', () => {
     const getHistoryByPuuidAndQueueTypeSpy = spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of(history));
     const getMoreHistorySpy = spyOn(historyService, 'getMoreHistory').and.returnValue(of(historyOlder));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     expect(component.listMatchDataSoloQSignal()).toHaveSize(10);
 
@@ -1503,7 +1493,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(playerService, 'getChampionMasteriesDTO').and.returnValue(of([]));
     spyOn(historyService, 'getHistoryByPuuidAndQueueType').and.returnValue(of([]));
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1605,7 +1594,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
 
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();
@@ -1671,7 +1659,6 @@ describe('PlayerDetailsComponent', () => {
     spyOn(historyService, 'getMoreHistory').and.returnValue(of([]));
 
     fixture.detectChanges();
-    component.isLoading.set(false);
 
     // WHEN
     fixture.detectChanges();

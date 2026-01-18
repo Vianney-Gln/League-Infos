@@ -28,18 +28,20 @@ public class MatchDataProvider {
 
     public List<MatchDTO> getMatchsHistory(String puuid, Integer queue) {
         List<MatchDTO> listMatchHistory = historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
-        if (listMatchHistory.isEmpty() || !wasResfreshedFromRiot(listMatchHistory)) {
+        if (listMatchHistory.isEmpty() || !wasResfreshedFromRiotForCurrentplayer(listMatchHistory, puuid)) {
             List<String> listGamesIds = historyRiotGamesService.getHistoryIds(puuid, queue);
             List<MatchDTO> listMatchToPersist = historyRiotGamesService.getMatchHistory(listGamesIds);
             updatePseudoFromFromCurrentParticipant(puuid, listMatchToPersist);
             historyPersistence.persistAndRefreshFromRiotMatchHistory(listMatchToPersist);
         }
-        return listMatchHistory;
+        return historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
     }
 
-    private boolean wasResfreshedFromRiot(List<MatchDTO> matchs) {
-        return matchs.stream().anyMatch(match ->
-                match.getInfo().getLastRefreshFromRiot() != null && match.getInfo().getLastRefreshFromRiot().isAfter(currentLocalDateTime.getCurrentLocalDateTime().minusHours(12)));
+    private boolean wasResfreshedFromRiotForCurrentplayer(List<MatchDTO> matchs, String puuid) {
+        return matchs.stream()
+                .filter(match -> match.getInfo().getParticipants().stream().anyMatch(p -> p.getPuuid().equals(puuid)))
+                .allMatch(match ->
+                        match.getInfo().getLastRefreshFromRiot() != null && match.getInfo().getLastRefreshFromRiot().isAfter(currentLocalDateTime.getCurrentLocalDateTime().minusHours(12)));
     }
 
     private void updatePseudoFromFromCurrentParticipant(String puuid, List<MatchDTO> listMatchToPersist) {

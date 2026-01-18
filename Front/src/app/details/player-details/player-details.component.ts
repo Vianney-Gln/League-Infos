@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayersService } from '../../services/players/players.service';
-import { catchError, concatMap, finalize, map, of, Subscription, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, concatMap, finalize, forkJoin, map, of, Subscription, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
@@ -56,7 +56,9 @@ export class PlayerDetailsComponent implements OnDestroy {
   isUnrankedFlex = false;
   isUnrankedSoloQ = false;
   tagLine: string = '';
-  isLoading: WritableSignal<boolean> = signal(false);
+  isLoading = computed(() => {
+    return !this.isCalledGetHistoryFlexComplete() && !this.isCalledGetHistorySoloComplete();
+  });
   isGetMoreButtonSoloQVisibleSignal: WritableSignal<boolean> = signal(true);
   isGetMoreButtonFlexQVisibleSignal: WritableSignal<boolean> = signal(true);
   noMoreHistoriqueMessageSoloQSignal: WritableSignal<string> = signal('');
@@ -64,9 +66,10 @@ export class PlayerDetailsComponent implements OnDestroy {
 
   displayInfosPlayerSubscription: Subscription = new Subscription();
   gamesHistorySubscription: Subscription = new Subscription();
+  isCalledGetHistorySoloComplete = signal(false);
+  isCalledGetHistoryFlexComplete = signal(false);
 
   ngOnInit() {
-    this.isLoading.set(true);
     this.lastVersionLolSignal = this.versionService.lastVersionlolDTOSignal;
     this.getDisplayedPlayerInfos();
     this.route.paramMap.subscribe({
@@ -74,7 +77,6 @@ export class PlayerDetailsComponent implements OnDestroy {
         this.initGetMoreButtonAndMessageState();
         const summonerId = params.get('summoner');
         if (summonerId) {
-          this.isLoading.set(true);
           this.initGetMoreButtonAndMessageState();
         }
       },
@@ -177,22 +179,23 @@ export class PlayerDetailsComponent implements OnDestroy {
           } else {
             this.urlBackgroundBannerSignal.set(`url(images/default-banner.png)`);
           }
-          return this.getHistory(this.RANKED_SOLO_5x5.libelle);
-        }),
-        concatMap((res: MatchDTO[]) => {
-          this.listMatchDataSoloQSignal.set(res);
-          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(res));
-          return this.getHistory(this.RANKED_FLEX_SR.libelle);
+          return forkJoin({
+            solo: this.getHistory(this.RANKED_SOLO_5x5.libelle),
+            flex: this.getHistory(this.RANKED_FLEX_SR.libelle),
+          });
         })
       )
       .subscribe({
-        next: (res: MatchDTO[]) => {
-          this.listMatchDataFlexQSignal.set(res);
-          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(res));
-          this.isLoading.set(false);
+        next: ({ solo, flex }) => {
+          this.listMatchDataFlexQSignal.set(flex);
+          this.currentMatchsParticipantsFlexQSignal.set(this.getCurrentMatchParticipant(flex));
+          this.isCalledGetHistoryFlexComplete.set(true);
+
+          this.listMatchDataSoloQSignal.set(solo);
+          this.currentMatchsParticipantsSoloQSignal.set(this.getCurrentMatchParticipant(solo));
+          this.isCalledGetHistorySoloComplete.set(true);
         },
         error: (error) => {
-          this.isLoading.set(false);
           console.log(error);
         },
       });

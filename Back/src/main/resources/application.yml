@@ -13,3 +13,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+app:
+  game-history:
+    max-count: 10

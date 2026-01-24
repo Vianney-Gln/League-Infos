@@ -15,6 +15,7 @@ public class ParticipantGenerationCommentaryDTO extends ParticipantMatchDTO {
         private Integer participantId;
         private String role;
         private String championName;
+        private boolean win;
 
         public ParticipantGenerationCommentaryDTO.Builder puuid(String puuid) {
             this.puuid = puuid;
@@ -56,6 +57,11 @@ public class ParticipantGenerationCommentaryDTO extends ParticipantMatchDTO {
             return this;
         }
 
+        public ParticipantGenerationCommentaryDTO.Builder win(boolean win) {
+            this.win = win;
+            return this;
+        }
+
         public ParticipantGenerationCommentaryDTO build() {
             ParticipantGenerationCommentaryDTO participantGenerationCommentaryDTO = new ParticipantGenerationCommentaryDTO();
             participantGenerationCommentaryDTO.setPuuid(this.puuid);
@@ -66,6 +72,7 @@ public class ParticipantGenerationCommentaryDTO extends ParticipantMatchDTO {
             participantGenerationCommentaryDTO.setParticipantId(this.participantId);
             participantGenerationCommentaryDTO.setRole(this.role);
             participantGenerationCommentaryDTO.setChampionName(this.championName);
+            participantGenerationCommentaryDTO.setWin(this.win);
             return participantGenerationCommentaryDTO;
         }
     }

@@ -53,10 +53,11 @@ public class GenerationCommentaryServiceImpl implements GenerationCommentaryServ
                         .participantId(participant.getParticipantId())
                         .role(participant.getTeamPosition())
                         .championName(participant.getChampionName())
+                        .win(participant.getWin())
                         .build()
         ).toList();
 
-        contextGenerationCommentaryDTO.setParticipantRequestCommentaries(participantRequestCommentaries);
+        contextGenerationCommentaryDTO.setParticipants(participantRequestCommentaries);
         return new GenerationCommentaryDTO.Builder()
                 .contextGenerationCommentaryDTO(contextGenerationCommentaryDTO)
                 .eventsMatchDto(eventMatchDTOS)

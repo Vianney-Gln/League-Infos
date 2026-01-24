@@ -21,11 +21,12 @@ class ParticipantGenerationCommentaryDTOTest {
                 .championName("Shyvana")
                 .goldEarned(13225)
                 .role("mid")
+                .win(true)
                 .build();
 
         // THEN
         assertThat(participantGenerationCommentaryDTO).isNotNull()
-                .extracting("puuid", "participantId", "assists", "deaths", "kills", "championName", "goldEarned", "role")
-                .containsExactly("puuid", 20, 18, 3, 11, "Shyvana", 13225, "mid");
+                .extracting("puuid", "participantId", "assists", "deaths", "kills", "championName", "goldEarned", "role", "win")
+                .containsExactly("puuid", 20, 18, 3, 11, "Shyvana", 13225, "mid", true);
     }
 }

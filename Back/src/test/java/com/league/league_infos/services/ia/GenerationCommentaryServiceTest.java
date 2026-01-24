@@ -78,6 +78,7 @@ class GenerationCommentaryServiceTest {
                                         .participantId(10)
                                         .teamPosition("mid")
                                         .championName("Garen")
+                                        .win(true)
                                         .build()
                         ))
                         .build())
@@ -100,11 +101,11 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
-                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName", "win")
+                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen", true));
     }
 
     @Test
@@ -143,6 +144,7 @@ class GenerationCommentaryServiceTest {
                                         .participantId(10)
                                         .teamPosition("mid")
                                         .championName("Garen")
+                                        .win(true)
                                         .build()
                         ))
                         .build())
@@ -165,11 +167,11 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
-                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName", "win")
+                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen", true));
     }
 
     @ParameterizedTest
@@ -210,6 +212,7 @@ class GenerationCommentaryServiceTest {
                                         .participantId(10)
                                         .teamPosition("mid")
                                         .championName("Garen")
+                                        .win(true)
                                         .build()
                         ))
                         .build())
@@ -232,15 +235,15 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
-                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName", "win")
+                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen", true));
     }
 
     @ParameterizedTest
-    @EnumSource(value = ObjectivesEnum.class, names = {"BARON_NASHOR", "HORDE", "RIFTHERALD", "ATHAKAN"})
+    @EnumSource(value = ObjectivesEnum.class, names = {"BARON_NASHOR", "HORDE", "RIFTHERALD", "ATAKHAN"})
     @DisplayName("getGenerationCommentaryDTO should call historyPersistence.findMatchByGameId to get match's context , participants ect..." +
             "call matchTimelineService.getMatchEventsByMatchId to get game's event timeline" +
             "and format data correctly, case other monsters kill events")
@@ -277,6 +280,7 @@ class GenerationCommentaryServiceTest {
                                         .participantId(10)
                                         .teamPosition("mid")
                                         .championName("Garen")
+                                        .win(false)
                                         .build()
                         ))
                         .build())
@@ -299,10 +303,10 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
-                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName", "win")
+                .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen", false));
     }
 }

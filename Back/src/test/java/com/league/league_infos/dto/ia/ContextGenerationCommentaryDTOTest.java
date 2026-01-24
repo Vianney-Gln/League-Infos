@@ -28,7 +28,7 @@ class ContextGenerationCommentaryDTOTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(contextGenerationCommentaryDTO.getParticipantRequestCommentaries()).isNotEmpty().hasSize(1)
+        assertThat(contextGenerationCommentaryDTO.getParticipants()).isNotEmpty().hasSize(1)
                 .extracting("puuid")
                 .containsExactly("puuid participant");
     }

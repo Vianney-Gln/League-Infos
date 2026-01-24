@@ -5,7 +5,7 @@ import java.util.List;
 public class ContextGenerationCommentaryDTO {
     private String pseudoFocusedPlayer;
     private String puuidFocusedPlayer;
-    private List<ParticipantGenerationCommentaryDTO> participantRequestCommentaries;
+    private List<ParticipantGenerationCommentaryDTO> participants;
 
     public String getPseudoFocusedPlayer() {
         return pseudoFocusedPlayer;
@@ -23,12 +23,12 @@ public class ContextGenerationCommentaryDTO {
         this.puuidFocusedPlayer = puuidFocusedPlayer;
     }
 
-    public List<ParticipantGenerationCommentaryDTO> getParticipantRequestCommentaries() {
-        return participantRequestCommentaries;
+    public List<ParticipantGenerationCommentaryDTO> getParticipants() {
+        return participants;
     }
 
-    public void setParticipantRequestCommentaries(List<ParticipantGenerationCommentaryDTO> participantRequestCommentaries) {
-        this.participantRequestCommentaries = participantRequestCommentaries;
+    public void setParticipants(List<ParticipantGenerationCommentaryDTO> participants) {
+        this.participants = participants;
     }
 
     public static class Builder {
@@ -55,7 +55,7 @@ public class ContextGenerationCommentaryDTO {
             ContextGenerationCommentaryDTO contextGenerationCommentaryDTO = new ContextGenerationCommentaryDTO();
             contextGenerationCommentaryDTO.setPseudoFocusedPlayer(this.pseudoFocusedPlayer);
             contextGenerationCommentaryDTO.setPuuidFocusedPlayer(this.puuidFocusedPlayer);
-            contextGenerationCommentaryDTO.setParticipantRequestCommentaries(this.participantRequestCommentaries);
+            contextGenerationCommentaryDTO.setParticipants(this.participantRequestCommentaries);
             return contextGenerationCommentaryDTO;
         }
     }

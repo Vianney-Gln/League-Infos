@@ -103,7 +103,7 @@ class GenerationCommentaryServiceTest {
         assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "champion")
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
                 .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
     }
 
@@ -168,7 +168,7 @@ class GenerationCommentaryServiceTest {
         assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "champion")
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
                 .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
     }
 
@@ -235,7 +235,7 @@ class GenerationCommentaryServiceTest {
         assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "champion")
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
                 .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
     }
 
@@ -302,7 +302,7 @@ class GenerationCommentaryServiceTest {
         assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
                 .isNotEmpty()
                 .hasSize(1)
-                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "champion")
+                .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
                 .containsExactly(tuple("puuid from one participant", 8, 2, 9, 11522, 10, "mid", "Garen"));
     }
 }

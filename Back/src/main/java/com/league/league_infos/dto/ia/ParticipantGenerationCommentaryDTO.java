@@ -1,78 +1,8 @@
 package com.league.league_infos.dto.ia;
 
-public class ParticipantGenerationCommentaryDTO {
-    private String puuid;
-    private Integer kills;
-    private Integer deaths;
-    private Integer assists;
-    private Integer goldEarned;
-    private Integer participantId;
-    private String role;
-    private String champion;
+import com.league.league_infos.dto.match.ParticipantMatchDTO;
 
-    public String getPuuid() {
-        return puuid;
-    }
-
-    public void setPuuid(String puuid) {
-        this.puuid = puuid;
-    }
-
-    public Integer getKills() {
-        return kills;
-    }
-
-    public void setKills(Integer kills) {
-        this.kills = kills;
-    }
-
-    public Integer getDeaths() {
-        return deaths;
-    }
-
-    public void setDeaths(Integer deaths) {
-        this.deaths = deaths;
-    }
-
-    public Integer getAssists() {
-        return assists;
-    }
-
-    public void setAssists(Integer assists) {
-        this.assists = assists;
-    }
-
-    public Integer getGoldEarned() {
-        return goldEarned;
-    }
-
-    public void setGoldEarned(Integer goldEarned) {
-        this.goldEarned = goldEarned;
-    }
-
-    public Integer getParticipantId() {
-        return participantId;
-    }
-
-    public void setParticipantId(Integer participantId) {
-        this.participantId = participantId;
-    }
-
-    public String getChampion() {
-        return champion;
-    }
-
-    public void setChampion(String champion) {
-        this.champion = champion;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+public class ParticipantGenerationCommentaryDTO extends ParticipantMatchDTO {
 
     public static class Builder {
         private String puuid;
@@ -82,7 +12,7 @@ public class ParticipantGenerationCommentaryDTO {
         private Integer goldEarned;
         private Integer participantId;
         private String role;
-        private String champion;
+        private String championName;
 
         public ParticipantGenerationCommentaryDTO.Builder puuid(String puuid) {
             this.puuid = puuid;
@@ -119,8 +49,8 @@ public class ParticipantGenerationCommentaryDTO {
             return this;
         }
 
-        public ParticipantGenerationCommentaryDTO.Builder champion(String champion) {
-            this.champion = champion;
+        public ParticipantGenerationCommentaryDTO.Builder championName(String championName) {
+            this.championName = championName;
             return this;
         }
 
@@ -133,7 +63,7 @@ public class ParticipantGenerationCommentaryDTO {
             participantGenerationCommentaryDTO.setGoldEarned(this.goldEarned);
             participantGenerationCommentaryDTO.setParticipantId(this.participantId);
             participantGenerationCommentaryDTO.setRole(this.role);
-            participantGenerationCommentaryDTO.setChampion(this.champion);
+            participantGenerationCommentaryDTO.setChampionName(this.championName);
             return participantGenerationCommentaryDTO;
         }
     }

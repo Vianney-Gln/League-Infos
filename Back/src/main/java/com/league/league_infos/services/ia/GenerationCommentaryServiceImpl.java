@@ -52,7 +52,7 @@ public class GenerationCommentaryServiceImpl implements GenerationCommentaryServ
                         .goldEarned(participant.getGoldEarned())
                         .participantId(participant.getParticipantId())
                         .role(participant.getTeamPosition())
-                        .champion(participant.getChampionName())
+                        .championName(participant.getChampionName())
                         .build()
         ).toList();
 

@@ -18,14 +18,14 @@ class ParticipantGenerationCommentaryDTOTest {
                 .assists(18)
                 .deaths(3)
                 .kills(11)
-                .champion("Shyvana")
+                .championName("Shyvana")
                 .goldEarned(13225)
                 .role("mid")
                 .build();
 
         // THEN
         assertThat(participantGenerationCommentaryDTO).isNotNull()
-                .extracting("puuid", "participantId", "assists", "deaths", "kills", "champion", "goldEarned", "role")
+                .extracting("puuid", "participantId", "assists", "deaths", "kills", "championName", "goldEarned", "role")
                 .containsExactly("puuid", 20, 18, 3, 11, "Shyvana", 13225, "mid");
     }
 }

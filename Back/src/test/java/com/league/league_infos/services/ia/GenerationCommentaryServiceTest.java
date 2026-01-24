@@ -100,7 +100,7 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
                 .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
@@ -165,7 +165,7 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
                 .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
@@ -232,7 +232,7 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
                 .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")
@@ -240,7 +240,7 @@ class GenerationCommentaryServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = ObjectivesEnum.class, names = {"BARON_NASHOR", "HORDE", "RIFTHERALD", "ATHAKAN"})
+    @EnumSource(value = ObjectivesEnum.class, names = {"BARON_NASHOR", "HORDE", "RIFTHERALD", "ATAKHAN"})
     @DisplayName("getGenerationCommentaryDTO should call historyPersistence.findMatchByGameId to get match's context , participants ect..." +
             "call matchTimelineService.getMatchEventsByMatchId to get game's event timeline" +
             "and format data correctly, case other monsters kill events")
@@ -299,7 +299,7 @@ class GenerationCommentaryServiceTest {
                 .extracting("puuidFocusedPlayer", "pseudoFocusedPlayer")
                 .containsExactly("puuid", "pseudo");
 
-        assertThat(result.getContextGenerationCommentaryDTO().getParticipantRequestCommentaries())
+        assertThat(result.getContextGenerationCommentaryDTO().getParticipants())
                 .isNotEmpty()
                 .hasSize(1)
                 .extracting("puuid", "kills", "deaths", "assists", "goldEarned", "participantId", "role", "championName")

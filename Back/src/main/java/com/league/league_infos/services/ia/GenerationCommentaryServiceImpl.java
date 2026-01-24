@@ -56,7 +56,7 @@ public class GenerationCommentaryServiceImpl implements GenerationCommentaryServ
                         .build()
         ).toList();
 
-        contextGenerationCommentaryDTO.setParticipantRequestCommentaries(participantRequestCommentaries);
+        contextGenerationCommentaryDTO.setParticipants(participantRequestCommentaries);
         return new GenerationCommentaryDTO.Builder()
                 .contextGenerationCommentaryDTO(contextGenerationCommentaryDTO)
                 .eventsMatchDto(eventMatchDTOS)

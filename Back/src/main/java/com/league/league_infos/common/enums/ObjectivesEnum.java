@@ -12,7 +12,7 @@ public enum ObjectivesEnum {
     BARON_NASHOR("Baron Nashor", "BARON_NASHOR"),
     HORDE("Larves du néant", "HORDE"),
     RIFTHERALD("Hérault", "RIFTHERALD"),
-    ATHAKAN("Athakan", "ATHAKAN"),
+    ATAKHAN("Atakhan", "ATAKHAN"),
     BUILDING_KILL("Batiment", "BUILDING_KILL"),
     TOWER_BUILDING("TOWER_BUILDING", "TOWER_BUILDING"),
     OUTER_TURRET("Tourelle extérieur", "OUTER_TURRET"),

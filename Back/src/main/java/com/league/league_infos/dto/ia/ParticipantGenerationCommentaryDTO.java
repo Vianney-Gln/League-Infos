@@ -1,7 +1,9 @@
 package com.league.league_infos.dto.ia;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.league.league_infos.dto.match.ParticipantMatchDTO;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParticipantGenerationCommentaryDTO extends ParticipantMatchDTO {
 
     public static class Builder {

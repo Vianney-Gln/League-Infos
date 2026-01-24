@@ -26,4 +26,17 @@ public class StringUtilsTest {
         // THEN
         assertThat(result).isEqualTo(expectOutput);
     }
+
+    @Test
+    @DisplayName("should parse ms into a readable string like mm:ss min")
+    void milliSecondsToTimeStr_success() {
+
+        // WHEN
+        String result = StringUtils.milliSecondsToTimeStr(572925);
+
+        // THEN
+        assertThat(result).isEqualTo("9:32 min");
+    }
+
+
 }

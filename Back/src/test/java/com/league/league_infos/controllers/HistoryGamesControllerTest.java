@@ -6,7 +6,7 @@ import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.dto.match.MetadataDTO;
 import com.league.league_infos.dto.match.ParticipantMatchDTO;
 import com.league.league_infos.dto.match.TeamDTO;
-import com.league.league_infos.services.business.MatchDataProvider;
+import com.league.league_infos.services.handler.MatchDataHandler;
 import com.league.league_infos.services.spi.HistoryPersistence;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HistoryGamesControllerTest {
 
     @MockitoBean
-    private MatchDataProvider matchDataProvider;
+    private MatchDataHandler matchDataHandler;
 
     @MockitoBean
     private HistoryPersistence historyPersistence;
@@ -145,7 +145,7 @@ class HistoryGamesControllerTest {
                                         .build()))
                         .build())
                 .build();
-        when(matchDataProvider.getMatchsHistory(anyString(), any(Integer.class))).thenReturn(List.of(matchDTO));
+        when(matchDataHandler.getMatchsHistory(anyString(), any(Integer.class))).thenReturn(List.of(matchDTO));
 
         // WHEN
         mockMvc.perform(get("/games-history/puuid")
@@ -244,7 +244,7 @@ class HistoryGamesControllerTest {
                         """));
 
         // THEN
-        verify(matchDataProvider, times(1)).getMatchsHistory("puuid", 420);
+        verify(matchDataHandler, times(1)).getMatchsHistory("puuid", 420);
     }
 
     @Test

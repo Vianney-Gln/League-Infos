@@ -2,7 +2,7 @@ package com.league.league_infos.services.riot;
 
 import com.league.league_infos.dto.ia.EventMatchDTO;
 import com.league.league_infos.dto.ia.PositionEventDTO;
-import com.league.league_infos.services.business.TimelineParser;
+import com.league.league_infos.services.handler.TimelineParserHandler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ class RiotMatchTimelineServiceTest {
     private RestTemplate restTemplate;
 
     @Mock
-    private TimelineParser timelineParser;
+    private TimelineParserHandler timelineParserHandler;
 
     @InjectMocks
     private RiotMatchTimelineService riotMatchTimelineService;
@@ -58,7 +58,7 @@ class RiotMatchTimelineServiceTest {
         // THEN
         verify(restTemplate, times(1)).exchange("https://europe.api.riotgames.com/lol/match/v5/matches/12345_euw/timeline", HttpMethod.GET, null, String.class);
         assertThat(result).isEmpty();
-        verify(timelineParser, never()).parseTimeline(any());
+        verify(timelineParserHandler, never()).parseTimeline(any());
     }
 
     @Test
@@ -66,7 +66,7 @@ class RiotMatchTimelineServiceTest {
     void getMatchEventsByMatchId_success_2() throws Exception {
         // GIVEN
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), eq(null), eq(String.class))).thenReturn(ResponseEntity.ok("a big json"));
-        when(timelineParser.parseTimeline(any(InputStream.class))).thenReturn(List.of(new EventMatchDTO.Builder()
+        when(timelineParserHandler.parseTimeline(any(InputStream.class))).thenReturn(List.of(new EventMatchDTO.Builder()
                 .buildingType("tower")
                 .monsterType("monster type")
                 .monsterSubType("monster sub")
@@ -106,7 +106,7 @@ class RiotMatchTimelineServiceTest {
                         1,
                         "inner tower",
                         "time"));
-        verify(timelineParser, times(1)).parseTimeline(inputStreamArgumentCaptor.capture());
+        verify(timelineParserHandler, times(1)).parseTimeline(inputStreamArgumentCaptor.capture());
         assertThat(inputStreamArgumentCaptor.getValue()).isNotEmpty();
     }
 }

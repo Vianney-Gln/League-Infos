@@ -1,4 +1,4 @@
-package com.league.league_infos.services.business;
+package com.league.league_infos.services.handler;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.league.league_infos.dto.ia.EventMatchDTO;
@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
 @ExtendWith(MockitoExtension.class)
-class TimelineParserTest {
+class TimelineParserHandlerTest {
 
     @InjectMocks
-    private TimelineParser timelineParser;
+    private TimelineParserHandler timelineParserHandler;
 
     @Test
     @DisplayName("should parse a given jsonStream into a List<EventMatchDTO>")
@@ -217,7 +217,7 @@ class TimelineParserTest {
         InputStream inputStream = IOUtils.toInputStream(jsonMock, "UTF-8");
 
         // WHEN
-        List<EventMatchDTO> result = timelineParser.parseTimeline(inputStream);
+        List<EventMatchDTO> result = timelineParserHandler.parseTimeline(inputStream);
 
         // THEN
         assertThat(result).isNotEmpty().hasSize(3)
@@ -260,7 +260,7 @@ class TimelineParserTest {
         InputStream inputStream = IOUtils.toInputStream(jsonMock, "UTF-8");
 
         // WHEN
-        List<EventMatchDTO> result = timelineParser.parseTimeline(inputStream);
+        List<EventMatchDTO> result = timelineParserHandler.parseTimeline(inputStream);
 
         // THEN
         assertThat(result).isEmpty();
@@ -299,7 +299,7 @@ class TimelineParserTest {
         InputStream inputStream = IOUtils.toInputStream(jsonMock, "UTF-8");
 
         // WHEN
-        List<EventMatchDTO> result = timelineParser.parseTimeline(inputStream);
+        List<EventMatchDTO> result = timelineParserHandler.parseTimeline(inputStream);
 
         // THEN
         assertThat(result).isEmpty();
@@ -337,7 +337,7 @@ class TimelineParserTest {
         InputStream inputStream = IOUtils.toInputStream(jsonMock, "UTF-8");
 
         // WHEN
-        List<EventMatchDTO> result = timelineParser.parseTimeline(inputStream);
+        List<EventMatchDTO> result = timelineParserHandler.parseTimeline(inputStream);
 
         // THEN
         assertThat(result).isEmpty();
@@ -375,6 +375,6 @@ class TimelineParserTest {
         InputStream inputStream = IOUtils.toInputStream(jsonMock, "UTF-8");
 
         // WHEN + THEN
-        assertThatThrownBy(() -> timelineParser.parseTimeline(inputStream)).isInstanceOf(JsonParseException.class);
+        assertThatThrownBy(() -> timelineParserHandler.parseTimeline(inputStream)).isInstanceOf(JsonParseException.class);
     }
 }

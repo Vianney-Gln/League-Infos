@@ -4,6 +4,7 @@ import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.dto.SummonerDTO;
 import com.league.league_infos.services.api.SummonersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class RiotSummonersService implements SummonersService {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public RiotSummonersService(RestTemplate restTemplate) {
+    public RiotSummonersService(@Qualifier("riotRestTemplate") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

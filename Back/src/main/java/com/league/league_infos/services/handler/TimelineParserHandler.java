@@ -1,4 +1,4 @@
-package com.league.league_infos.services.business;
+package com.league.league_infos.services.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class TimelineParser {
+public class TimelineParserHandler {
 
     public List<EventMatchDTO> parseTimeline(InputStream jsonStream) throws Exception {
         List<EventMatchDTO> eventsList = new ArrayList<>();

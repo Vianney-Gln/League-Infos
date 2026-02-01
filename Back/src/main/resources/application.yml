@@ -16,3 +16,15 @@ spring:
 app:
   game-history:
     max-count: 10
+  openAi:
+    maxToken: 2000
+    temperature: 0.5
+    model: gpt-4.1-mini
+    prompt-commentary: |
+      À partir des données d'événements et des stats d'une partie (JSON fourni), génère un commentaire pour le joueur dont le pseudo est dans "pseudoFocusedPlayer".
+      Tu peux voir s'il a gagné la partie via la variable win dans les participants si tu compares puuid et puuidFocusedPlayer
+      Nommer ce joueur par son pseudo.
+      Nommer les autres joueurs par leur champions
+      Décris les actions importantes, les moments clés et l'impact stratégique du joueur sans énumérer bêtement tous les scores de chacun
+      Résume clairement sa performance, son style de jeu, son rôle dans la partie et sa performance comparée à ses équipiers
+      Maximum 1000 caractères.

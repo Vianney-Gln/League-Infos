@@ -3,6 +3,7 @@ package com.league.league_infos.services.riot;
 import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.dto.FreeChampionsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class RiotChampionsService implements com.league.league_infos.services.ap
     private final RestTemplate restTemplate;
 
     @Autowired
-    public RiotChampionsService(RestTemplate restTemplate) {
+    public RiotChampionsService(@Qualifier("riotRestTemplate") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

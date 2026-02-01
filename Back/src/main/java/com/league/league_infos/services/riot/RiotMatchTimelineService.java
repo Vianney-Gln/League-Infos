@@ -2,7 +2,8 @@ package com.league.league_infos.services.riot;
 
 import com.league.league_infos.dto.ia.EventMatchDTO;
 import com.league.league_infos.services.api.MatchTimelineService;
-import com.league.league_infos.services.business.TimelineParser;
+import com.league.league_infos.services.handler.TimelineParserHandler;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,11 @@ import static com.league.league_infos.common.constants.ApiRiotUrls.MATCH_TIMELIN
 public class RiotMatchTimelineService implements MatchTimelineService {
 
     private final RestTemplate restTemplate;
-    private final TimelineParser timelineParser;
+    private final TimelineParserHandler timelineParserHandler;
 
-    public RiotMatchTimelineService(RestTemplate restTemplate, TimelineParser timelineParser) {
+    public RiotMatchTimelineService(@Qualifier("riotRestTemplate") RestTemplate restTemplate, TimelineParserHandler timelineParserHandler) {
         this.restTemplate = restTemplate;
-        this.timelineParser = timelineParser;
+        this.timelineParserHandler = timelineParserHandler;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class RiotMatchTimelineService implements MatchTimelineService {
         }
 
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(result.getBody().getBytes(StandardCharsets.UTF_8))) {
-            return timelineParser.parseTimeline(inputStream);
+            return timelineParserHandler.parseTimeline(inputStream);
         }
     }
 }

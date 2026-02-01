@@ -3,6 +3,7 @@ package com.league.league_infos.services.ia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.league.league_infos.dto.ia.GenerationCommentaryDTO;
+import com.league.league_infos.dto.ia.OpenAiResponseDTO;
 import com.league.league_infos.services.api.IAService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,7 @@ public class openAiService implements IAService {
     }
 
     @Override
-    public String generateCommentaries(GenerationCommentaryDTO generationCommentaryDTO) throws JsonProcessingException {
+    public OpenAiResponseDTO generateCommentaries(GenerationCommentaryDTO generationCommentaryDTO) throws JsonProcessingException {
         String jsonData = objectMapper.writeValueAsString(generationCommentaryDTO);
         String content = promptCommentary + "\n\n" + jsonData;
 
@@ -56,14 +57,13 @@ public class openAiService implements IAService {
         body.put("max_tokens", maxToken);
         body.put("messages", List.of(message));
 
-
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body);
 
-        ResponseEntity<String> openAiResponse = restTemplate.exchange(
+        ResponseEntity<OpenAiResponseDTO> openAiResponse = restTemplate.exchange(
                 OPEN_AI_URL,
                 HttpMethod.POST,
                 entity,
-                String.class
+                OpenAiResponseDTO.class
         );
 
         return openAiResponse.getBody();

@@ -1,6 +1,7 @@
 package com.league.league_infos.services.handler;
 
 import com.league.league_infos.dto.ia.GenerationCommentaryDTO;
+import com.league.league_infos.dto.ia.OpenAiResponseDTO;
 import com.league.league_infos.services.api.GenerationCommentaryService;
 import com.league.league_infos.services.api.IAService;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class CommentaryHandler {
         this.generationCommentaryService = generationCommentaryService;
     }
 
-    public String getCommentaryFromAGameByPlayer(Long gameId, String puuid, String matchId, String pseudo) throws Exception {
+    public OpenAiResponseDTO getCommentaryFromAGameByPlayer(Long gameId, String puuid, String matchId, String pseudo) throws Exception {
         // Vérifier en Bdd si pour cette game et ce joueur, un commentaire existe déjà
 
         // s'il n'existe pas --> appel à openAi pour le générer et le persister.

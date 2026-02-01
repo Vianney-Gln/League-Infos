@@ -1,7 +1,7 @@
 package com.league.league_infos.controllers;
 
 import com.league.league_infos.dto.match.MatchDTO;
-import com.league.league_infos.services.business.MatchDataProvider;
+import com.league.league_infos.services.handler.MatchDataHandler;
 import com.league.league_infos.services.spi.HistoryPersistence;
 import jakarta.annotation.Nullable;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +15,17 @@ import java.util.List;
 @RestController
 public class HistoryGamesController {
 
-    private final MatchDataProvider matchDataProvider;
+    private final MatchDataHandler matchDataHandler;
     private final HistoryPersistence historyPersistence;
 
-    public HistoryGamesController(MatchDataProvider matchDataProvider, HistoryPersistence historyPersistence) {
-        this.matchDataProvider = matchDataProvider;
+    public HistoryGamesController(MatchDataHandler matchDataHandler, HistoryPersistence historyPersistence) {
+        this.matchDataHandler = matchDataHandler;
         this.historyPersistence = historyPersistence;
     }
 
     @GetMapping("games-history/{puuid}")
     public ResponseEntity<List<MatchDTO>> getGamesHistory(@PathVariable String puuid, @Nullable @RequestParam Integer queue) {
-        return ResponseEntity.status(200).body(matchDataProvider.getMatchsHistory(puuid, queue));
+        return ResponseEntity.status(200).body(matchDataHandler.getMatchsHistory(puuid, queue));
     }
 
     @GetMapping("games-history-before-creation-date/{puuid}")

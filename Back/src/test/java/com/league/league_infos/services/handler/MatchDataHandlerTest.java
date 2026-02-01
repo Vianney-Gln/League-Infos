@@ -1,4 +1,4 @@
-package com.league.league_infos.services.business;
+package com.league.league_infos.services.handler;
 
 import com.league.league_infos.common.utils.CurrentLocalDateTime;
 import com.league.league_infos.dto.AccountDTO;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class MatchDataProviderTest {
+class MatchDataHandlerTest {
 
     @Mock
     private HistoryGamesService historyGamesService;
@@ -50,7 +50,7 @@ class MatchDataProviderTest {
     private RiotAccountService riotAccountService;
 
     @InjectMocks
-    private MatchDataProvider matchDataProvider;
+    private MatchDataHandler matchDataHandler;
 
     @Captor
     private ArgumentCaptor<List<MatchDTO>> listMatchArgumentCaptor;
@@ -78,7 +78,7 @@ class MatchDataProviderTest {
         when(currentLocalDateTime.getCurrentLocalDateTime()).thenReturn(LocalDateTime.of(2025, 10, 10, 0, 0, 0));
 
         // WHEN
-        List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
+        List<MatchDTO> result = matchDataHandler.getMatchsHistory("puuid", 420);
 
         // THEN
         verify(historyPersistence, times(2)).findAllMatchByPuuidAndQueue("puuid", 420);
@@ -214,7 +214,7 @@ class MatchDataProviderTest {
         when(riotAccountService.getAccountByPuuid(anyString())).thenReturn(account);
 
         // WHEN
-        List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
+        List<MatchDTO> result = matchDataHandler.getMatchsHistory("puuid", 420);
 
         // THEN
         verify(historyPersistence, times(2)).findAllMatchByPuuidAndQueue("puuid", 420);
@@ -302,7 +302,7 @@ class MatchDataProviderTest {
         when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(null);
 
         // WHEN
-        List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
+        List<MatchDTO> result = matchDataHandler.getMatchsHistory("puuid", 420);
 
         // THEN
         assertThat(result).isEmpty();
@@ -316,7 +316,7 @@ class MatchDataProviderTest {
         when(historyGamesService.getHistoryIds(anyString(), any(Integer.class))).thenReturn(Collections.emptyList());
 
         // WHEN
-        List<MatchDTO> result = matchDataProvider.getMatchsHistory("puuid", 420);
+        List<MatchDTO> result = matchDataHandler.getMatchsHistory("puuid", 420);
 
         // THEN
         assertThat(result).isEmpty();

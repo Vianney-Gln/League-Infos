@@ -345,7 +345,7 @@ class TimelineParserHandlerTest {
 
     @Test
     @DisplayName("should throw a JsonParseException if an error occurs during parsing")
-    void parseTimeline_fail_1() throws Exception {
+    void parseTimeline_fail_1() {
 
         // GIVEN
         String jsonMock = """

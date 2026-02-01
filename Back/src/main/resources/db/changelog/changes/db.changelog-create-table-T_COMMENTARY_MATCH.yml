@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010220261416
+      author: VG
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: T_COMMENTARY_MATCH
+      changes:
+        - createTable:
+            tableName: T_COMMENTARY_MATCH
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: commentary_match_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_tier
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: system_fingerprint
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: participant_match_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_participant_match_id
+                    references: T_PARTICIPANT_MATCH(id)
+

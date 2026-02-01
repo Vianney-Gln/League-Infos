@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class openAiServiceTest {
+class OpenAiServiceTest {
 
     @InjectMocks
     private openAiService openAiService;
@@ -46,7 +46,6 @@ class openAiServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Injecter les champs @Value après création par Mockito
         ReflectionTestUtils.setField(openAiService, "promptCommentary", "Prompt de test");
         ReflectionTestUtils.setField(openAiService, "model", "gpt-4");
         ReflectionTestUtils.setField(openAiService, "maxToken", 2000);

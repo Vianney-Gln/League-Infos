@@ -81,7 +81,7 @@ class MatchDataHandlerTest {
         List<MatchDTO> result = matchDataHandler.getMatchsHistory("puuid", 420);
 
         // THEN
-        verify(historyPersistence, times(2)).findAllMatchByPuuidAndQueue("puuid", 420);
+        verify(historyPersistence, times(1)).findAllMatchByPuuidAndQueue("puuid", 420);
         verify(historyPersistence, never()).persistAndRefreshFromRiotMatchHistory(any());
         verify(historyGamesService, never()).getMatchHistory(any());
         verify(historyGamesService, never()).getHistoryIds(any(), any());

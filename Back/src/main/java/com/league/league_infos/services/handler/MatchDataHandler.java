@@ -33,8 +33,9 @@ public class MatchDataHandler {
             List<MatchDTO> listMatchToPersist = historyRiotGamesService.getMatchHistory(listGamesIds);
             updatePseudoFromFromCurrentParticipant(puuid, listMatchToPersist);
             historyPersistence.persistAndRefreshFromRiotMatchHistory(listMatchToPersist);
+            return historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
         }
-        return historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
+        return listMatchHistory;
     }
 
     private boolean wasResfreshedFromRiotForCurrentplayer(List<MatchDTO> matchs, String puuid) {

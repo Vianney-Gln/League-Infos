@@ -62,7 +62,6 @@ class InfoMatchRepositoryTest {
                         "queueId",
                         "mapId")
                 .containsExactly(
-                        tuple("GameComplete", 1756400970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
                         tuple("GameComplete", 1756390970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
                         tuple("GameComplete", 1756380970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
                         tuple("GameComplete", 1756370970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
@@ -71,7 +70,9 @@ class InfoMatchRepositoryTest {
                         tuple("GameComplete", 1756340970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
                         tuple("GameComplete", 1756330970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
                         tuple("GameComplete", 1756320970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
-                        tuple("GameComplete", 1756310970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11));
+                        tuple("GameComplete", 1756310970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11),
+                        tuple("GameComplete", 1756300970149L, 1742L, "CLASSIC", "MATCHED_GAME", 1756251627166L, "15.16.706.7476", 420, 11)
+                );
     }
 
     @Test

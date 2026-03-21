@@ -2,7 +2,10 @@ package com.league.league_infos.services.ia;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.league.league_infos.dto.ia.ChoiceDTO;
 import com.league.league_infos.dto.ia.GenerationCommentaryDTO;
+import com.league.league_infos.dto.ia.MessageDTO;
+import com.league.league_infos.dto.ia.OpenAiResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -56,23 +60,65 @@ class OpenAiServiceTest {
     @DisplayName("should call openAi api with good parameters")
     void generateCommentaries_succes() throws JsonProcessingException {
         // GIVEN
-        ResponseEntity<String> responseEntity = ResponseEntity.ok("Un commentaire");
+        OpenAiResponseDTO openAiResponseDTO = new OpenAiResponseDTO.Builder()
+                .id("chatcmpl-D4OSM6AZyMkE6cvFVjopelXU6dRt0")
+                .object("chat.completion")
+                .created(123456L)
+                .model("gpt-4.1-mini-2025-04-14")
+                .serviceTier("default")
+                .fingerPrint("fp_38699cb0fe")
+                .choices(List.of(new ChoiceDTO.Builder()
+                        .index(0)
+                        .message(new MessageDTO.Builder()
+                                .content("Pun1sher Reborn, incarnant Cassiopeia, a livré une performance décisive au cœur de la midlane...")
+                                .role("assistant")
+                                .build())
+                        .build()
+                ))
+                .build();
+
+
+        ResponseEntity<OpenAiResponseDTO> responseEntity = ResponseEntity.ok(openAiResponseDTO);
         GenerationCommentaryDTO generationCommentaryDTO = new GenerationCommentaryDTO.Builder().build();
 
         when(objectMapper.writeValueAsString(any())).thenReturn("json");
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String.class))).thenReturn(responseEntity);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(OpenAiResponseDTO.class))).thenReturn(responseEntity);
 
         // WHEN
-        String result = openAiService.generateCommentaries(generationCommentaryDTO);
+        OpenAiResponseDTO result = openAiService.generateCommentaries(generationCommentaryDTO);
 
         // THEN
-        assertThat(result).isNotNull().isEqualTo("Un commentaire");
+        assertThat(result).isNotNull().extracting("id",
+                        "object",
+                        "model",
+                        "serviceTier",
+                        "fingerPrint")
+                .containsExactly("chatcmpl-D4OSM6AZyMkE6cvFVjopelXU6dRt0",
+                        "chat.completion",
+                        "gpt-4.1-mini-2025-04-14",
+                        "default",
+                        "fp_38699cb0fe");
+
+        assertThat(result.getChoices())
+                .isNotEmpty()
+                .extracting(
+                        "index",
+                        "message.role",
+                        "message.content"
+                )
+                .containsExactly(
+                        tuple(
+                                0,
+                                "assistant",
+                                "Pun1sher Reborn, incarnant Cassiopeia, a livré une performance décisive au cœur de la midlane...")
+                );
+
         verify(objectMapper, times(1)).writeValueAsString(generationCommentaryDTO);
         verify(restTemplate, times(1)).exchange(
                 eq("https://api.openai.com/v1/chat/completions"),
                 eq(HttpMethod.POST),
                 httpEntityArgumentCaptor.capture(),
-                eq(String.class)
+                eq(OpenAiResponseDTO.class)
         );
 
         HttpEntity<Map<String, Object>> httpEntityCaptor = httpEntityArgumentCaptor.getValue();

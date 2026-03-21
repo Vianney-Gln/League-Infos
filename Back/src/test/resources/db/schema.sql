@@ -71,7 +71,20 @@ CREATE TABLE T_PARTICIPANT_MATCH (
     win boolean NOT NULL,
     challenges_id BIGINT NOT NULL,
     info_match_id BIGINT NOT NULL,
-    meta_data_id BIGINT NOT NULL
+    meta_data_id BIGINT NOT NULL,
+    pseudo VARCHAR(255)
+);
+
+CREATE TABLE T_COMMENTARY_MATCH (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    commentary_match_id VARCHAR(255) NOT NULL,
+    object VARCHAR(255),
+    created BIGINT NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    service_tier VARCHAR(255) NOT NULL,
+    system_fingerprint VARCHAR(255) NOT NULL,
+    participant_match_id BIGINT NOT NULL
 );
 
 ALTER TABLE T_PARTICIPANT_MATCH
@@ -93,3 +106,8 @@ ALTER TABLE T_PARTICIPANT_MATCH
 ADD CONSTRAINT fk_meta_data_participant_match
 FOREIGN KEY (meta_data_id)
 REFERENCES T_META_DATA(meta_data_id);
+
+ALTER TABLE T_COMMENTARY_MATCH
+ADD CONSTRAINT fk_commentary_participant_match_id
+FOREIGN KEY (id)
+REFERENCES T_PARTICIPANT_MATCH(id);

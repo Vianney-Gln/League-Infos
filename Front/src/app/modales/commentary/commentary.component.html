@@ -1,0 +1,23 @@
+<div class="dialog-container">
+    <h2 class="dialog-title">Analyse partie de {{data.pseudo}}</h2>
+    <div class="dialog-content">
+        @if(isLoading()){
+        <div class="row text-white">
+            <div class="col text-center">
+                <div data-test="spinner" class="spinner-border spinner-custom"></div>
+            </div>
+        </div>
+        } @else {
+            @if(commentaryDTOSignal() || !getCommentaryError()){
+        <blockquote class="commentary-quote">
+            <p data-test="commentary">{{commentaryDTOSignal()?.content}}</p>
+        </blockquote>
+            }@else {
+        <p data-test="get-commentary-error-message">{{commentaryError()}}</p>
+            }
+        }
+    </div>
+    <div class="dialog-actions">
+        <button (click)="onCloseModal()" class="btn-close" mat-dialog-close>Fermer</button>
+    </div>
+</div>

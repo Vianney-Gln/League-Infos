@@ -11,6 +11,10 @@
   --color-history-background-color-champ-icon: #222;
   --color-text-win: #4caf50;
   --color-text-loss: #f44336;
+
+  --color-modal-dialog-action: rgba(10, 29, 46, 0.5);
+  --color-modal-dialog-title: rgba(10, 29, 46, 0.8);
+  --color-modal-button-close: #0a1d2e;
 }
 
 body,
@@ -64,11 +68,24 @@ html {
   font-size: 1rem;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
     outline: none;
     border-color: var(--color-gold-lol-2);
     box-shadow: 0 0 0 2px #b0892b55;
   }
+}
+
+/*Don't touch this*/
+.cdk-global-overlay-wrapper {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
 }

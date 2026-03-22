@@ -1,18 +1,20 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history/matchDTO';
 import { CommonModule } from '@angular/common';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { DDRAGON_BASE_CDN } from '../../common/constants/api-urls';
-import { HistoryService } from '../../services/games-history/history.service';
 import { formatTimestampToDateStr } from '../../common/utils/date-utils';
 import { ItemUrl } from '../../common/types/types';
 import { durationSecondeToStr } from '../../common/utils/time-utils';
 import { summonerSpellIdToNameMap } from '../../common/constants/summoners';
 import { TranslateFillPipe } from '../../common/pipes/translate-fill.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayersService } from '../../services/players/players.service';
 import { AccountDTO } from '../../common/models/accountDTO';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CommentaryComponent } from '../../modales/commentary/commentary.component';
+import { CommentaryModalData } from '../../common/models/modal/CommentaryModalData';
+import { COMMENTARY_MODAL_HEIGHT, COMMENTARY_MODAL_WIDTH } from '../../common/constants/modal/modale-constants';
 
 @Component({
   selector: 'app-history-items',
@@ -22,7 +24,12 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './history-items.component.scss',
 })
 export class HistoryItemsComponent implements OnInit, OnDestroy {
-  constructor(private versionService: GetVersionsService, private playerService: PlayersService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private versionService: GetVersionsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+  ) {}
 
   @Input() currMatchParticipant!: ParticipantMatchDTO;
   @Input() listMatchDataSignal: Signal<MatchDTO[]> = signal([]);
@@ -54,7 +61,6 @@ export class HistoryItemsComponent implements OnInit, OnDestroy {
     this.gameDuration = durationSecondeToStr(this.currentMatch?.info.gameDuration);
     this.summoner1IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner1Id);
     this.summoner2IconUrl = this.computeSummonerSpellUrl(this.currMatchParticipant.summoner2Id);
-
     this.findCurrentPlayer();
   }
 
@@ -121,5 +127,20 @@ export class HistoryItemsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  showCommentary() {
+    const matchId: string | null = this.route.snapshot.paramMap.get('matchId');
+    const gameId: number = Number(matchId?.split('_')[1]);
+    this.dialog.open(CommentaryComponent, {
+      width: COMMENTARY_MODAL_WIDTH,
+      height: COMMENTARY_MODAL_HEIGHT,
+      data: {
+        matchId: matchId,
+        gameId: gameId,
+        puuid: this.currMatchParticipant.puuid,
+        pseudo: this.currMatchParticipant.pseudo,
+      } as CommentaryModalData,
+    });
   }
 }

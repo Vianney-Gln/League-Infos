@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -7,6 +6,7 @@ import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { LeagueEntryDTO } from '../../common/models/LeagueEntryDTO';
 import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',

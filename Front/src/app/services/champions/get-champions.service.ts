@@ -1,10 +1,10 @@
 import { Injectable, WritableSignal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FreeChampionsDTO } from '../../common/models/freeChampionsDTO';
 import { ChampionData } from '../../common/models/championsInfos';
 import { signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',

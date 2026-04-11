@@ -4,6 +4,7 @@ import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.dto.AccountDTO;
 import com.league.league_infos.services.api.AccountService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_B
 public class RiotAccountService implements AccountService {
     private final RestTemplate restTemplate;
 
-    public RiotAccountService(RestTemplate restTemplate) {
+    public RiotAccountService(@Qualifier("riotRestTemplate") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

@@ -14,7 +14,8 @@ insert into t_infos_match (creation_date, end_of_game_result, game_creation, gam
     (timestamp '2025-10-10 01:00', 'GameComplete', 1756370970149, 1742, 1756251627166, 7508515256, 'CLASSIC', 'teambuilder-match-7508515256', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
     (timestamp '2025-10-11 01:00', 'GameComplete', 1756380970149, 1742, 1756251627166, 7508515257, 'CLASSIC', 'teambuilder-match-7508515257', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
     (timestamp '2025-10-12 01:00', 'GameComplete', 1756390970149, 1742, 1756251627166, 7508515258, 'CLASSIC', 'teambuilder-match-7508515258', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
-    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7508515259, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00');
+    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7508515259, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00'),
+    (timestamp '2025-10-13 01:00', 'GameComplete', 1756400970149, 1742, 1756251627166, 7706979430, 'CLASSIC', 'teambuilder-match-7508515259', 'MATCHED_GAME', '15.16.706.7476', 11, 420,timestamp '2025-09-28 01:00');
 
 insert into t_challenges (game_length, kda) values
 (1742.83544921875, 4.199999809265137),
@@ -84,24 +85,26 @@ team_id,
 team_position,
 total_minions_killed,
 triple_kills,
-win)
+win,
+pseudo
+)
 values
-(11, 1, 16, 126, 'Jayce', 0, 5, 0, 18565, 1, 1, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 2, 16, 126, 'Jayce', 0, 5, 0, 18565, 2, 2, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 3, 16, 126, 'Jayce', 0, 5, 0, 18565, 3, 3, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 4, 16, 126, 'Jayce', 0, 5, 0, 18565, 4, 4, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 5, 16, 126, 'Jayce', 0, 5, 0, 18565, 5, 5, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 6, 16, 126, 'Jayce', 0, 5, 0, 18565, 6, 6, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 7, 16, 126, 'Jayce', 0, 5, 0, 18565, 7, 7, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 8, 16, 126, 'Jayce', 0, 5, 0, 18565, 8, 8, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 9, 16, 126, 'Jayce', 0, 5, 0, 18565, 9, 9, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 10, 16, 126, 'Jayce', 0, 5, 0, 18565, 10, 10, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 11, 16, 126, 'Jayce', 0, 5, 0, 18565, 11, 11, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 12, 16, 126, 'Jayce', 0, 5, 0, 18565, 12, 12, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 13, 16, 126, 'Jayce', 0, 5, 0, 18565, 13, 13, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 14, 16, 126, 'Jayce', 0, 5, 0, 18565, 14, 14, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 15, 16, 126, 'Jayce', 0, 5, 0, 18565, 15, 15, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true),
-(11, 16, 16, 126, 'Jayce', 0, 5, 0, 18565, 16, 16, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true);
+(11, 1, 16, 126, 'Jayce', 0, 5, 0, 18565, 1, 1, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 2, 16, 126, 'Jayce', 0, 5, 0, 18565, 2, 2, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 3, 16, 126, 'Jayce', 0, 5, 0, 18565, 3, 3, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 4, 16, 126, 'Jayce', 0, 5, 0, 18565, 4, 4, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 5, 16, 126, 'Jayce', 0, 5, 0, 18565, 5, 5, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 6, 16, 126, 'Jayce', 0, 5, 0, 18565, 6, 6, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 7, 16, 126, 'Jayce', 0, 5, 0, 18565, 7, 7, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 8, 16, 126, 'Jayce', 0, 5, 0, 18565, 8, 8, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 9, 16, 126, 'Jayce', 0, 5, 0, 18565, 9, 9, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 10, 16, 126, 'Jayce', 0, 5, 0, 18565, 10, 10, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 11, 16, 126, 'Jayce', 0, 5, 0, 18565, 11, 11, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 12, 16, 126, 'Jayce', 0, 5, 0, 18565, 12, 12, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 13, 16, 126, 'Jayce', 0, 5, 0, 18565, 13, 13, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 14, 16, 126, 'Jayce', 0, 5, 0, 18565, 14, 14, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 15, 16, 126, 'Jayce', 0, 5, 0, 18565, 15, 15, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'zb1DuHxFttxhq_01ETiTwyjkBzaCq9JcysGVfW_J6u45vNLQi0AQTdZE3cvS0gsYHK_VKLAbtWDpmQ', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'pseudo'),
+(11, 16, 16, 126, 'Jayce', 0, 5, 0, 18565, 16, 17, 3142, 3042, 3111, 6694, 3134, 1055, 3363, 10, 'TOP', 1, 0, 0, 1114, 'xmy1FeituRetdLHk8tS6x7bnStnrIVKuxaiQDGV83QsTKIlg9XCernYcrWOxhK3RawWtI4gTL3SGw', 0, 'SOLO', 12, 4, 100, 'TOP', 174, 0, true,'Pun1sher Reborn');
 
 insert into t_teams (info_match_id, team_id_numero, win) values
 (1, 100, true),
@@ -120,3 +123,7 @@ insert into t_teams (info_match_id, team_id_numero, win) values
 (14, 100, true),
 (15, 100, true),
 (16, 100, true);
+
+insert into t_commentary_match (commentary_match_id,object,created,model,content,service_tier,system_fingerprint,participant_match_id)
+VALUES ('chatcmpl-D5e3GABPryZ2vEHhFtQj4rFThgFv3','chat.completion',1770237970,'gpt-4.1-mini-2025-04-14','Pun1sher Reborn a livré une performance solide sur Cassiopeia, contribuant activement à la victoire de son équipe. Dès le début, il a su imposer sa présence en sécurisant plusieurs éliminations clés, notamment contre Ambessa en début de partie et en participant aux combats majeurs avec Viego et Alistar. Malgré quelques morts, il a fait preuve d’un style de jeu agressif mais intelligent, capitalisant sur ses dégâts constants pour harceler et affaiblir ses adversaires. Son rôle de midlaner a été central, créant des opportunités et soutenant les assauts orchestrés par Viego, le jungler dominant, et Gragas, solide en top. Comparé à ses coéquipiers, Pun1sher Reborn a équilibré agressivité et soutien, avec un impact stratégique notable dans le contrôle des combats d’équipe, participant à la pression sur les objectifs et à la prise de tours. Sa performance a été un pilier dans la victoire collective, montrant un style de jeu à la fois proactif et efficace.',
+'default','fp_e01c6f58e1',16);

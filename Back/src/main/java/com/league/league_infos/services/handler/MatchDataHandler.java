@@ -1,4 +1,4 @@
-package com.league.league_infos.services.business;
+package com.league.league_infos.services.handler;
 
 import com.league.league_infos.common.utils.CurrentLocalDateTime;
 import com.league.league_infos.dto.AccountDTO;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MatchDataProvider {
+public class MatchDataHandler {
     private final HistoryGamesService historyRiotGamesService;
     private final HistoryPersistence historyPersistence;
     private final CurrentLocalDateTime currentLocalDateTime;
     private final AccountService riotAccountService;
 
-    public MatchDataProvider(HistoryGamesService historyRiotGamesService, HistoryPersistence historyPersistence, CurrentLocalDateTime currentLocalDateTime,
-                             AccountService riotAccountService) {
+    public MatchDataHandler(HistoryGamesService historyRiotGamesService, HistoryPersistence historyPersistence, CurrentLocalDateTime currentLocalDateTime,
+                            AccountService riotAccountService) {
         this.historyRiotGamesService = historyRiotGamesService;
         this.historyPersistence = historyPersistence;
         this.currentLocalDateTime = currentLocalDateTime;
@@ -33,8 +33,9 @@ public class MatchDataProvider {
             List<MatchDTO> listMatchToPersist = historyRiotGamesService.getMatchHistory(listGamesIds);
             updatePseudoFromFromCurrentParticipant(puuid, listMatchToPersist);
             historyPersistence.persistAndRefreshFromRiotMatchHistory(listMatchToPersist);
+            return historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
         }
-        return historyPersistence.findAllMatchByPuuidAndQueue(puuid, queue);
+        return listMatchHistory;
     }
 
     private boolean wasResfreshedFromRiotForCurrentplayer(List<MatchDTO> matchs, String puuid) {

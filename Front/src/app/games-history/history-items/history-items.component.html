@@ -112,16 +112,21 @@
       {{ nbCsKilled }}
     </span>
   </div>
-  <div class="items col-5">
+  <div class="items col-4">
     @for(itemUrl of listUrlItems; let i = $index; track i){ @if(itemUrl.itemId != 0){
     <ng-container>
       <img loading="lazy"
           decoding="async"
           [src]="itemUrl.url"
-          alt="{{ itemUrl.itemId }}"
+          [alt]="itemUrl.itemId"
           class="item-icon" />
     </ng-container>
     }}
   </div>
+  @if(isCurrentPlayerSignal()){
+  <div class="col-2 d-flex align-items-center">
+    <button class="button-lol-style" data-test="show-analyse-button" type="button" (click)="showCommentary()">Afficher l'analyse</button>
+  </div>
+  }
 </div>
 }

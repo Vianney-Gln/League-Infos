@@ -5,6 +5,7 @@ import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.dto.match.MatchDTO;
 import com.league.league_infos.services.api.HistoryGamesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class RiotHistoryGamesService implements HistoryGamesService {
     private int MAX_COUNT_MATCH_HISTORY;
 
     @Autowired
-    public RiotHistoryGamesService(RestTemplate restTemplate) {
+    public RiotHistoryGamesService(@Qualifier("riotRestTemplate") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

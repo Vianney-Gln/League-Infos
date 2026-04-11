@@ -10,12 +10,12 @@ import java.util.List;
 
 
 @Configuration
-public class RestTemplateConfig {
+public class RiotRestTemplateConfig {
     @Value("${app.apiRiotGame.apiKey}")
     private String apiRiotKey;
 
     @Bean
-    public RestTemplate restTemplate() {
+    public RestTemplate riotRestTemplate() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(5000);
         factory.setReadTimeout(5000);

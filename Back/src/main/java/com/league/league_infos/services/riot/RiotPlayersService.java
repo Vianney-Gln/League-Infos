@@ -8,6 +8,7 @@ import com.league.league_infos.dto.LeagueEntryDTO;
 import com.league.league_infos.dto.LeagueListDTO;
 import com.league.league_infos.services.api.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class RiotPlayersService implements PlayerService {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public RiotPlayersService(RestTemplate restTemplate) {
+    public RiotPlayersService(@Qualifier("riotRestTemplate") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

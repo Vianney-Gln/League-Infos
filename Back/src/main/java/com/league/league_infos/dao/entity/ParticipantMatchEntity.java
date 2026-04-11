@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -129,6 +130,9 @@ public class ParticipantMatchEntity {
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "meta_data_id", nullable = false)
     private MetaDataEntity metaDataEntity;
+
+    @OneToOne(mappedBy = "participantMatchEntity")
+    private CommentaryMatchEntity commentaryMatchEntity;
 
     public Long getId() {
         return id;
@@ -424,5 +428,13 @@ public class ParticipantMatchEntity {
 
     public void setInfoMatchEntity(InfoMatchEntity infoMatchEntity) {
         this.infoMatchEntity = infoMatchEntity;
+    }
+
+    public CommentaryMatchEntity getCommentaryMatchEntity() {
+        return commentaryMatchEntity;
+    }
+
+    public void setCommentaryMatchEntity(CommentaryMatchEntity commentaryMatchEntity) {
+        this.commentaryMatchEntity = commentaryMatchEntity;
     }
 }

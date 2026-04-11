@@ -7,13 +7,16 @@ import { MatchDTO, ParticipantMatchDTO } from '../../common/models/games-history
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
 import { signal } from '@angular/core';
-import { provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { CommentaryComponent } from '../../modales/commentary/commentary.component';
 
 describe('HistoryItemsComponent', () => {
   let component: HistoryItemsComponent;
   let fixture: ComponentFixture<HistoryItemsComponent>;
   let versionService: GetVersionsService;
   let routerService: Router;
+  let matDialog: MatDialog;
 
   function matchDTOMock() {
     return {
@@ -87,15 +90,22 @@ describe('HistoryItemsComponent', () => {
   }
 
   beforeEach(async () => {
+    const activatedRouteStub = {
+      snapshot: {
+        paramMap: convertToParamMap({ matchId: 'id_456' }),
+      },
+    };
+
     await TestBed.configureTestingModule({
       imports: [HistoryItemsComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: ActivatedRoute, useValue: activatedRouteStub }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HistoryItemsComponent);
     versionService = TestBed.inject(GetVersionsService);
     versionService.lastVersionlolDTOSignal.set('14.1');
     routerService = TestBed.inject(Router);
+    matDialog = TestBed.inject(MatDialog);
     fixture.componentRef.setInput('listMatchDataSignal', signal([matchDTOMock()]));
     component = fixture.componentInstance;
     component.currMatchParticipant = mockMatchParticipant() as ParticipantMatchDTO;
@@ -234,7 +244,7 @@ describe('HistoryItemsComponent', () => {
               },
             ],
           },
-        })
+        }),
       );
     });
   });
@@ -349,6 +359,41 @@ describe('HistoryItemsComponent', () => {
         expect(component.role).toEqual(position.libelle);
         expect(getByDataTestAttr(fixture.debugElement, 'role')?.innerText).toEqual(position.libelle);
       });
+    });
+  });
+
+  it("should display 'Afficher l'analyse' button", () => {
+    // GIVEN
+    component.isCurrentPlayerSignal.set(true);
+    component.isAllPlayerForAgame = true;
+
+    // WHEN
+    fixture.detectChanges();
+
+    // THEN
+    expect(getByDataTestAttr(fixture.debugElement, 'show-analyse-button')).toBeTruthy();
+  });
+
+  it('sould open a modal on click on show-analyse-button', () => {
+    // GIVEN
+    component.isCurrentPlayerSignal.set(true);
+    component.isAllPlayerForAgame = true;
+    fixture.detectChanges();
+    const matDialogOpenSpy = spyOn(matDialog, 'open');
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'show-analyse-button');
+
+    // THEN
+    expect(matDialogOpenSpy).toHaveBeenCalledWith(CommentaryComponent, {
+      width: '600px',
+      height: '450px',
+      data: {
+        matchId: 'id_456',
+        gameId: 456,
+        puuid: 'mock-puuid-123',
+        pseudo: 'joueur 1',
+      },
     });
   });
 });

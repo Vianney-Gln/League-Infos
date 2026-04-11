@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { MatchDTO } from '../../common/models/games-history/matchDTO';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',

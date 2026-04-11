@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GET_VERSIONS_LOL_DRAGON_URL } from '../../common/constants/api-urls';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,11 @@
+# Build Maven
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
+# Runtime
 FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
-COPY target/app.jar app.jar
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]

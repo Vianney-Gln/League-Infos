@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    build: ../Back
+    image: vianneygln/backend:latest
     container_name: spring-app
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -17,7 +17,7 @@ services:
     restart: always
 
   frontend:
-    build: ../Front
+    image: vianneygln/frontend:latest
     container_name: angular-app
     ports:
       - "80:80"

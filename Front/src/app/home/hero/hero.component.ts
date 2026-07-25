@@ -56,7 +56,7 @@ export class HeroComponent implements OnInit, OnDestroy {
     private playersService: PlayersService,
     private getVersionsService: GetVersionsService,
     private router: Router,
-    private getChampionsService: GetChampionsService
+    private getChampionsService: GetChampionsService,
   ) {
     effect(() => {
       this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
@@ -96,7 +96,7 @@ export class HeroComponent implements OnInit, OnDestroy {
         }),
         finalize(() => {
           this.isCarouselLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: ({ championMasteries, summoner }) => {
@@ -140,7 +140,7 @@ export class HeroComponent implements OnInit, OnDestroy {
         }),
         finalize(() => {
           this.isCarouselLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: ({ championMasteries, summoner }) => {
@@ -191,7 +191,9 @@ export class HeroComponent implements OnInit, OnDestroy {
             }
           });
           this.mostRecentChampionDtoSignal.set(listMostRecentsChampions[0][1]);
-          this.urlBackgroundMostRecentChampion.set(`url(https://lolg-cdn.porofessor.gg/img/d/champion-banners/${this.mostRecentChampionDtoSignal()?.key}.jpg)`);
+          this.urlBackgroundMostRecentChampion.set(
+            `url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.mostRecentChampionDtoSignal()?.id}_0.jpg)`,
+          );
         }
       },
       error: (err) => console.log(err),

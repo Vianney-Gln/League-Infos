@@ -32,8 +32,6 @@ public class RiotChampionsService implements com.league.league_infos.services.ap
                 FreeChampionsDTO.class
         );
 
-        riotResponse.getBody().setFreeChampionIds(null);
-
         if (riotResponse.getBody() != null && (riotResponse.getBody().getFreeChampionIds() == null || riotResponse.getBody().getFreeChampionIdsForNewPlayers() == null)) {
             throw new BusinessException(ERROR_BUSINESS_4.getLibelle(), HttpStatus.BAD_GATEWAY);
         }

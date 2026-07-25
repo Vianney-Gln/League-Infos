@@ -1,19 +1,15 @@
 package com.league.league_infos.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import java.util.List;
 
 public class FreeChampionsDTO {
-    private int maxNewPlayerLevel;
+    @JsonAlias({"newplayer", "freeChampionIdsForNewPlayers"})
     private List<Integer> freeChampionIdsForNewPlayers;
+
+    @JsonAlias({"sr", "freeChampionIds"})
     private List<Integer> freeChampionIds;
-
-    public int getMaxNewPlayerLevel() {
-        return maxNewPlayerLevel;
-    }
-
-    public void setMaxNewPlayerLevel(int maxNewPlayerLevel) {
-        this.maxNewPlayerLevel = maxNewPlayerLevel;
-    }
 
     public List<Integer> getFreeChampionIdsForNewPlayers() {
         return freeChampionIdsForNewPlayers;
@@ -32,14 +28,9 @@ public class FreeChampionsDTO {
     }
 
     public static class Builder {
-        private int maxNewPlayerLevel;
+
         private List<Integer> freeChampionIdsForNewPlayers;
         private List<Integer> freeChampionIds;
-
-        public Builder maxNewPlayerLevel(int maxNewPlayerLevel) {
-            this.maxNewPlayerLevel = maxNewPlayerLevel;
-            return this;
-        }
 
         public Builder freeChampionIdsForNewPlayers(List<Integer> ids) {
             this.freeChampionIdsForNewPlayers = ids;
@@ -53,7 +44,6 @@ public class FreeChampionsDTO {
 
         public FreeChampionsDTO build() {
             FreeChampionsDTO dto = new FreeChampionsDTO();
-            dto.setMaxNewPlayerLevel(this.maxNewPlayerLevel);
             dto.setFreeChampionIdsForNewPlayers(this.freeChampionIdsForNewPlayers);
             dto.setFreeChampionIds(this.freeChampionIds);
             return dto;

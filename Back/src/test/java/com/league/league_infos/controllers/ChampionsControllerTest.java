@@ -35,7 +35,6 @@ class ChampionsControllerTest {
     void getFreeChampions_succes() throws Exception {
         // GIVEN
         FreeChampionsDTO dto = new FreeChampionsDTO();
-        dto.setMaxNewPlayerLevel(10);
         dto.setFreeChampionIdsForNewPlayers(List.of(1, 2, 3));
         dto.setFreeChampionIds(List.of(101, 102));
 

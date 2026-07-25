@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 
 import { HeroComponent } from './hero.component';
 import { PlayersService } from '../../services/players/players.service';
@@ -9,11 +9,11 @@ import { AccountDTO } from '../../common/models/accountDTO';
 import { SummonerDTO } from '../../common/models/summonerDTO';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
-import { clickButtonByDataTestAttr, getByDataTestAttr } from '../../common/utils/utils-tests';
+import { getByDataTestAttr } from '../../common/utils/utils-tests';
 import { Router } from '@angular/router';
 import { GetVersionsService } from '../../services/versions/get-versions.service';
 import { GetChampionsService } from '../../services/champions/get-champions.service';
-import { ChampionData } from '../../common/models/championsInfos';
+import { Champion } from '../../common/models/championsInfos';
 
 describe('HeroComponentComponent', () => {
   let component: HeroComponent;
@@ -565,9 +565,9 @@ describe('HeroComponentComponent', () => {
     // GIVEN
     const champDataV20WithNewChamp = {
       data: {
-        Aatrox: { name: 'Aatrox' },
-        Ahri: { name: 'Ahri' },
-        Aurora: { name: 'Aurora' },
+        Aatrox: { name: 'Aatrox', id: 'Aatrox' },
+        Ahri: { name: 'Ahri', id: 'Ahri' },
+        Aurora: { name: 'Aurora', id: 'Aurora' },
       },
       version: version20,
     };
@@ -621,13 +621,13 @@ describe('HeroComponentComponent', () => {
     });
 
     // Spy sur la mise à jour du signal
-    const signalSpy = spyOn(component.mostRecentChampionDtoSignal, 'set');
+    const mostRecentChampionDtoSignalSpy = spyOn(component.mostRecentChampionDtoSignal, 'set');
 
     // WHEN
     fixture.detectChanges();
 
     // THEN
-    expect(signalSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ name: 'Aurora' }));
+    expect(mostRecentChampionDtoSignalSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ name: 'Aurora', id: 'Aurora' }));
   });
 
   it('should call getAllChampionsInfos as much as there is versions in the list and dont set any signal if no champ finded', () => {

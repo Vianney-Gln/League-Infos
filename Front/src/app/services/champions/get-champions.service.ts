@@ -2,7 +2,7 @@ import { Injectable, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FreeChampionsDTO } from '../../common/models/freeChampionsDTO';
-import { ChampionData } from '../../common/models/championsInfos';
+import { Champion, ChampionData } from '../../common/models/championsInfos';
 import { signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,6 +18,11 @@ export class GetChampionsService {
   getFreeChampions(): Observable<FreeChampionsDTO> {
     const url = `${environment.apiBaseUrl}/champions/free`;
     return this.http.get<FreeChampionsDTO>(url);
+  }
+
+  getMostRecentChampion(): Observable<Champion> {
+    const url = `${environment.apiBaseUrl}/champions/mostRecent`;
+    return this.http.get<Champion>(url);
   }
 
   getAllChampionsInfos(version: string): Observable<ChampionData> {

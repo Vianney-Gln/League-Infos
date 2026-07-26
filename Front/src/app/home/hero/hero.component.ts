@@ -60,14 +60,13 @@ export class HeroComponent implements OnInit, OnDestroy {
   ) {
     effect(() => {
       this.lastVersionLolSignal = this.getVersionsService.lastVersionlolDTOSignal;
-      this.lastTwentyVersionsLolSignal = this.getVersionsService.lastTwentyVersionslolSignal;
-      this.getMostRecentChampion();
     });
   }
 
   ngOnInit(): void {
     this.getDataBestSoloqPlayer();
     this.getDataBestFlexPlayer();
+    this.getMostRecentChampion();
   }
 
   private getDataBestSoloqPlayer(): void {
@@ -168,33 +167,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   private getMostRecentChampion(): void {
-    const observables = this.lastTwentyVersionsLolSignal().map((version) => {
-      return this.getChampionsService.getAllChampionsInfos(version);
-    });
-
-    this.getMostrecentChampionSubscription = forkJoin(observables).subscribe({
-      next: (listChampData: ChampionData[]) => {
-        const listMostRecentsChampions: [string, Champion][] = [];
-        if (listChampData.length === this.NB_PREVIOUS_VERSIONS) {
-          listChampData.forEach((champData, index) => {
-            if (index > 0) {
-              const prevChampData = listChampData[index - 1];
-              const currentChampCount = Object.keys(champData.data).length;
-              const prevChampCount = Object.keys(prevChampData.data).length;
-              if (prevChampCount > currentChampCount) {
-                const missingChampions = Object.keys(prevChampData.data).filter((champKey) => !(champKey in champData.data));
-                const foundChampion = Object.entries(prevChampData.data).find(([, champion]) => champion.name === missingChampions[0]);
-                if (foundChampion) {
-                  listMostRecentsChampions.push(foundChampion);
-                }
-              }
-            }
-          });
-          this.mostRecentChampionDtoSignal.set(listMostRecentsChampions[0][1]);
-          this.urlBackgroundMostRecentChampion.set(
-            `url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.mostRecentChampionDtoSignal()?.id}_0.jpg)`,
-          );
-        }
+    this.getChampionsService.getMostRecentChampion().subscribe({
+      next: (value) => {
+        this.mostRecentChampionDtoSignal.set(value);
+        this.urlBackgroundMostRecentChampion.set(`url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${value?.id}_0.jpg)`);
       },
       error: (err) => console.log(err),
     });

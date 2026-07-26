@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ChampionMasteryDto } from '../../common/models/ChampionMasteryDto';
 import { Router } from '@angular/router';
 import { GetChampionsService } from '../../services/champions/get-champions.service';
-import { Champion, ChampionData } from '../../common/models/championsInfos';
+import { Champion } from '../../common/models/championsInfos';
 
 @Component({
   selector: 'app-hero-component',
@@ -32,7 +32,6 @@ export class HeroComponent implements OnInit, OnDestroy {
   firstChallengerSummonerFlexSignal: WritableSignal<SummonerDTO | undefined> = signal<SummonerDTO | undefined>(undefined);
   firstChallengerPlayerFlexSignal: Signal<LeagueItemDTO | undefined> = signal<LeagueItemDTO | undefined>(undefined);
   lastVersionLolSignal: Signal<string> = signal('');
-  lastTwentyVersionsLolSignal: Signal<string[]> = signal([]);
   mostRecentChampionDtoSignal: WritableSignal<Champion | undefined> = signal(undefined);
 
   leagueBestPlayerSoloQ: string | undefined = '';

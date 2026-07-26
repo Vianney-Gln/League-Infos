@@ -2,6 +2,8 @@ package com.league.league_infos.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.league.league_infos.dto.FreeChampionsDTO;
+import com.league.league_infos.dto.ddragon.ChampionDTO;
+import com.league.league_infos.services.handler.MostRecentChampionHandler;
 import com.league.league_infos.services.riot.RiotChampionsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,9 @@ class ChampionsControllerTest {
     @MockitoBean
     private RiotChampionsService riotChampionsService;
 
+    @MockitoBean
+    private MostRecentChampionHandler mostRecentChampionHandler;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -46,5 +51,22 @@ class ChampionsControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(dto)));
 
         verify(riotChampionsService, times(1)).getFreeChampionsInfos();
+    }
+
+    @Test
+    @DisplayName("should return dto and status Ok")
+    void getMostrecentChampion_succes() throws Exception {
+        // GIVEN
+        ChampionDTO dto = new ChampionDTO();
+        dto.setName("Shyvanna");
+
+        when(mostRecentChampionHandler.getMostRecentChampion()).thenReturn(dto);
+
+        // WHEN + THEN
+        mockMvc.perform(get("/champions/mostRecent"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(dto)));
+
+        verify(mostRecentChampionHandler, times(1)).getMostRecentChampion();
     }
 }

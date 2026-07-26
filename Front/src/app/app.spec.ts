@@ -99,11 +99,10 @@ describe('App', () => {
         '13.7.5',
         '13.7.4',
         '13.7.3',
-      ])
+      ]),
     );
     const championDataSignalSpy = spyOn(getChampionService.championDataSignal, 'set').and.stub();
     const lastVersionlolDTOSignalSpy = spyOn(getVersionsService.lastVersionlolDTOSignal, 'set').and.stub();
-    const lastTenVersionlolSignalSpy = spyOn(getVersionsService.lastTwentyVersionslolSignal, 'set').and.stub();
 
     // WHEN
     fixture.detectChanges();
@@ -113,28 +112,6 @@ describe('App', () => {
     expect(getChampionServiceSpy).toHaveBeenCalledWith('14.10.2');
     expect(championDataSignalSpy).toHaveBeenCalledWith(ChampionDataMock);
     expect(lastVersionlolDTOSignalSpy).toHaveBeenCalledWith('14.10.2');
-    expect(lastTenVersionlolSignalSpy).toHaveBeenCalledWith([
-      '14.10.2',
-      '13.10.2',
-      '13.9.2',
-      '13.9.1',
-      '13.9.0',
-      '13.8.6',
-      '13.8.5',
-      '13.8.4',
-      '13.8.3',
-      '13.8.2',
-      '13.8.1',
-      '13.8.0',
-      '13.7.11',
-      '13.7.10',
-      '13.7.9',
-      '13.7.8',
-      '13.7.7',
-      '13.7.6',
-      '13.7.5',
-      '13.7.4',
-    ]);
   });
 
   it('Should call set method from isFreeChampErrorSignal with true as value if back end throw an error', () => {

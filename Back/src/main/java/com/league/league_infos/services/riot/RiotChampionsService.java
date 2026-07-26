@@ -3,6 +3,7 @@ package com.league.league_infos.services.riot;
 import com.league.league_infos.common.constants.ApiRiotUrls;
 import com.league.league_infos.common.exceptions.BusinessException;
 import com.league.league_infos.dto.FreeChampionsDTO;
+import com.league.league_infos.services.api.ChampionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
@@ -14,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import static com.league.league_infos.common.constants.ErrorMessagesEnum.ERROR_BUSINESS_4;
 
 @Service
-public class RiotChampionsService implements com.league.league_infos.services.api.ChampionsService {
+public class RiotChampionsService implements ChampionsService {
 
     private final RestTemplate restTemplate;
 

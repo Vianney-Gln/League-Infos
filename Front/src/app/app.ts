@@ -13,7 +13,10 @@ import { GetVersionsService } from './services/versions/get-versions.service';
   styleUrl: './app.scss',
 })
 export class App implements OnInit, OnDestroy {
-  constructor(private getChampionService: GetChampionsService, private getVersionsService: GetVersionsService) {}
+  constructor(
+    private getChampionService: GetChampionsService,
+    private getVersionsService: GetVersionsService,
+  ) {}
 
   title: string = 'league-infos';
   ChampioninfosSubscription: Subscription | null = null;
@@ -24,9 +27,8 @@ export class App implements OnInit, OnDestroy {
       .pipe(
         switchMap((versions) => {
           this.getVersionsService.lastVersionlolDTOSignal.set(versions[0]);
-          this.getVersionsService.lastTwentyVersionslolSignal.set(versions.slice(0, 20));
           return this.getChampionService.getAllChampionsInfos(versions[0]);
-        })
+        }),
       )
       .subscribe({
         next: (data) => {

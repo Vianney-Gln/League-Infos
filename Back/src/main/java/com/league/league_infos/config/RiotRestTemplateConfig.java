@@ -29,4 +29,19 @@ public class RiotRestTemplateConfig {
 
         return restTemplate;
     }
+
+    @Bean
+    public RestTemplate ddragonRestTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);
+        factory.setReadTimeout(5000);
+
+        RestTemplate restTemplate = new RestTemplate(factory);
+
+        restTemplate.setInterceptors(List.of((request, body, execution) ->
+                execution.execute(request, body)
+        ));
+
+        return restTemplate;
+    }
 }

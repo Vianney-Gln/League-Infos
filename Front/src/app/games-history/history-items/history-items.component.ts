@@ -132,9 +132,11 @@ export class HistoryItemsComponent implements OnInit, OnDestroy {
   showCommentary() {
     const matchId: string | null = this.route.snapshot.paramMap.get('matchId');
     const gameId: number = Number(matchId?.split('_')[1]);
+    const isMobile = window.innerWidth < 768;
     this.dialog.open(CommentaryComponent, {
-      width: COMMENTARY_MODAL_WIDTH,
-      height: COMMENTARY_MODAL_HEIGHT,
+      width: isMobile ? '100vw' : COMMENTARY_MODAL_WIDTH,
+      height: isMobile ? '100vh' : COMMENTARY_MODAL_HEIGHT,
+      panelClass: isMobile ? 'commentary-dialog-mobile' : undefined,
       data: {
         matchId: matchId,
         gameId: gameId,

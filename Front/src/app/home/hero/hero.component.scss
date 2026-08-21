@@ -38,3 +38,43 @@ h2 {
 .element-carrousel-most-recent-champion {
   background-position: center 10%;
 }
+
+.hero-carousel {
+  width: 50%;
+}
+
+@media (max-width: 767.98px) {
+  .hero-carousel {
+    width: 100%;
+  }
+
+  .element-carrousel-challenger {
+    height: 180px;
+  }
+
+  .hero-stats {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .hero-stats .text-hero {
+    font-size: 0.75rem;
+  }
+
+  .hero-stats .text-hero:last-child {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-right: 1rem;
+  }
+
+  .hero-player {
+    margin-left: 0.75rem !important;
+    margin-top: 0.75rem !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .hero-stats .text-hero {
+    font-size: 0.65rem;
+  }
+}

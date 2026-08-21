@@ -374,10 +374,11 @@ describe('HistoryItemsComponent', () => {
     expect(getByDataTestAttr(fixture.debugElement, 'show-analyse-button')).toBeTruthy();
   });
 
-  it('sould open a modal on click on show-analyse-button', () => {
+  it('should open a modal on click on show-analyse-button, case desktop', () => {
     // GIVEN
     component.isCurrentPlayerSignal.set(true);
     component.isAllPlayerForAgame = true;
+    spyOnProperty(window, 'innerWidth', 'get').and.returnValue(1200);
     fixture.detectChanges();
     const matDialogOpenSpy = spyOn(matDialog, 'open');
 
@@ -388,6 +389,32 @@ describe('HistoryItemsComponent', () => {
     expect(matDialogOpenSpy).toHaveBeenCalledWith(CommentaryComponent, {
       width: '600px',
       height: '450px',
+      panelClass: undefined,
+      data: {
+        matchId: 'id_456',
+        gameId: 456,
+        puuid: 'mock-puuid-123',
+        pseudo: 'joueur 1',
+      },
+    });
+  });
+
+  it('should open a modal on click on show-analyse-button, case mobile', () => {
+    // GIVEN
+    component.isCurrentPlayerSignal.set(true);
+    component.isAllPlayerForAgame = true;
+    spyOnProperty(window, 'innerWidth', 'get').and.returnValue(720);
+    fixture.detectChanges();
+    const matDialogOpenSpy = spyOn(matDialog, 'open');
+
+    // WHEN
+    clickButtonByDataTestAttr(fixture.debugElement, 'show-analyse-button');
+
+    // THEN
+    expect(matDialogOpenSpy).toHaveBeenCalledWith(CommentaryComponent, {
+      width: '100vw',
+      height: '100vh',
+      panelClass: 'commentary-dialog-mobile',
       data: {
         matchId: 'id_456',
         gameId: 456,

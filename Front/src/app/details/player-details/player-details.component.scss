@@ -47,3 +47,84 @@
 .bloc_unranked {
   height: 140px;
 }
+
+@media (max-width: 767.98px) {
+  .main-champion-banner {
+    background-position: center;
+  }
+
+  .main-champion-banner {
+    background-position: center;
+  }
+
+  .main-champion-banner > .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .main-champion-banner > .row > .col-11 {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .icon-player-container .icon-player-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .text-gameName-level {
+    font-size: 1rem;
+  }
+
+  .bloc_unranked {
+    height: auto;
+    flex: 100;
+  }
+
+  .bloc_unranked > p {
+    text-align: left !important;
+  }
+
+  .ranking-row {
+    align-items: center;
+  }
+
+  .ranking-row > .col-2:has(.img-rank-emblem) {
+    width: 100px;
+    flex: 0 0 100px;
+  }
+
+  .ranking-row > .col-4.data {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ranking-row > .col-4.data.mt-4 {
+    width: 100%;
+    flex: 0 0 100%;
+    text-align: center;
+    margin-top: 1rem !important;
+  }
+
+  .ranking-row > .col-2:has(.btn-group) {
+    width: 100%;
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    order: -1;
+  }
+
+  .img-rank-emblem {
+    height: 100px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  p {
+    font-size: 0.8rem;
+  }
+}

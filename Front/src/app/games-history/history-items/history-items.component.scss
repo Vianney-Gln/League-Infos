@@ -111,7 +111,7 @@
   width: 22px;
   height: 22px;
   background-color: var(--color-black-background-1);
-  z-index: 999;
+
   border: 2px solid var(--color-gold-lol-1);
   border-radius: 50%;
   color: white;
@@ -130,4 +130,71 @@
 
 .match-history-row.text-gold-2 {
   background: linear-gradient(135deg, #0a1d2e 0%, #1a3a52 100%);
+}
+
+@media (max-width: 767.98px) {
+  .match-history-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .match-history-row > .col-1 {
+    width: 80px;
+    flex: 0 0 80px;
+  }
+
+  .match-history-row > .champion-info {
+    width: calc(100% - 80px);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .match-history-row > .stats {
+    width: 100%;
+    flex: 0 0 100%;
+    justify-content: space-around;
+    min-width: 0;
+    gap: 8px;
+    margin-top: 0.75rem;
+  }
+
+  .match-history-row > .items {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-top: 0.75rem;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .match-history-row > .result {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-top: 0.5rem;
+    padding: 0;
+    justify-content: flex-start;
+    font-size: 16px;
+  }
+
+  .item-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .champion-img-container {
+    width: 68px;
+  }
+
+  .analysis-button-container {
+    width: 100% !important;
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
+
+  .analysis-button-container .button-lol-style {
+    width: 100%;
+  }
 }

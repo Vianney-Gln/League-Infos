@@ -1,11 +1,11 @@
 <!-- prettier-ignore -->
 <div class="container player-container">
   @if(!isLoading()){
-  
+
   <div class="row">
     <div [ngStyle]="{ 'background-image': urlBackgroundBannerSignal() }" class="col-12 main-champion-banner">
       <div class="mt-3 row w-100">
-        <div class="icon-player-container col-1">
+        <div class="icon-player-container col-auto">
           <img
             loading="lazy"
             decoding="async"
@@ -13,7 +13,7 @@
             [src]="'https://ddragon.leagueoflegends.com/cdn/' + lastVersionLolSignal() + '/img/profileicon/' + summonerDto.profileIconId + '.png'"
           />
         </div>
-        <div class="col-11">
+        <div class="col">
           <h2>
             <span class="text-gameName-level ps-2 pe-2">{{ gameName }} #{{ tagLine }}</span>
           </h2>
@@ -24,12 +24,13 @@
   </div>
   <div class="row mt-2 league-entry">
     <h2 class="text-center mt-2 mb-4">Infos sur le joueur</h2>
-    @if(queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ){
+    <div class="row ranking-row">
+      @if(queueTypeSignal() === 'RANKED_SOLO_5x5' && !isUnrankedSoloQ){
       <div class="col-2">
           <img loading="lazy"
-                decoding="async" 
-                class="img-rank-emblem" 
-                alt="tier emblem" 
+                decoding="async"
+                class="img-rank-emblem"
+                alt="tier emblem"
                 [src]="computeTierEmblem(leagueEntrySoloQSignal()?.tier)" />
         </div>
       <div data-test="bloc-data-league-entry-1" class="col-4 data">
@@ -50,8 +51,8 @@
     @if(queueTypeSignal() === 'RANKED_FLEX_SR' && !isUnrankedFlex ){
       <div class="col-2">
           <img loading="lazy"
-              decoding="async" 
-              class="img-rank-emblem" 
+              decoding="async"
+              class="img-rank-emblem"
               alt="tier emblem" [src]="computeTierEmblem(leagueEntryFlexQSignal()?.tier)" />
         </div>
       <div data-test="bloc-data-league-entry-1" class="col-4 data">
@@ -70,31 +71,32 @@
         </div>
     }
 
-  <div class="col-2">
-    <div class="btn-group" role="group" aria-label="Choix du la file classée">
-      <input
-        type="radio"
-        class="btn-check custom-button-radio"
-        name="soloQ"
-        id="soloQ"
-        autocomplete="off"
-        data-test="radio-switch-queue-solo"
-        (change)="onSwitch(RANKED_SOLO_5x5.libelle)"
-        [checked]="queueTypeSignal() === RANKED_SOLO_5x5.libelle"
-      />
-      <label data-test="label-radio-queue-solo" class="btn custom-button-radio" for="soloQ">SoloQ</label>
+    <div class="col-2">
+      <div class="btn-group" role="group" aria-label="Choix du la file classée">
+        <input
+          type="radio"
+          class="btn-check custom-button-radio"
+          name="soloQ"
+          id="soloQ"
+          autocomplete="off"
+          data-test="radio-switch-queue-solo"
+          (change)="onSwitch(RANKED_SOLO_5x5.libelle)"
+          [checked]="queueTypeSignal() === RANKED_SOLO_5x5.libelle"
+        />
+        <label data-test="label-radio-queue-solo" class="btn custom-button-radio" for="soloQ">SoloQ</label>
 
-      <input
-        type="radio"
-        class="btn-check"
-        name="flexQ"
-        id="flexQ"
-        data-test="radio-switch-queue-flex"
-        autocomplete="off"
-        (change)="onSwitch(RANKED_FLEX_SR.libelle)"
-        [checked]="queueTypeSignal() === RANKED_FLEX_SR.libelle"
-      />
-      <label data-test="label-radio-queue-flex" class="btn custom-button-radio" for="flexQ">FlexQ</label>
+        <input
+          type="radio"
+          class="btn-check"
+          name="flexQ"
+          id="flexQ"
+          data-test="radio-switch-queue-flex"
+          autocomplete="off"
+          (change)="onSwitch(RANKED_FLEX_SR.libelle)"
+          [checked]="queueTypeSignal() === RANKED_FLEX_SR.libelle"
+        />
+        <label data-test="label-radio-queue-flex" class="btn custom-button-radio" for="flexQ">FlexQ</label>
+      </div>
     </div>
   </div>
 
@@ -105,8 +107,8 @@
       @if(queueTypeSignal() === RANKED_SOLO_5x5.libelle){
         <div class="mt-4">
             @for (currMatchParticipant of currentMatchsParticipantsSoloQSignal(); track $index) {
-              <app-history-items data-test="history-item" 
-              [currMatchParticipant]="currMatchParticipant" 
+              <app-history-items data-test="history-item"
+              [currMatchParticipant]="currMatchParticipant"
               [listMatchDataSignal]="listMatchDataSoloQSignal"
               [currentQueue]="RANKED_SOLO_5x5.libelle">
             </app-history-items>
@@ -122,9 +124,9 @@
         @if(queueTypeSignal() === RANKED_FLEX_SR.libelle){
           <div class="mt-4">
             @for (currMatchParticipant of currentMatchsParticipantsFlexQSignal(); track $index) {
-              <app-history-items 
-              data-test="history-item" 
-              [currMatchParticipant]="currMatchParticipant" 
+              <app-history-items
+              data-test="history-item"
+              [currMatchParticipant]="currMatchParticipant"
               [listMatchDataSignal]="listMatchDataFlexQSignal"
               [currentQueue]="RANKED_FLEX_SR.libelle">
             </app-history-items>
@@ -139,13 +141,13 @@
     }
 
     @if((!currentMatchsParticipantsSoloQSignal().length && queueTypeSignal() === RANKED_SOLO_5x5.libelle) ||
-      (!currentMatchsParticipantsFlexQSignal().length && queueTypeSignal() === RANKED_FLEX_SR.libelle) 
+      (!currentMatchsParticipantsFlexQSignal().length && queueTypeSignal() === RANKED_FLEX_SR.libelle)
     ) {
       <div data-test="bloc-default-no-data-league-entry" class="text-center mt-2">
         <h3>Il n'y a pas d'informations sur ce joueur.</h3>
         <p>Il n'a peut être pas encore joué de parties classées ou est peut être inactif.</p>
       </div>
-      }   
+      }
 </div>
 }@else {
   <div class="row text-white spinner-container">

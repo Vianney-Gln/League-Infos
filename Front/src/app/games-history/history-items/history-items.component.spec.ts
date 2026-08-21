@@ -374,7 +374,7 @@ describe('HistoryItemsComponent', () => {
     expect(getByDataTestAttr(fixture.debugElement, 'show-analyse-button')).toBeTruthy();
   });
 
-  it('sould open a modal on click on show-analyse-button', () => {
+  it('should open a modal on click on show-analyse-button', () => {
     // GIVEN
     component.isCurrentPlayerSignal.set(true);
     component.isAllPlayerForAgame = true;
@@ -388,6 +388,7 @@ describe('HistoryItemsComponent', () => {
     expect(matDialogOpenSpy).toHaveBeenCalledWith(CommentaryComponent, {
       width: '600px',
       height: '450px',
+      panelClass: undefined,
       data: {
         matchId: 'id_456',
         gameId: 456,
